@@ -1,7 +1,4 @@
-import h05.Amphibien;
-import h05.Animal;
-import h05.Environment;
-import h05.SaltWaterCrocodile;
+package h05;
 
 public class SaltWaterCrocodileAsAmphibean implements Amphibien {
 

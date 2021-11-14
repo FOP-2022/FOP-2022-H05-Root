@@ -46,8 +46,8 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     @Override
     public boolean canLiveInFreshWater() {
         degreeOfHunger++;
-        return specificSpecies % 2 == 0 && specificSpecies % 4 != 0;
-        // return specificSpecies % 4 == 2;
+        return specificSpecies % 4 == 2;
+        // return specificSpecies % 2 == 0 && specificSpecies % 4 != 0;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     String letMeMove() {
         degreeOfHunger++;
         int oldX = x, oldY = y;
-        letMeSwim((char) (ThreadLocalRandom.current().nextInt('a', 'z' - 'a' + 1)),
+        letMeSwim((char) (ThreadLocalRandom.current().nextInt('a', 'z' - 'a' + 2)),
                 ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(1, 6));
         return String.format("%d -> %d and %d -> %d", oldX, oldY, x, y);
     }
