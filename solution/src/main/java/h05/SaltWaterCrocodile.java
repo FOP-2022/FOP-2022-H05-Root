@@ -3,7 +3,7 @@ package h05;
 public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
     public SaltWaterCrocodile() {
         super();
-        animalClass = AnimalClass.CROCODYLIDAE;
+        animalType = AnimalType.CROCODYLIDAE;
     }
 
     double averageSpeed;
@@ -38,7 +38,7 @@ public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
     }
 
     @Override
-    String letMeMove() {
+    public String letMeMove() {
         return "";
     }
 

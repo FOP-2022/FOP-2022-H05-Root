@@ -1,14 +1,12 @@
 package h05;
 
-public class SaltWaterCrocodileAsAmphibean implements Amphibien {
+public class SaltWaterCrocodileAsAmphibean implements Amphibean {
 
     private SaltWaterCrocodile salty;
 
-    public SaltWaterCrocodileAsAmphibean(Animal animal) {
+    public SaltWaterCrocodileAsAmphibean(SaltWaterCrocodile salty) {
         super();
-        if (animal instanceof SaltWaterCrocodile) {
-            salty = (SaltWaterCrocodile) animal;
-        }
+        this.salty = salty;
     }
 
     @Override
@@ -42,7 +40,7 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibien {
     }
 
     @Override
-    public Environment wherePrefered() {
+    public Environment getPreferredEnvironment() {
         return Environment.IN_WATER;
     }
 

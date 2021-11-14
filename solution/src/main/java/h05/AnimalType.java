@@ -3,6 +3,6 @@ package h05;
 /**
  * The Animal Type
  */
-public enum AnimalClass {
+public enum AnimalType {
     AVES, MAMMALIA, CROCODYLIDAE, CHONDRICHTHYES
 }

@@ -12,7 +12,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     public Shark(short specificSpecies) {
         super();
         setSpecificSpecies(specificSpecies);
-        animalClass = AnimalClass.CHONDRICHTHYES;
+        animalType = AnimalType.CHONDRICHTHYES;
         degreeOfHunger = 10;
     }
 
@@ -58,14 +58,17 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     }
 
     @Override
-    String letMeMove() {
+    public String letMeMove() {
         degreeOfHunger++;
         int oldX = x, oldY = y;
-        letMeSwim((char) (ThreadLocalRandom.current().nextInt('a', 'z' - 'a' + 2)),
-                ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(1, 6));
+        letMeSwim(
+            (char) ThreadLocalRandom.current().nextInt('a', 'z' + 1),
+            ThreadLocalRandom.current().nextInt(1, 6),
+            ThreadLocalRandom.current().nextInt(1, 6)
+        );
         return String.format("%d -> %d and %d -> %d", oldX, oldY, x, y);
     }
-
+// Spischis
     public short setSpecificSpecies(short specificSpecies) {
         return this.specificSpecies = (short) Math.max(0, Math.min(specificSpecies, 10));
     }

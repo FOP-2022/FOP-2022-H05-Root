@@ -4,17 +4,17 @@ package h05;
  * Represents an Animal Class
  */
 public abstract class Animal {
-    protected AnimalClass animalClass;
+    protected AnimalType animalType;
 
     /**
      * @return AnimalClass The Animal Class Type
      */
-    public AnimalClass getAnimalClass() {
-        return animalClass;
+    public AnimalType getAnimalType() {
+        return animalType;
     }
 
     /**
      * Lets the Animal Move
      */
-    abstract String letMeMove();
+    public abstract String letMeMove();
 }

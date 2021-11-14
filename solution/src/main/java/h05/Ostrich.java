@@ -4,11 +4,19 @@ public class Ostrich extends Animal implements Walking {
 
     public Ostrich() {
         super();
-        animalClass = AnimalClass.AVES;
+        animalType = AnimalType.AVES;
     }
 
+    /**
+     * Die bisher zurückgelegte Strecke
+     */
     private int distanceSoFar;
 
+    /**
+     * Gibt die bisher zurückgelegte Strecke zurück
+     *
+     * @return die bisher zurückgelegte Strecke
+     */
     public int getDistanceSoFar() {
         return distanceSoFar;
     }
@@ -22,7 +30,7 @@ public class Ostrich extends Animal implements Walking {
     public double getAverageSpeed(double distance) {
         if (distance <= 0) {
             return 0;
-        } else if (distance <= 1.10) {
+        } else if (distance <= 1.19) {
             return 3.14;
         } else if (distance <= 2.38) {
             return 2.71;
@@ -31,7 +39,7 @@ public class Ostrich extends Animal implements Walking {
     }
 
     @Override
-    String letMeMove() {
+    public String letMeMove() {
         return String.format("Distance so far: %d", ++distanceSoFar);
     }
 
