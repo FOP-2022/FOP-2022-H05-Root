@@ -1,9 +1,22 @@
 package h05;
 
+/**
+ * A {@link SaltWaterCrocodile} as {@link Amphibean}
+ *
+ * @author Ruben Deisenroth
+ */
 public class SaltWaterCrocodileAsAmphibean implements Amphibean {
 
+    /**
+     * The {@link SaltWaterCrocodile}
+     */
     private SaltWaterCrocodile salty;
 
+    /**
+     * Creates a new {@link SaltWaterCrocodileAsAmphibean}
+     *
+     * @param salty the {@link SaltWaterCrocodileAsAmphibean}
+     */
     public SaltWaterCrocodileAsAmphibean(SaltWaterCrocodile salty) {
         super();
         this.salty = salty;

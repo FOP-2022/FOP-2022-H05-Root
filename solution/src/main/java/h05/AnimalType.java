@@ -1,8 +1,25 @@
 package h05;
 
 /**
- * The Animal Type
+ * Animal Types
+ *
+ * @author Ruben Deisenroth
  */
 public enum AnimalType {
-    AVES, MAMMALIA, CROCODYLIDAE, CHONDRICHTHYES
+    /**
+     * Vögel
+     */
+    AVES,
+    /**
+     * Säugetiere
+     */
+    MAMMALIA,
+    /**
+     * Echten Krokodile
+     */
+    CROCODYLIDAE,
+    /**
+     * Knorpelfische
+     */
+    CHONDRICHTHYES
 }

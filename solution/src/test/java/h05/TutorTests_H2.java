@@ -82,4 +82,10 @@ public class TutorTests_H2 {
         var test_value = ThreadLocalRandom.current().nextInt(10000);
         assertHasGetter(attribute, a, test_value);
     }
+
+    @Test
+    @DisplayName("4 | Test ToString()")
+    public void t4() {
+        assertEquals("My species is called Ostrich which is part of animal type Aves.", new Ostrich().toString());
+    }
 }

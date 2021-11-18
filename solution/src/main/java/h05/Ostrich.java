@@ -1,5 +1,10 @@
 package h05;
 
+/**
+ * Strauß
+ *
+ * @author Ruben Deisenroth
+ */
 public class Ostrich extends Animal implements Walking {
 
     public Ostrich() {

@@ -4,11 +4,25 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
+/**
+ * Represents a Shark (Hai)
+ *
+ * @author Ruben Deisenroth
+ */
 public class Shark extends Animal implements Swimming, IntConsumer {
 
+    /**
+     * The Specific Shark Species
+     */
     private short specificSpecies;
     private int x, y, degreeOfHunger;
 
+    /**
+     * Creates a new {@link Shark}
+     *
+     * @param specificSpecies the specific Shark Species, stored in
+     *                        {@link #specificSpecies}
+     */
     public Shark(short specificSpecies) {
         super();
         setSpecificSpecies(specificSpecies);
@@ -16,18 +30,38 @@ public class Shark extends Animal implements Swimming, IntConsumer {
         degreeOfHunger = 10;
     }
 
+    /**
+     * Gets the Specific Species
+     *
+     * @return the Specific Species
+     */
     public short getSpecificSpecies() {
         return specificSpecies;
     }
 
+    /**
+     * Gets the X-Coordinate
+     *
+     * @return the X-Coordinate
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * Gets the YCoordinate
+     *
+     * @return the Y-Coordinate
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * Gets the Degree of Hunger
+     *
+     * @return the Degree of Hunger
+     */
     public int getDegreeOfHunger() {
         return degreeOfHunger;
     }
@@ -61,14 +95,18 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     public String letMeMove() {
         degreeOfHunger++;
         int oldX = x, oldY = y;
-        letMeSwim(
-            (char) ThreadLocalRandom.current().nextInt('a', 'z' + 1),
-            ThreadLocalRandom.current().nextInt(1, 6),
-            ThreadLocalRandom.current().nextInt(1, 6)
-        );
+        letMeSwim((char) ThreadLocalRandom.current().nextInt('a', 'z' + 1), ThreadLocalRandom.current().nextInt(1, 6),
+                ThreadLocalRandom.current().nextInt(1, 6));
         return String.format("%d -> %d and %d -> %d", oldX, oldY, x, y);
     }
-// Spischis
+
+    /**
+     * Sets {@link #specificSpecies} to the given value, if it's between {@code 0}
+     * and {@code 10}
+     *
+     * @param specificSpecies the Specific Shark Species
+     * @return the Specific Shark Species
+     */
     public short setSpecificSpecies(short specificSpecies) {
         return this.specificSpecies = (short) Math.max(0, Math.min(specificSpecies, 10));
     }

@@ -8,9 +8,16 @@ package h05;
 public interface Walking {
     /**
      * Gibt die Anzahl der Beine des {@link Animal}s an
+     *
      * @return die Anzahl der Beine
      */
     byte getNumberOfLegs();
 
-    double getAverageSpeed(double distance);
+    /**
+     * Gets the average Speed (m/s) archievable ofer a given distance
+     *
+     * @param distance the distance to walk
+     * @return the average Speed over the distance
+     */
+    public double getAverageSpeed(double distance);
 }

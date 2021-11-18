@@ -1,11 +1,22 @@
 package h05;
 
+/**
+ * A Salt Water Crocodile(Salzwasserkrokodil)
+ *
+ * @author Ruben Deisenroth
+ */
 public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
+    /**
+     * Creates a new {@link SaltWaterCrocodile}
+     */
     public SaltWaterCrocodile() {
         super();
         animalType = AnimalType.CROCODYLIDAE;
     }
 
+    /**
+     * The Average Speed
+     */
     double averageSpeed;
 
     @Override
@@ -33,6 +44,11 @@ public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
         return averageSpeed;
     }
 
+    /**
+     * Overwrites {@link #averageSpeed} with the given value
+     *
+     * @param averageSpeed the new average Speed
+     */
     public void setAverageSpeed(double averageSpeed) {
         this.averageSpeed = averageSpeed;
     }

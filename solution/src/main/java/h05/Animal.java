@@ -2,6 +2,8 @@ package h05;
 
 /**
  * Represents an Animal Class
+ *
+ * @author Ruben Deisenroth
  */
 public abstract class Animal {
     protected AnimalType animalType;
@@ -17,4 +19,11 @@ public abstract class Animal {
      * Lets the Animal Move
      */
     public abstract String letMeMove();
+
+    @Override
+    public String toString() {
+        return String.format("My species is called %s which is part of animal type %s.",
+        getClass().getSimpleName(),
+                animalType.name().substring(0, 1) + animalType.name().substring(1).toLowerCase());
+    }
 }
