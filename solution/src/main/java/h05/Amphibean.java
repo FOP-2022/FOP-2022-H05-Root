@@ -7,9 +7,9 @@ package h05;
  */
 public interface Amphibean extends Walking, Swimming {
     /**
-     * gets the preferred {@link Environment}
+     * gets the preferred {@link EnvironmentType}
      *
-     * @return the preferred {@link Environment}
+     * @return the preferred {@link EnvironmentType}
      */
-    Environment getPreferredEnvironment();
+    EnvironmentType getPreferredEnvironmentType();
 }

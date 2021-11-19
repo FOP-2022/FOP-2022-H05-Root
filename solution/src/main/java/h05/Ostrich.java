@@ -15,14 +15,14 @@ public class Ostrich extends Animal implements Walking {
     /**
      * Die bisher zurückgelegte Strecke
      */
-    private int distanceSoFar;
+    private double distanceSoFar;
 
     /**
      * Gibt die bisher zurückgelegte Strecke zurück
      *
      * @return die bisher zurückgelegte Strecke
      */
-    public int getDistanceSoFar() {
+    public double getDistanceSoFar() {
         return distanceSoFar;
     }
 

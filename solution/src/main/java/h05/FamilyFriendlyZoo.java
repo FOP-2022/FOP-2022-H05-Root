@@ -1,5 +1,7 @@
 package h05;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Ein Zoo der versucht, Konflikte zu vermeiden aber eine möglichst Große
  * Vielfalt zu bieten.
@@ -35,6 +37,13 @@ public class FamilyFriendlyZoo implements Zoo {
     public boolean isAllowed(Animal a) {
         // Bis auf die besonders gefährliche Heiart 4, sind alle Tiere erlaubt
         return !(a instanceof Shark && ((Shark) a).getSpecificSpecies() == 4);
+    }
+
+    /**
+     * Gibt Einen Zufälligen Buchstaben zurück
+     */
+    public char letterOfTheDay() {
+        return (char) ThreadLocalRandom.current().nextInt('a', 'z' + 1);
     }
 
 }

@@ -19,5 +19,5 @@ public interface Walking {
      * @param distance the distance to walk
      * @return the average Speed over the distance
      */
-    public double getAverageSpeed(double distance);
+    double getAverageSpeed(double distance);
 }

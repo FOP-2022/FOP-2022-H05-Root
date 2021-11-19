@@ -30,7 +30,7 @@ public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
     }
 
     @Override
-    public void letMeSwim(char distance, double x, double y) {
+    public void letMeSwim(int distance, double x, double y) {
         // Nothing to see here
     }
 

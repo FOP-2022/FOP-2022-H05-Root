@@ -48,13 +48,13 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean {
     }
 
     @Override
-    public void letMeSwim(char distance, double x, double y) {
+    public void letMeSwim(int distance, double x, double y) {
         salty.letMeSwim(distance, x, y);
     }
 
     @Override
-    public Environment getPreferredEnvironment() {
-        return Environment.IN_WATER;
+    public EnvironmentType getPreferredEnvironmentType() {
+        return EnvironmentType.IN_WATER;
     }
 
 }
