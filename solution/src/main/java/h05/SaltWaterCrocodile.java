@@ -17,7 +17,7 @@ public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
     /**
      * The Average Speed
      */
-    double averageSpeed;
+    static double averageSpeed;
 
     @Override
     public boolean canLiveInSaltWater() {
@@ -50,7 +50,7 @@ public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
      * @param averageSpeed the new average Speed
      */
     public void setAverageSpeed(double averageSpeed) {
-        this.averageSpeed = averageSpeed;
+        SaltWaterCrocodile.averageSpeed = averageSpeed;
     }
 
     @Override

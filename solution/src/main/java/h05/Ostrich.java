@@ -35,10 +35,10 @@ public class Ostrich extends Animal implements Walking {
     public double getAverageSpeed(double distance) {
         if (distance <= 0) {
             return 0;
-        } else if (distance <= 1.19) {
+        } else if (distance <= 1.337) {
+            return 6.900;
+        } else if (distance <= 4.200) {
             return 3.14;
-        } else if (distance <= 2.38) {
-            return 2.71;
         }
         return 1;
     }

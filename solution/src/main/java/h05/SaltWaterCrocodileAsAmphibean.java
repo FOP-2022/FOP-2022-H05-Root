@@ -17,14 +17,21 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean {
      *
      * @param salty the {@link SaltWaterCrocodileAsAmphibean}
      */
-    public SaltWaterCrocodileAsAmphibean(SaltWaterCrocodile salty) {
+    public SaltWaterCrocodileAsAmphibean(Animal a) {
         super();
-        this.salty = salty;
+        if (a instanceof SaltWaterCrocodile) {
+            salty = (SaltWaterCrocodile) a;
+        }
     }
 
     @Override
     public boolean equals(Object obj) {
         return (obj == null || obj instanceof SaltWaterCrocodile) && salty == obj;
+    }
+
+    @Override
+    protected Object clone() {
+        return this;
     }
 
     @Override
