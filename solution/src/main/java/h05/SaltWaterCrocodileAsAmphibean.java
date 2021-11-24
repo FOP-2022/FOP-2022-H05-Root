@@ -26,12 +26,13 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean {
 
     @Override
     public boolean equals(Object obj) {
-        return (obj == null || obj instanceof SaltWaterCrocodile) && salty == obj;
+        return (obj == null || obj instanceof SaltWaterCrocodileAsAmphibean)
+                && salty == ((SaltWaterCrocodileAsAmphibean) obj).salty;
     }
 
     @Override
     protected Object clone() {
-        return this;
+        return new SaltWaterCrocodileAsAmphibean(salty);
     }
 
     @Override
