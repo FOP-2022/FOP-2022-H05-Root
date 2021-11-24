@@ -85,7 +85,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     }
 
     @Override
-    public void letMeSwim(int distance, double x, double y) {
+    public void letMeSwim(char distance, double x, double y) {
         degreeOfHunger++;
         this.x += x * distance;
         this.y += y * distance;
@@ -95,7 +95,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     public String letMeMove() {
         degreeOfHunger++;
         int oldX = x, oldY = y;
-        letMeSwim(ThreadLocalRandom.current().nextInt(0, 10), ThreadLocalRandom.current().nextInt(1, 6),
+        letMeSwim((char) ThreadLocalRandom.current().nextInt(0, 5), ThreadLocalRandom.current().nextInt(1, 6),
                 ThreadLocalRandom.current().nextInt(1, 6));
         return String.format("%d -> %d and %d -> %d", oldX, oldY, x, y);
     }

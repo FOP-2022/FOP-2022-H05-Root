@@ -27,5 +27,5 @@ public interface Swimming {
      * @param x        the X-Coordinate of the new Position
      * @param y        the Y-Coordinate of the new Position
      */
-    void letMeSwim(int distance, double x, double y);
+    void letMeSwim(char distance, double x, double y);
 }

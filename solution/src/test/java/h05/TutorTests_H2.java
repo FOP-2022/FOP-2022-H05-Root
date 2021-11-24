@@ -12,6 +12,9 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import h05.ReflectionUtils.ClassTester;
+
 import static h05.TestUtils.*;
 
 @DisplayName("H2")
@@ -41,6 +44,9 @@ public class TutorTests_H2 {
             assertTrue(Stream.of(enum_values).anyMatch(x -> x.toString().equals(n)),
                     String.format("Enum-Konstante %s fehlt.", n));
         }
+
+        // var clazz = new ClassTester<>("h05", "Animal").resolveClass(1.0);
+
     }
 
     @Test

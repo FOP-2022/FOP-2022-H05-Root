@@ -40,11 +40,11 @@ public class TutorTests_H1_3 {
     }
 
     @Test
-    @DisplayName("2 | Enum Environment()")
+    @DisplayName("2 | Enum EnvironmentType()")
     @SuppressWarnings("unchecked")
     public void t02() {
         // Existance
-        var clazz = assertDoesNotThrow(() -> Class.forName("h05.Environment"), "Interface Swimming existiert nicht.");
+        var clazz = assertDoesNotThrow(() -> Class.forName("h05.EnvironmentType"), "Enum EnvironmentType existiert nicht.");
 
         // Access Modifier
         var mod = clazz.getModifiers();

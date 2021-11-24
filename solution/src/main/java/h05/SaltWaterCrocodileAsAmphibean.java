@@ -56,7 +56,7 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean {
     }
 
     @Override
-    public void letMeSwim(int distance, double x, double y) {
+    public void letMeSwim(char distance, double x, double y) {
         salty.letMeSwim(distance, x, y);
     }
 
