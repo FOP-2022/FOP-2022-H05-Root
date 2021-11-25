@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import h05.ReflectionUtils.ClassTester;
+import h05.ReflectionUtils.IdentifierMatcher;
 
 import static h05.TestUtils.*;
 
@@ -45,24 +48,36 @@ public class TutorTests_H2 {
                     String.format("Enum-Konstante %s fehlt.", n));
         }
 
-        // var clazz = new ClassTester<>("h05", "Animal").resolveClass(1.0);
-
+        // var classTester = new ClassTester<>("h05", "Animal", 1.0, Modifier.PUBLIC |
+        // Modifier.ABSTRACT);
+        // classTester.resolveClass();
+        // classTester.assertIsPlainClass();
+        // classTester.assertAccessModifier();
+        // classTester.assertDoesNotImplementAnyInterfaces();
     }
 
     @Test
     @DisplayName("2 | Existenz Klasse " + class_name)
     public void t02() {
-        // Existance
-        var clazz = assertDoesNotThrow(() -> Class.forName(String.format("h05.%s", class_name)),
-                "Klasse Swimming existiert nicht.");
+        // // Existance
+        // var clazz = assertDoesNotThrow(() -> Class.forName(String.format("h05.%s",
+        // class_name)),
+        // "Klasse Swimming existiert nicht.");
 
-        // Access Modifier
-        var mod = clazz.getModifiers();
-        var expected_mod = 1025; // public abstract
-        assertFalse(Modifier.isInterface(mod), String.format("%s ist ein Interface.", class_name));
-        assertFalse(clazz.isEnum(), String.format("%s ist ein Enum.", class_name));
-        assertEquals(expected_mod, mod, String.format("Falscher Access Modifier. Gefordert: %s, Erhalten:%s",
-                Modifier.toString(expected_mod), Modifier.toString(mod)));
+        // // Access Modifier
+        // var mod = clazz.getModifiers();
+        // var expected_mod = 1025; // public abstract
+        // assertFalse(Modifier.isInterface(mod), String.format("%s ist ein Interface.",
+        // class_name));
+        // assertFalse(clazz.isEnum(), String.format("%s ist ein Enum.", class_name));
+        // assertEquals(expected_mod, mod, String.format("Falscher Access Modifier.
+        // Gefordert: %s, Erhalten:%s",
+        // Modifier.toString(expected_mod), Modifier.toString(mod)));
+        var classTester = new ClassTester<>("h05", "Animal", 1.0, Modifier.PUBLIC | Modifier.ABSTRACT);
+        classTester.resolveClass();
+        classTester.assertIsPlainClass();
+        classTester.assertAccessModifier();
+        classTester.assertDoesNotImplementAnyInterfaces();
     }
 
     @Test

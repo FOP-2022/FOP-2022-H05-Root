@@ -56,16 +56,17 @@ public class TestUtils {
      * @param name     Feld Name
      */
     public static void assertModifier(int expected, int actual, String name) {
-        assertEquals(expected, actual,
-                String.format("Falsche Modifiers für %s! Gefordert: %s Erhalten: %s", name, expected, actual));
+        assertEquals(expected, actual, String.format("Falsche Modifiers für %s! Gefordert: %s Erhalten: %s", name,
+                Modifier.toString(expected), Modifier.toString(actual)));
     }
 
     public static void assertModifier(int expected, Class<?> clazz) {
-        assertEquals(expected, clazz.getModifiers(), "Klasse " + clazz.getName());
+        assertModifier(expected, clazz.getModifiers(), "Klasse " + clazz.getName());
     }
 
     public static void assertModifier(int expected, Method method) {
-        assertEquals(expected, method.getModifiers(), "Methode " + method.getDeclaringClass() + "." + method.getName());
+        assertModifier(expected, method.getModifiers(),
+                "Methode " + method.getDeclaringClass() + "." + method.getName());
     }
 
     // public static Modifier[] toModifierArray(int modifier) {
