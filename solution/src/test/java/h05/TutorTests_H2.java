@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,33 +71,15 @@ public class TutorTests_H2 {
         methodTester.assertReturnType();
 
         assertDoesNotThrow(() -> animalTypeField.setAccessible(true));
-        var instance = classTester.resolveInstance();
+
+        Object animalInstance = classTester.resolveInstance();
+        classTester.setClassInstance(animalInstance);
+
+        // var instance = classTester.resolveInstance();
         var expectedReturnValue = enumClassTester.getRandomEnumConstant();
-        assertDoesNotThrow(() -> animalTypeField.set(instance, expectedReturnValue));
+        assertDoesNotThrow(() -> animalTypeField.set(animalInstance, expectedReturnValue));
         var returnValue = methodTester.invoke();
         assertEquals(expectedReturnValue, returnValue, "Falsche Rückgabe der Getter-Metode.");
-        // // Existance
-        // var clazz = assertDoesNotThrow(() -> Class.forName(String.format("h05.%s",
-        // class_name)));
-        // var attribute = assertDoesNotThrow(() ->
-        // clazz.getDeclaredField("animalClass"));
-
-        // // Access Modifier
-        // var mod = attribute.getModifiers();
-        // var expected_mod = 4; // public abstract
-        // assertEquals(expected_mod, mod, String.format("Falscher Access Modifier.
-        // Gefordert: %s, Erhalten:%s",
-        // Modifier.toString(expected_mod), Modifier.toString(mod)));
-
-        // // Getter
-        // Animal a = new Animal() {
-        // public String letMeMove() {
-        // return null;
-        // };
-        // };
-
-        // var test_value = ThreadLocalRandom.current().nextInt(10000);
-        // assertHasGetter(attribute, a, test_value);
     }
 
     @Test

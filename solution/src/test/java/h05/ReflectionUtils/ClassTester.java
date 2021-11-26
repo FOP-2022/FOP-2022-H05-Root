@@ -2,14 +2,24 @@ package h05.ReflectionUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 
 import h05.TestUtils;
 
@@ -285,9 +295,105 @@ public class ClassTester<T> {
         return resolveClass(classIdentifier.packageName, classIdentifier.identifierName, similarity);
     }
 
+    /**
+     * Returns the Default Value for the given Type
+     *
+     * @param type the Type Class
+     * @return the Default Value for the given Type
+     */
+    public static Object getDefaultValue(Class<?> type) {
+        if (List.of(byte.class, short.class, int.class, long.class, float.class, double.class).contains(type)) {
+            return 0;
+        } else if (type == char.class) {
+            return 'a';
+        } else if (type == boolean.class) {
+            return false;
+        } else {
+            return null;
+        }
+    }
+
     @SuppressWarnings("unchecked")
-    public static <T> T resolveInstance(Class<T> clazz, String className) {
+    public static <T> Class<? extends T> generateDerivedClass(Class<T> clazz, String className, String derivedClassName)
+            throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException,
+            IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         assertClassNotNull(clazz, className);
+        // new sun.tools.javac.Main(baos, source[0]).compile(source);
+        // Prepare source somehow.
+
+        System.out.println(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+        // final File f = new
+        // File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+        var sourceBuilder = new StringBuilder();
+        var lsep = System.getProperty("line.separator");
+        if (!clazz.getPackageName().isEmpty()) {
+            sourceBuilder.append(String.format("package %s;", clazz.getPackageName()));
+            sourceBuilder.append(lsep);
+            sourceBuilder.append(String.format("import %s;", clazz.getName())); // Might be unnecessary
+            sourceBuilder.append(lsep);
+        }
+        sourceBuilder.append(String.format("public class %s extends %s {", derivedClassName, clazz.getName()));
+        sourceBuilder.append(lsep);
+        // Constructors
+        for (var c : clazz.getDeclaredConstructors()) {
+            if (Modifier.isPrivate(c.getModifiers())) {
+                continue;
+            }
+            sourceBuilder.append(String.format("\t%s %s(%s){" + lsep + "\t\tsuper(%s);" + lsep + "\t}" + lsep,
+                    Modifier.toString(c.getModifiers()), derivedClassName,
+                    Arrays.stream(c.getParameters())
+                            .map(x -> String.format("%s %s", x.getType().getName(), x.getName()))
+                            .collect(Collectors.joining(", ")),
+                    Arrays.stream(c.getParameters()).map(x -> x.getName()).collect(Collectors.joining(", "))));
+        }
+        // Abstract Methods
+        for (var m : clazz.getDeclaredMethods()) {
+            if (!Modifier.isAbstract(m.getModifiers())) {
+                continue;
+            }
+            sourceBuilder.append(String.format("\t%s %s %s(%s){" + lsep + "\t\treturn %s;" + lsep + "\t}" + lsep,
+                    Modifier.toString(m.getModifiers() & ~Modifier.ABSTRACT), m.getReturnType().getName(), m.getName(),
+                    Arrays.stream(m.getParameters())
+                            .map(x -> String.format("%s %s", x.getType().getName(), x.getName()))
+                            .collect(Collectors.joining(", ")),
+                    getDefaultValue(m.getReturnType())));
+        }
+        sourceBuilder.append("}");
+        String source = sourceBuilder.toString();
+        System.out.println(source);
+
+        // Save source in .java file.
+        File root = new File(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+        System.out.println(clazz.getProtectionDomain().getCodeSource().getLocation().getPath());
+        File sourceFile = new File(root, clazz.getPackageName().replace(".", "/")
+                + String.format("%s%s.java", clazz.getPackageName().isEmpty() ? "" : "/", derivedClassName));
+        sourceFile.getParentFile().mkdirs();
+        Files.write(sourceFile.toPath(), source.getBytes(StandardCharsets.UTF_8));
+
+        // Compile source file.
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        compiler.run(null, null, null, sourceFile.getPath());
+
+        // Load compiled class.;
+        Class<?> cls = Class
+                .forName((clazz.getPackageName().isEmpty() ? "" : (clazz.getPackageName() + ".") + derivedClassName));
+
+        return (Class<? extends T>) cls;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T resolveInstance(Class<? super T> clazz, String className) {
+        assertClassNotNull(clazz, className);
+        if (Modifier.isAbstract(clazz.getModifiers())) {
+            try {
+                clazz = (Class<T>) generateDerivedClass(clazz, className,
+                        className + ThreadLocalRandom.current().nextInt(1000, 10000));
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IllegalArgumentException
+                    | InvocationTargetException | NoSuchMethodException | SecurityException | IOException e) {
+                fail("Could not Create Derivative Class", e);
+                // e.printStackTrace();
+            }
+        }
         assertFalse(Modifier.isAbstract(clazz.getModifiers()), "Kann keine Abstrakten Klasssen instanzieren.");
         var constructors = clazz.getDeclaredConstructors();
         T instance = null;
@@ -297,17 +403,7 @@ public class ClassTester<T> {
                 var params = c.getParameters();
 
                 var constructorArgs = Arrays.stream(params).map(x -> {
-                    var type = x.getType();
-                    if (List.of(byte.class, short.class, int.class, long.class, float.class, double.class)
-                            .contains(type)) {
-                        return 0;
-                    } else if (type == char.class) {
-                        return 'a';
-                    } else if (type == boolean.class) {
-                        return false;
-                    } else {
-                        return null;
-                    }
+                    return getDefaultValue(x.getType());
                 }).toArray();
                 instance = (T) c.newInstance(constructorArgs);
                 break;
