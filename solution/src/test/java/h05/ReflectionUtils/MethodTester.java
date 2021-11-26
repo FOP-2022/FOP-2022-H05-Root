@@ -230,8 +230,8 @@ public class MethodTester {
         try {
             returnValue = theMethod.invoke(classTester.getClassInstance(), params);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            fail("Method Could not be invoked.");
             e.printStackTrace();
+            fail("Method Could not be invoked.");
         }
         return returnValue;
     }

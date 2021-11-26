@@ -45,7 +45,7 @@ public class Ostrich extends Animal implements Walking {
 
     @Override
     public String letMeMove() {
-        return String.format("Distance so far: %d", ++distanceSoFar);
+        return String.format("Distance so far: %s", ++distanceSoFar);
     }
 
 }

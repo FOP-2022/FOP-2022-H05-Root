@@ -2,29 +2,17 @@ package h05;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
-
-import static h05.TestUtils.*;
 
 @DisplayName("H2")
 public class TutorTests_H2 {
@@ -85,6 +73,31 @@ public class TutorTests_H2 {
     @Test
     @DisplayName("4 | Test ToString()")
     public void t4() {
-        assertEquals("My species is called Ostrich which is part of animal type Aves.", new Ostrich().toString());
+        var classTester = new ClassTester<>("h05", "Animal", 0.8);
+        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8);
+        classTester.resolveClass();
+        enumClassTester.resolveClass();
+        Field animalTypeField = classTester.resolveAttribute(
+                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass()));
+
+        var methodTester = new MethodTester(classTester, "toString", 0.8, Modifier.PUBLIC, String.class,
+                new ArrayList<>());
+        methodTester.resolveMethod();
+        methodTester.assertAccessModifier();
+        methodTester.assertParametersMatch();
+        methodTester.assertReturnType();
+
+        assertDoesNotThrow(() -> animalTypeField.setAccessible(true));
+
+        Object animalInstance = classTester.resolveInstance();
+        classTester.setClassInstance(animalInstance);
+
+        var expectedAnimalType = enumClassTester.getRandomEnumConstant();
+        var expectedAnswer = String.format("My species is called %s which is part of animal type %s.",
+                animalInstance.getClass().getSimpleName(),
+                expectedAnimalType.name().substring(0, 1) + expectedAnimalType.name().substring(1).toLowerCase());
+        assertDoesNotThrow(() -> animalTypeField.set(animalInstance, expectedAnimalType));
+        var returnValue = methodTester.invoke();
+        assertEquals(expectedAnswer, returnValue, "Falsche Rückgabe der toString-Metode.");
     }
 }

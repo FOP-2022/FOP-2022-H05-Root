@@ -131,6 +131,7 @@ public class ClassTester<T> {
         } else {
             for (int i = 0; i < implementsInterfaces.size(); i++) {
                 var matcher = implementsInterfaces.get(i);
+                assertFalse(interfaces.isEmpty(), getInterfaceNotImplementedMessage(matcher.identifierName));
                 var bestMatch = interfaces.stream()
                         .sorted((x, y) -> Double
                                 .valueOf(TestUtils.similarity(matcher.identifierName, y.getSimpleName()))
@@ -249,7 +250,7 @@ public class ClassTester<T> {
         }
     }
 
-    public static Object getRandomEnumConstant(Class<?> enumClass, String enumClassName) {
+    public static Enum<?> getRandomEnumConstant(Class<Enum<?>> enumClass, String enumClassName) {
         assertIsEnum(enumClass, enumClassName);
         var enumConstants = enumClass.getEnumConstants();
         if (enumConstants.length == 0) {
@@ -258,8 +259,18 @@ public class ClassTester<T> {
         return enumConstants[ThreadLocalRandom.current().nextInt(enumConstants.length)];
     }
 
-    public Object getRandomEnumConstant() {
-        return getRandomEnumConstant(theClass, classIdentifier.identifierName);
+    @SuppressWarnings("unchecked")
+    public Enum<?> getRandomEnumConstant() {
+        assertIsEnum();
+        return getRandomEnumConstant((Class<Enum<?>>) theClass, classIdentifier.identifierName);
+    }
+
+    public IdentifierMatcher getClassIdentifier() {
+        return classIdentifier;
+    }
+
+    public void setClassIdentifier(IdentifierMatcher classIdentifier) {
+        this.classIdentifier = classIdentifier;
     }
 
     /**
@@ -417,7 +428,7 @@ public class ClassTester<T> {
     }
 
     public T resolveInstance() {
-        return resolveInstance(theClass, classIdentifier.identifierName);
+        return classInstance = resolveInstance(theClass, classIdentifier.identifierName);
     }
 
     public static void assertIsInterface(Class<?> theClass, String className) {
