@@ -2,10 +2,13 @@ package h05.ReflectionUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
 import h05.TestUtils;
@@ -39,15 +42,15 @@ public class ClassTester<T> {
     }
 
     public ClassTester(String packageName, String className, double similarity, int accessModifier) {
-        this(packageName, className, similarity, accessModifier, null, null, null);
+        this(packageName, className, similarity, accessModifier, null, new ArrayList<>(), null);
     }
 
     public ClassTester(String packageName, String className, double similarity) {
-        this(packageName, className, similarity, -1, null, null, null);
+        this(packageName, className, similarity, -1, null, new ArrayList<>(), null);
     }
 
     public ClassTester(String packageName, String className) {
-        this(packageName, className, 1, -1, null, null, null);
+        this(packageName, className, 1, -1, null, new ArrayList<>(), null);
     }
 
     /**
@@ -92,6 +95,24 @@ public class ClassTester<T> {
         addImplementsInterface(interfaceName, null);
     }
 
+    public Field resolveAttribute(AttributeMatcher matcher) {
+        assertClassResolved();
+        var fields = theClass.getDeclaredFields();
+        Field bestMatch = Arrays.stream(fields)
+                .sorted((x, y) -> Double.valueOf(TestUtils.similarity(y.getName(), matcher.identifierName))
+                        .compareTo(TestUtils.similarity(x.getName(), matcher.identifierName)))
+                .findFirst().orElse(null);
+        assertNotNull(bestMatch, String.format("Attribut %s existiert nicht.", matcher.identifierName));
+        var sim = TestUtils.similarity(bestMatch.getName(), matcher.identifierName);
+        assertTrue(sim >= matcher.similarity,
+                String.format("Attribut %s existiert nicht. Ähnlichstes Attribut: %s mit Ähnlichkeit: %s",
+                        matcher.identifierName, bestMatch, sim));
+        if (matcher.modifier >= 0) {
+            TestUtils.assertModifier(matcher.modifier, bestMatch);
+        }
+        return bestMatch;
+    }
+
     public void assertImplementsInterfaces(ArrayList<IdentifierMatcher> implementsInterfaces) {
         assertClassResolved();
         var interfaces = new ArrayList<>(List.of(theClass.getInterfaces()));
@@ -105,8 +126,8 @@ public class ClassTester<T> {
                                 .valueOf(TestUtils.similarity(matcher.identifierName, y.getSimpleName()))
                                 .compareTo(TestUtils.similarity(matcher.identifierName, x.getSimpleName())))
                         .findFirst().orElseGet(null);
-                var sim = TestUtils.similarity(bestMatch.getSimpleName(), matcher.identifierName);
                 assertNotNull(bestMatch, getInterfaceNotImplementedMessage(matcher.identifierName));
+                var sim = TestUtils.similarity(bestMatch.getSimpleName(), matcher.identifierName);
                 assertTrue(sim >= matcher.similarity, getInterfaceNotImplementedMessage(matcher.identifierName)
                         + "Ähnlichstes Interface:" + bestMatch.getSimpleName() + " with " + sim + " similarity.");
                 interfaces.remove(bestMatch);
@@ -128,16 +149,24 @@ public class ClassTester<T> {
         return theClass != null;
     }
 
-    public String getClassNotFoundMessage() {
-        return String.format("Klasse %s existiert nicht.", classIdentifier.identifierName);
+    public static String getClassNotFoundMessage(String className) {
+        return String.format("Klasse %s existiert nicht.", className);
     }
 
-    public String getInterfaceNotImplementedMessage(String interfaceName) {
+    public String getClassNotFoundMessage() {
+        return getClassNotFoundMessage(classIdentifier.identifierName);
+    }
+
+    public static String getInterfaceNotImplementedMessage(String interfaceName) {
         return String.format("Interface %s wird nicht erweitert.", interfaceName);
     }
 
+    public static void assertClassNotNull(Class<?> theClass, String className) {
+        assertNotNull(theClass, getClassNotFoundMessage(className));
+    }
+
     public void assertClassResolved() {
-        assertTrue(class_resolved(), getClassNotFoundMessage());
+        assertClassNotNull(theClass, classIdentifier.identifierName);
     }
 
     /**
@@ -181,12 +210,46 @@ public class ClassTester<T> {
         }
     }
 
-    public Object getClassInstance() {
+    public T getClassInstance() {
         return classInstance;
     }
 
     public void setClassInstance(T classInstance) {
         this.classInstance = classInstance;
+    }
+
+    public boolean classInstanceResolved() {
+        return classInstance != null;
+    }
+
+    public void assertclassInstanceResolved() {
+        assertNotNull(classInstance, "Es wurde keine Klassen-Instanz gefunden.");
+    }
+
+    public static String getEnumConstantMissingMessage(String constantName) {
+        return String.format("Enum-Konstante %s fehlt.", constantName);
+    }
+
+    public void assertEnumConstants(String[] expectedConstants) {
+        assertClassResolved();
+        var enum_values = theClass.getEnumConstants();
+        for (String n : expectedConstants) {
+            assertTrue(Stream.of(enum_values).anyMatch(x -> x.toString().equals(n)),
+                    String.format("Enum-Konstante %s fehlt.", n));
+        }
+    }
+
+    public static Object getRandomEnumConstant(Class<?> enumClass, String enumClassName) {
+        assertIsEnum(enumClass, enumClassName);
+        var enumConstants = enumClass.getEnumConstants();
+        if (enumConstants.length == 0) {
+            return null;
+        }
+        return enumConstants[ThreadLocalRandom.current().nextInt(enumConstants.length)];
+    }
+
+    public Object getRandomEnumConstant() {
+        return getRandomEnumConstant(theClass, classIdentifier.identifierName);
     }
 
     /**
@@ -222,21 +285,71 @@ public class ClassTester<T> {
         return resolveClass(classIdentifier.packageName, classIdentifier.identifierName, similarity);
     }
 
+    @SuppressWarnings("unchecked")
+    public static <T> T resolveInstance(Class<T> clazz, String className) {
+        assertClassNotNull(clazz, className);
+        assertFalse(Modifier.isAbstract(clazz.getModifiers()), "Kann keine Abstrakten Klasssen instanzieren.");
+        var constructors = clazz.getDeclaredConstructors();
+        T instance = null;
+        for (var c : constructors) {
+            try {
+                c.setAccessible(true);
+                var params = c.getParameters();
+
+                var constructorArgs = Arrays.stream(params).map(x -> {
+                    var type = x.getType();
+                    if (List.of(byte.class, short.class, int.class, long.class, float.class, double.class)
+                            .contains(type)) {
+                        return 0;
+                    } else if (type == char.class) {
+                        return 'a';
+                    } else if (type == boolean.class) {
+                        return false;
+                    } else {
+                        return null;
+                    }
+                }).toArray();
+                instance = (T) c.newInstance(constructorArgs);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+        }
+        assertNotNull(instance, "Could not create Instance.");
+        return instance;
+    }
+
+    public T resolveInstance() {
+        return resolveInstance(theClass, classIdentifier.identifierName);
+    }
+
+    public static void assertIsInterface(Class<?> theClass, String className) {
+        assertClassNotNull(theClass, className);
+        assertTrue(theClass.isInterface(), String.format("%s ist kein Interface.", className));
+    }
+
     public void assertIsInterface() {
-        assertClassResolved();
-        assertTrue(theClass.isInterface(), String.format("%s ist kein Interface.", classIdentifier.identifierName));
+        assertIsInterface(theClass, classIdentifier.identifierName);
+    }
+
+    public static void assertIsEnum(Class<?> theClass, String className) {
+        assertClassNotNull(theClass, className);
+        assertTrue(theClass.isEnum(), String.format("%s ist kein Enum.", className));
     }
 
     public void assertIsEnum() {
-        assertClassResolved();
-        assertTrue(theClass.isEnum(), String.format("%s ist kein Enum.", classIdentifier.identifierName));
+        assertIsEnum(theClass, classIdentifier.identifierName);
+    }
+
+    public static void assertIsPlainClass(Class<?> theClass, String className) {
+        assertClassNotNull(theClass, className);
+        assertFalse(theClass.isInterface(), String.format("%s sollte kein Interface sein.", className));
+        assertFalse(theClass.isEnum(), String.format("%s sollte kein Enum sein.", className));
     }
 
     public void assertIsPlainClass() {
-        assertClassResolved();
-        assertFalse(theClass.isInterface(),
-                String.format("%s sollte kein Interface sein.", classIdentifier.identifierName));
-        assertFalse(theClass.isEnum(), String.format("%s sollte kein Enum sein.", classIdentifier.identifierName));
+        assertIsPlainClass(theClass, classIdentifier.identifierName);
     }
 
 }

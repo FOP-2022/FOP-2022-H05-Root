@@ -15,6 +15,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class TestUtils {
+
+    public static final int BRIDGE = 0x00000040;
+    public static final int VARARGS = 0x00000080;
+    public static final int SYNTHETIC = 0x00001000;
+    public static final int ANNOTATION = 0x00002000;
+    public static final int ENUM = 0x00004000;
+    public static final int MANDATED = 0x00008000;
+
     /**
      * Asserts that a given field has a getter method
      *
@@ -67,6 +75,11 @@ public class TestUtils {
     public static void assertModifier(int expected, Method method) {
         assertModifier(expected, method.getModifiers(),
                 "Methode " + method.getDeclaringClass() + "." + method.getName());
+    }
+
+    public static void assertModifier(int expected, Field attribut) {
+        assertModifier(expected, attribut.getModifiers(),
+                "Attribut " + attribut.getDeclaringClass() + "." + attribut.getName());
     }
 
     // public static Modifier[] toModifierArray(int modifier) {
