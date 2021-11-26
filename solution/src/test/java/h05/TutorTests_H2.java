@@ -51,23 +51,7 @@ public class TutorTests_H2 {
         Field animalTypeField = classTester.resolveAttribute(
                 new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass()));
 
-        var methodTester = new MethodTester(classTester, "getAnimalType", 0.8, Modifier.PUBLIC,
-                enumClassTester.getTheClass(), new ArrayList<>());
-        methodTester.resolveMethod();
-        methodTester.assertAccessModifier();
-        methodTester.assertParametersMatch();
-        methodTester.assertReturnType();
-
-        assertDoesNotThrow(() -> animalTypeField.setAccessible(true));
-
-        Object animalInstance = classTester.resolveInstance();
-        classTester.setClassInstance(animalInstance);
-
-        // var instance = classTester.resolveInstance();
-        var expectedReturnValue = enumClassTester.getRandomEnumConstant();
-        assertDoesNotThrow(() -> animalTypeField.set(animalInstance, expectedReturnValue));
-        var returnValue = methodTester.invoke();
-        assertEquals(expectedReturnValue, returnValue, "Falsche Rückgabe der Getter-Metode.");
+        classTester.assertHasGetter(animalTypeField);
     }
 
     @Test

@@ -123,6 +123,31 @@ public class ClassTester<T> {
         return bestMatch;
     }
 
+    public void assertHasGetter(Field attribute) {
+        assertNotNull(attribute);
+
+        // Method Declaration
+        var methodTester = new MethodTester(this, String.format("get%s%s",
+                attribute.getName().substring(0, 1).toUpperCase(), attribute.getName().substring(1)), 0.8,
+                Modifier.PUBLIC, attribute.getType());
+        methodTester.resolveMethod();
+        methodTester.assertAccessModifier();
+        methodTester.assertParametersMatch();
+        methodTester.assertReturnType();
+
+        // test with Value
+
+        assertDoesNotThrow(() -> attribute.setAccessible(true),
+                "Konnte nicht auf Attribut zugreifen:" + attribute.getName());
+
+        resolveInstance();
+
+        var expectedReturnValue = getRandomValue(attribute.getType());
+        assertDoesNotThrow(() -> attribute.set(getClassInstance(), expectedReturnValue));
+        var returnValue = methodTester.invoke();
+        assertEquals(expectedReturnValue, returnValue, "Falsche Rückgabe der Getter-Metode.");
+    }
+
     public void assertImplementsInterfaces(ArrayList<IdentifierMatcher> implementsInterfaces) {
         assertClassResolved();
         var interfaces = new ArrayList<>(List.of(theClass.getInterfaces()));
@@ -313,14 +338,60 @@ public class ClassTester<T> {
      * @return the Default Value for the given Type
      */
     public static Object getDefaultValue(Class<?> type) {
-        if (List.of(byte.class, short.class, int.class, long.class, float.class, double.class).contains(type)) {
+        if (type == byte.class || type == Byte.class) {
+            return (byte) 0;
+        } else if (type == short.class || type == Short.class) {
+            return (short) 0;
+        } else if (type == int.class || type == Integer.class) {
             return 0;
+        } else if (type == long.class || type == Long.class) {
+            return (long) 0;
+        } else if (type == float.class || type == Float.class) {
+            return (float) 0;
+        } else if (type == double.class || type == Double.class) {
+            return (double) 0;
+        } else if (type == char.class || type == Character.class) {
+            return (char) 0;
         } else if (type == char.class) {
             return 'a';
         } else if (type == boolean.class) {
             return false;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Returns the Random Value for the given Type
+     *
+     * @param type the Type Class
+     * @return the Random Value for the given Type
+     */
+    @SuppressWarnings("unchecked")
+    public static Object getRandomValue(Class<?> type) {
+        if (type == null) {
+            return null;
+        }
+        if (type == byte.class || type == Byte.class) {
+            return (byte) ThreadLocalRandom.current().nextInt(Byte.MIN_VALUE, Byte.MAX_VALUE);
+        } else if (type == short.class || type == Short.class) {
+            return (short) ThreadLocalRandom.current().nextInt(Short.MIN_VALUE, Short.MAX_VALUE);
+        } else if (type == int.class || type == Integer.class) {
+            return ThreadLocalRandom.current().nextInt(Integer.MIN_VALUE, Integer.MAX_VALUE);
+        } else if (type == long.class || type == Long.class) {
+            return ThreadLocalRandom.current().nextLong(Long.MIN_VALUE, Long.MAX_VALUE);
+        } else if (type == float.class || type == Float.class) {
+            return ThreadLocalRandom.current().nextFloat(Float.MIN_VALUE, Float.MAX_VALUE);
+        } else if (type == double.class || type == Double.class) {
+            return ThreadLocalRandom.current().nextDouble(Double.MIN_VALUE, Double.MAX_VALUE);
+        } else if (type == char.class || type == Character.class) {
+            return (char) ThreadLocalRandom.current().nextInt(Character.MIN_VALUE, Character.MAX_VALUE);
+        } else if (type == boolean.class) {
+            return ThreadLocalRandom.current().nextBoolean();
+        } else if (type.isEnum()) {
+            return getRandomEnumConstant((Class<Enum<?>>) type, type.getName());
+        } else {
+            return resolveInstance(type, type.getName() + "Impl" + ThreadLocalRandom.current().nextInt(1000, 10000));
         }
     }
 

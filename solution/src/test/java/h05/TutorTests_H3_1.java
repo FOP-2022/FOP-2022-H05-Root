@@ -45,22 +45,7 @@ public class TutorTests_H3_1 {
         Field distanceSoFarField = classTester
                 .resolveAttribute(new AttributeMatcher("distanceSoFar", 0.8, Modifier.PRIVATE, double.class));
 
-        var methodTester = new MethodTester(classTester, "getDistanceSoFar", 0.8, Modifier.PUBLIC, double.class,
-                new ArrayList<>());
-        methodTester.resolveMethod();
-        methodTester.assertAccessModifier();
-        methodTester.assertParametersMatch();
-        methodTester.assertReturnType();
-
-        assertDoesNotThrow(() -> distanceSoFarField.setAccessible(true));
-
-        Object OstrichInstance = classTester.resolveInstance();
-        classTester.setClassInstance(OstrichInstance);
-
-        // var instance = classTester.resolveInstance();
-        assertDoesNotThrow(() -> distanceSoFarField.set(OstrichInstance, 69420d));
-        var returnValue = methodTester.invoke();
-        assertEquals(69420d, returnValue, "Falsche Rückgabe der Getter-Metode.");
+        classTester.assertHasGetter(distanceSoFarField);
     }
 
     @Test
@@ -130,12 +115,12 @@ public class TutorTests_H3_1 {
         classTester.setClassInstance(ostrichInstance);
 
         // var instance = classTester.resolveInstance
-        double initialDistance = ThreadLocalRandom.current().nextDouble(1000, 10000);
+        double initialDistance = (double) ClassTester.getRandomValue(double.class);
         assertDoesNotThrow(() -> distanceSoFarField.set(ostrichInstance, initialDistance));
 
         var returnValue = methodTester.invoke();
-        assertEquals(String.format("Distance so far: %s", initialDistance + 1), returnValue,
+        assertEquals(String.format("Distance so far: %s", initialDistance + 1d), returnValue,
                 "Falsche Rückgabe bei Methode distanceSoFar:");
-        assertEquals(initialDistance + 1, assertDoesNotThrow(() -> distanceSoFarField.get(ostrichInstance)));
+        assertEquals(initialDistance + 1d, assertDoesNotThrow(() -> distanceSoFarField.get(ostrichInstance)));
     }
 }
