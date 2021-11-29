@@ -381,7 +381,7 @@ public class ClassTester<T> {
         } else if (type == long.class || type == Long.class) {
             return ThreadLocalRandom.current().nextLong(Long.MIN_VALUE, Long.MAX_VALUE);
         } else if (type == float.class || type == Float.class) {
-            return ThreadLocalRandom.current().nextFloat(Float.MIN_VALUE, Float.MAX_VALUE);
+            return (float) ThreadLocalRandom.current().nextDouble(Float.MIN_VALUE, Float.MAX_VALUE);
         } else if (type == double.class || type == Double.class) {
             return ThreadLocalRandom.current().nextDouble(Double.MIN_VALUE, Double.MAX_VALUE);
         } else if (type == char.class || type == Character.class) {
