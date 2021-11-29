@@ -73,14 +73,12 @@ public class Shark extends Animal implements Swimming, IntConsumer {
 
     @Override
     public boolean canLiveInSaltWater() {
-        degreeOfHunger++;
         return IntStream.of(2, 5, 9).anyMatch(x -> x == specificSpecies);
     }
 
     @Override
     public boolean canLiveInFreshWater() {
-        degreeOfHunger++;
-        return specificSpecies % 4 == 2;
+        return Math.abs(specificSpecies % 4) == 2;
         // return specificSpecies % 2 == 0 && specificSpecies % 4 != 0;
     }
 

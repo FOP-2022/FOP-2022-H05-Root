@@ -236,6 +236,11 @@ public class MethodTester {
         return returnValue;
     }
 
+    public void assertReturnValueEquals(Object expected, String additionalMessage, Object... params) {
+        assertEquals(expected, invoke(params), "Falsche Rückgabe bei Methode" + getMethodIdentifier().identifierName
+                + (params.length > 0 ? "mit Parameter(n):" + Arrays.toString(params) : "") + additionalMessage);
+    }
+
     public int getAccessModifier() {
         return accessModifier;
     }

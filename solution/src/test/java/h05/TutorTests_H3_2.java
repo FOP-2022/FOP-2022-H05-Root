@@ -2,12 +2,14 @@ package h05;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,5 +55,49 @@ public class TutorTests_H3_2 {
         Field degreeOfHungerField = classTester
                 .resolveAttribute(new AttributeMatcher("degreeOfHunger", 1.0, Modifier.PRIVATE, int.class));
         classTester.assertHasGetter(degreeOfHungerField);
+    }
+
+    @Test
+    @DisplayName("4 | canLiveInSaltWater mit Hungerreduktion")
+    public void t04() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8);
+        classTester.resolveClass();
+        classTester.resolveInstance();
+        Field specificSpeciesField = classTester
+                .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
+        MethodTester mt = new MethodTester(classTester, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class,
+                new ArrayList<>(List.of(
+                // new ParameterMatcher("reductionOfHunger",0.8,int.class)
+                )));
+        mt.resolveMethod();
+        for (int i = -20; i <= 20; i++) {
+            var specificSpecies = i;
+            classTester.setField(specificSpeciesField, (short) specificSpecies);
+            mt.assertReturnValueEquals(IntStream.of(2, 5, 9).anyMatch(x -> x == specificSpecies),
+                    "bei " + specificSpeciesField.getName() + "==" + i);
+            classTester.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
+        }
+    }
+
+    @Test
+    @DisplayName("5 | canLiveInFreshWater mit Hungerreduktion")
+    public void t05() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8);
+        classTester.resolveClass();
+        classTester.resolveInstance();
+        Field specificSpeciesField = classTester
+                .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
+        MethodTester mt = new MethodTester(classTester, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class,
+                new ArrayList<>(List.of(
+                // new ParameterMatcher("reductionOfHunger",0.8,int.class)
+                )));
+        mt.resolveMethod();
+        for (int i = -20; i <= 20; i++) {
+            var specificSpecies = i;
+            classTester.setField(specificSpeciesField, (short) specificSpecies);
+            mt.assertReturnValueEquals(Math.abs(specificSpecies % 4) == 2,
+                    "bei " + specificSpeciesField.getName() + "==" + i);
+            classTester.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
+        }
     }
 }

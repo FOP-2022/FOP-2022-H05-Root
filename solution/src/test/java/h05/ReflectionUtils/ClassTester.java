@@ -502,6 +502,26 @@ public class ClassTester<T> {
         return classInstance = resolveInstance(theClass, classIdentifier.identifierName);
     }
 
+    public void setField(Field field, Object value) {
+        assertNotNull(field, "Das Feld wurde nicht gefunden.");
+        assertclassInstanceResolved();
+        assertDoesNotThrow(() -> {
+            field.setAccessible(true);
+            field.set(getClassInstance(), value);
+        }, "Konnte nicht auf Attribut " + field.getName() + " zugreifen.");
+
+    }
+
+    public Object getFieldValue(Field field) {
+        assertNotNull(field, "Das Feld wurde nicht gefunden.");
+        assertclassInstanceResolved();
+        return assertDoesNotThrow(() -> field.get(getClassInstance()));
+    }
+
+    public void assertFieldEquals(Field field, Object expected) {
+        assertEquals(expected, getFieldValue(field), "Das Attribut " + field.getName() + " hat den Falschen Wert.");
+    }
+
     public static void assertIsInterface(Class<?> theClass, String className) {
         assertClassNotNull(theClass, className);
         assertTrue(theClass.isInterface(), String.format("%s ist kein Interface.", className));
