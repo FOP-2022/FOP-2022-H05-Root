@@ -24,6 +24,6 @@ public abstract class Animal {
     public String toString() {
         return String.format("My species is called %s which is part of animal type %s.",
         getClass().getSimpleName(),
-                animalType.name().substring(0, 1) + animalType.name().substring(1).toLowerCase());
+                animalType == null ? "Null" : animalType.name().substring(0, 1) + animalType.name().substring(1).toLowerCase());
     }
 }

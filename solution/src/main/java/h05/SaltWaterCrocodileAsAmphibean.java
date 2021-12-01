@@ -5,7 +5,7 @@ package h05;
  *
  * @author Ruben Deisenroth
  */
-public class SaltWaterCrocodileAsAmphibean implements Amphibean {
+public class SaltWaterCrocodileAsAmphibean implements Amphibean, Cloneable {
 
     /**
      * The {@link SaltWaterCrocodile}
@@ -30,10 +30,11 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean {
                 && salty == ((SaltWaterCrocodileAsAmphibean) obj).salty;
     }
 
-    @Override
-    protected Object clone() {
-        return new SaltWaterCrocodileAsAmphibean(salty);
-    }
+    // Alternative Solution, if Clonable was not implemented
+    // @Override
+    // protected Object clone() throws CloneNotSupportedException {
+    // return new SaltWaterCrocodileAsAmphibean(salty);
+    // }
 
     @Override
     public byte getNumberOfLegs() {

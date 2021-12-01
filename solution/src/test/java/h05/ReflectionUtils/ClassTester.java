@@ -897,11 +897,23 @@ public class ClassTester<T> {
     /**
      * Asserts that a given field has a certain value
      *
+     * @param field             the field
+     * @param expected          the expected Value
+     * @param additionalMessage an Addition Error Message
+     */
+    public void assertFieldEquals(Field field, Object expected, String additionalMessage) {
+        assertEquals(expected, getFieldValue(field), "Das Attribut " + field.getName() + " hat den Falschen Wert."
+                + (additionalMessage == null ? "" : "\n" + additionalMessage));
+    }
+
+    /**
+     * Asserts that a given field has a certain value
+     *
      * @param field    the field
      * @param expected the expected Value
      */
     public void assertFieldEquals(Field field, Object expected) {
-        assertEquals(expected, getFieldValue(field), "Das Attribut " + field.getName() + " hat den Falschen Wert.");
+        assertFieldEquals(field, expected, "");
     }
 
     /**

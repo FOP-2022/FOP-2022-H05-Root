@@ -93,7 +93,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     public String letMeMove() {
         degreeOfHunger++;
         int oldX = x, oldY = y;
-        letMeSwim((char) ThreadLocalRandom.current().nextInt(0, 5), ThreadLocalRandom.current().nextInt(1, 6),
+        letMeSwim((char) ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(1, 6),
                 ThreadLocalRandom.current().nextInt(1, 6));
         return String.format("%d -> %d and %d -> %d", oldX, oldY, x, y);
     }

@@ -123,4 +123,20 @@ public class TutorTests_H3_1 {
                 "Falsche Rückgabe bei Methode distanceSoFar:");
         assertEquals(initialDistance + 1d, assertDoesNotThrow(() -> distanceSoFarField.get(ostrichInstance)));
     }
+
+    @Test
+    @DisplayName("7 | Konstruktor")
+    public void t07() {
+        var classTester = new ClassTester<>("h05", "Ostrich", 0.8);
+        classTester.resolveClass();
+        var constructor = classTester.resolveConstructor();
+        classTester.assertConstructorValid(constructor, Modifier.PUBLIC);
+
+        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8);
+        enumClassTester.resolveClass();
+        Field animalTypeField = classTester.resolveAttribute(
+                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(), true));
+        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
+        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("AVES", 0.8));
+    }
 }

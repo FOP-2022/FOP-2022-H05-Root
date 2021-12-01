@@ -76,6 +76,7 @@ public class TutorTests_H2 {
         Object animalInstance = classTester.resolveInstance();
         classTester.setClassInstance(animalInstance);
 
+        // Normal
         var expectedAnimalType = enumClassTester.getRandomEnumConstant();
         var expectedAnswer = String.format("My species is called %s which is part of animal type %s.",
                 animalInstance.getClass().getSimpleName(),
@@ -83,5 +84,10 @@ public class TutorTests_H2 {
         assertDoesNotThrow(() -> animalTypeField.set(animalInstance, expectedAnimalType));
         var returnValue = methodTester.invoke();
         assertEquals(expectedAnswer, returnValue, "Falsche Rückgabe der toString-Metode.");
+        // Null
+        expectedAnswer = String.format("My species is called %s which is part of animal type Null.",
+                animalInstance.getClass().getSimpleName());
+        classTester.setField(animalTypeField, null);
+        assertEquals(expectedAnswer, methodTester.invoke(), "Falsche Rückgabe der toString-Metode.");
     }
 }

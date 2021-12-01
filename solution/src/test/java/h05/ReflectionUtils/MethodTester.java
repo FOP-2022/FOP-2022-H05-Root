@@ -502,7 +502,7 @@ public class MethodTester {
             returnValue = theMethod.invoke(classTester.getClassInstance(), params);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             e.printStackTrace();
-            fail("Method Could not be invoked.");
+            fail("Method Could not be invoked.", e);
         }
         return returnValue;
     }
