@@ -1,18 +1,22 @@
 package h05.ReflectionUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -29,14 +33,44 @@ import h05.TestUtils;
  * @author Ruben Deisenroth
  */
 public class ClassTester<T> {
+    /**
+     * The Class Identifier (Containing Name, Similarity)
+     */
     IdentifierMatcher classIdentifier;
+    /**
+     * The resolved Class that will be tested
+     */
     Class<T> theClass;
+    /**
+     * The Expected Access Modifier
+     */
     int accessModifier;
+    /**
+     * The Expected Super class
+     */
     private Class<? super T> superClass;
+    /**
+     * Matchers for the Interfaces that are expected to be implemented
+     */
     private ArrayList<IdentifierMatcher> implementsInterfaces;
 
+    /**
+     * The Class Instance of the Class Being Tested
+     */
     T classInstance;
 
+    /**
+     * Creates a new {@link ClassTester}
+     *
+     * @param packageName          the Package Name of the Class
+     * @param className            The Class Name
+     * @param similarity           The Maximum Name Similarity for matching
+     * @param accessModifier       The Expected Access Modifier
+     * @param superClass           The Expected Super Class
+     * @param implementsInterfaces Matchers for the Interfaces that are expected to
+     *                             be implemented
+     * @param classInstance        The Class Instance of the Class Being Tested
+     */
     public ClassTester(String packageName, String className, double similarity, int accessModifier,
             Class<? super T> superClass, ArrayList<IdentifierMatcher> implementsInterfaces, T classInstance) {
         this.classIdentifier = new IdentifierMatcher(className, packageName, similarity);
@@ -46,19 +80,51 @@ public class ClassTester<T> {
         this.classInstance = classInstance;
     }
 
+    /**
+     * Creates a new {@link ClassTester}
+     *
+     * @param packageName          the Package Name of the Class
+     * @param className            The Class Name
+     * @param similarity           The Maximum Name Similarity for matching
+     * @param accessModifier       The Expected Access Modifier
+     * @param superClass           The Expected Super Class
+     * @param implementsInterfaces Matchers for the Interfaces that are expected to
+     *                             be implemented
+     */
     public ClassTester(String packageName, String className, double similarity, int accessModifier,
             Class<? super T> superClass, ArrayList<IdentifierMatcher> implementsInterfaces) {
         this(packageName, className, similarity, accessModifier, superClass, implementsInterfaces, null);
     }
 
+    /**
+     * Creates a new {@link ClassTester}
+     *
+     * @param packageName    the Package Name of the Class
+     * @param className      The Class Name
+     * @param similarity     The Maximum Name Similarity for matching
+     * @param accessModifier The Expected Access Modifier
+     */
     public ClassTester(String packageName, String className, double similarity, int accessModifier) {
         this(packageName, className, similarity, accessModifier, null, new ArrayList<>(), null);
     }
 
+    /**
+     * Creates a new {@link ClassTester}
+     *
+     * @param packageName the Package Name of the Class
+     * @param className   The Class Name
+     * @param similarity  The Maximum Name Similarity for matching
+     */
     public ClassTester(String packageName, String className, double similarity) {
         this(packageName, className, similarity, -1, null, new ArrayList<>(), null);
     }
 
+    /**
+     * Creates a new {@link ClassTester}
+     *
+     * @param packageName the Package Name of the Class
+     * @param className   The Class Name
+     */
     public ClassTester(String packageName, String className) {
         this(packageName, className, 1, -1, null, new ArrayList<>(), null);
     }
@@ -90,6 +156,11 @@ public class ClassTester<T> {
         this.implementsInterfaces = implementsInterfaces;
     }
 
+    /**
+     * Adds an Interface Matcher to the {@link #implementsInterfaces} List
+     *
+     * @param interfaceMatcher the InterfaceMatcher
+     */
     public void addImplementsInterface(IdentifierMatcher interfaceMatcher) {
         if (implementsInterfaces == null) {
             implementsInterfaces = new ArrayList<>();
@@ -97,18 +168,73 @@ public class ClassTester<T> {
         implementsInterfaces.add(interfaceMatcher);
     }
 
+    /**
+     * Adds an Interface Matcher to the {@link #implementsInterfaces} List
+     *
+     * @param interfaceName the InterfaceMatcher
+     * @param similarity    the Maximum similarity allowed
+     */
     public void addImplementsInterface(String interfaceName, Double similarity) {
         addImplementsInterface(new IdentifierMatcher(interfaceName, similarity));
     }
 
+    /**
+     * Adds an Interface Matcher to the {@link #implementsInterfaces} List
+     *
+     * @param interfaceName the InterfaceMatcher
+     */
     public void addImplementsInterface(String interfaceName) {
         addImplementsInterface(interfaceName, null);
     }
 
+    /**
+     * Gets all Fields from a given Class and its superclasses recursively
+     *
+     * @param fields the fields so far (initially give it new ArrayList<>())
+     * @param clazz  the Class to search
+     * @return all Fields from a given Class and its superclasses recursively
+     */
+    private static ArrayList<Field> getAllFields(ArrayList<Field> fields, Class<?> clazz) {
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        if (clazz.getSuperclass() != null) {
+            getAllFields(fields, clazz.getSuperclass());
+        }
+
+        return fields;
+    }
+
+    /**
+     * Gets all Fields from a given Class and its superclasses recursively
+     *
+     * @param clazz the Class to search
+     * @return all Fields from a given Class and its superclasses recursively
+     */
+    public static ArrayList<Field> getAllFields(Class<?> clazz) {
+        return getAllFields(new ArrayList<>(), clazz);
+    }
+
+    /**
+     * Gets all Fields from {@link #theClass} and its superclasses recursively
+     *
+     * @return all Fields from from {@link #theClass} and its superclasses
+     *         recursively
+     */
+    public ArrayList<Field> getAllFields() {
+        return getAllFields(new ArrayList<>(), getTheClass());
+    }
+
+    /**
+     * Resolves An Attribute with a given {@link AttributeMatcher}.
+     *
+     * @param matcher the {@link AttributeMatcher}
+     * @return the Attribute-{@link Field}
+     */
     public Field resolveAttribute(AttributeMatcher matcher) {
         assertClassResolved();
-        var fields = theClass.getDeclaredFields();
-        Field bestMatch = Arrays.stream(fields)
+        ArrayList<Field> fields = matcher.allowSuperClass ? getAllFields(theClass)
+                : new ArrayList<>(Arrays.asList(theClass.getDeclaredFields()));
+        Field bestMatch = fields.stream()
                 .sorted((x, y) -> Double.valueOf(TestUtils.similarity(y.getName(), matcher.identifierName))
                         .compareTo(TestUtils.similarity(x.getName(), matcher.identifierName)))
                 .findFirst().orElse(null);
@@ -123,6 +249,11 @@ public class ClassTester<T> {
         return bestMatch;
     }
 
+    /**
+     * Asserts that a given attribute has a getter
+     *
+     * @param attribute the Attribute-{@link Field}
+     */
     public void assertHasGetter(Field attribute) {
         assertNotNull(attribute);
 
@@ -148,6 +279,12 @@ public class ClassTester<T> {
         assertEquals(expectedReturnValue, returnValue, "Falsche Rückgabe der Getter-Metode.");
     }
 
+    /**
+     * asserts that all the interfaces described by the given matchers are being
+     * extended
+     *
+     * @param implementsInterfaces the Interface-Matchers
+     */
     public void assertImplementsInterfaces(ArrayList<IdentifierMatcher> implementsInterfaces) {
         assertClassResolved();
         var interfaces = new ArrayList<>(List.of(theClass.getInterfaces()));
@@ -173,34 +310,74 @@ public class ClassTester<T> {
         }
     }
 
+    /**
+     * asserts that all the interfaces described by {@link #implementsInterfaces}
+     * are being extended
+     */
     public void assertImplementsInterfaces() {
         assertImplementsInterfaces(implementsInterfaces);
     }
 
+    /**
+     * asserts that {@link #theClass} does not extend any interfaces
+     */
     public void assertDoesNotImplementAnyInterfaces() {
         assertImplementsInterfaces(null);
     }
 
+    /**
+     * Returns true if {@link #theClass} is not null
+     *
+     * @return true if {@link #theClass} is not null
+     */
     public boolean class_resolved() {
         return theClass != null;
     }
 
+    /**
+     * Generates a class not found Message
+     *
+     * @param className the Class Name
+     * @return a class not found Message
+     */
     public static String getClassNotFoundMessage(String className) {
         return String.format("Klasse %s existiert nicht.", className);
     }
 
+    /**
+     * Generates a class not found Message
+     *
+     * @return a class not found Message
+     */
     public String getClassNotFoundMessage() {
         return getClassNotFoundMessage(classIdentifier.identifierName);
     }
 
+    /**
+     * Generates a Interface not found Message
+     *
+     * @param interfaceName the Interface Name
+     * @return a Interface not found Message
+     */
     public static String getInterfaceNotImplementedMessage(String interfaceName) {
         return String.format("Interface %s wird nicht erweitert.", interfaceName);
     }
 
+    /**
+     * Asserts that a given Class is not {@code null} and fails with the propper
+     * message if not
+     *
+     * @param theClass  the {@link Class}
+     * @param className the Class Name for the error Message
+     */
     public static void assertClassNotNull(Class<?> theClass, String className) {
         assertNotNull(theClass, getClassNotFoundMessage(className));
     }
 
+    /**
+     * Asserts that {@link #theClass} is not {@code null} and fails with the propper
+     * message if not resolved
+     */
     public void assertClassResolved() {
         assertClassNotNull(theClass, classIdentifier.identifierName);
     }
@@ -232,40 +409,82 @@ public class ClassTester<T> {
         this.theClass = theClass;
     }
 
+    /**
+     * Gets the Value of {@link #accessModifier}
+     *
+     * @return the Value of {@link #accessModifier}
+     */
     public int getAccessModifier() {
         return accessModifier;
     }
 
+    /**
+     * Sets {@link #accessModifier} to the given Modifier
+     *
+     * @param accessModifier the new Modifier
+     */
     public void setAccessModifier(int accessModifier) {
         this.accessModifier = accessModifier;
     }
 
+    /**
+     * Asserts that the Access Modifier is correct, with propper Fail Message
+     */
     public void assertAccessModifier() {
         if (accessModifier >= 0) {
             TestUtils.assertModifier(accessModifier, theClass);
         }
     }
 
+    /**
+     * Gets the Value of {@link #classInstance}
+     *
+     * @return the Value of {@link #classInstance}
+     */
     public T getClassInstance() {
         return classInstance;
     }
 
+    /**
+     * Sets {@link #classInstance} to the given Value
+     *
+     * @param classInstance the new Class Instance
+     */
     public void setClassInstance(T classInstance) {
         this.classInstance = classInstance;
     }
 
+    /**
+     * Returns true if {@link #classInstance} is not {@code null}
+     *
+     * @return true if {@link #classInstance} is not {@code null}
+     */
     public boolean classInstanceResolved() {
         return classInstance != null;
     }
 
+    /**
+     * Asserts that {@link #classInstance} is not {@code null}
+     */
     public void assertclassInstanceResolved() {
         assertNotNull(classInstance, "Es wurde keine Klassen-Instanz gefunden.");
     }
 
+    /**
+     * Generates a Message for a Missing enum constant
+     *
+     * @param constantName the Constant name
+     * @return the generated Message
+     */
     public static String getEnumConstantMissingMessage(String constantName) {
         return String.format("Enum-Konstante %s fehlt.", constantName);
     }
 
+    /**
+     * Assert that enum Constants with the given names exist
+     *
+     * @param expectedConstants the enum Constants
+     */
     public void assertEnumConstants(String[] expectedConstants) {
         assertClassResolved();
         var enum_values = theClass.getEnumConstants();
@@ -275,6 +494,13 @@ public class ClassTester<T> {
         }
     }
 
+    /**
+     * Gets a random Enum Constant
+     *
+     * @param enumClass     the {@link Enum}-{@link Class}
+     * @param enumClassName the expected {@link Enum}-{@link Class}-Name
+     * @return the random Enum Constant
+     */
     public static Enum<?> getRandomEnumConstant(Class<Enum<?>> enumClass, String enumClassName) {
         assertIsEnum(enumClass, enumClassName);
         var enumConstants = enumClass.getEnumConstants();
@@ -284,16 +510,31 @@ public class ClassTester<T> {
         return enumConstants[ThreadLocalRandom.current().nextInt(enumConstants.length)];
     }
 
+    /**
+     * Gets a random Enum Constant
+     *
+     * @return the random Enum Constant
+     */
     @SuppressWarnings("unchecked")
     public Enum<?> getRandomEnumConstant() {
         assertIsEnum();
         return getRandomEnumConstant((Class<Enum<?>>) theClass, classIdentifier.identifierName);
     }
 
+    /**
+     * returns the Value of {@link #classIdentifier}
+     *
+     * @return the Value of {@link #classIdentifier}
+     */
     public IdentifierMatcher getClassIdentifier() {
         return classIdentifier;
     }
 
+    /**
+     * Sets {@link #classIdentifier} to the given Value
+     *
+     * @param classIdentifier the new Class Identifier
+     */
     public void setClassIdentifier(IdentifierMatcher classIdentifier) {
         this.classIdentifier = classIdentifier;
     }
@@ -323,10 +564,21 @@ public class ClassTester<T> {
         return theClass = (Class<T>) bestMatch;
     }
 
+    /**
+     * Resolves a Class With the current Class name and Similarity
+     *
+     * @return the resolved Class With the given name and similarity
+     */
     public Class<T> resolveClass() {
         return resolveClass(classIdentifier.packageName, classIdentifier.identifierName, classIdentifier.similarity);
     }
 
+    /**
+     * Resolves a Class With the given Similarity
+     *
+     * @param similarity The minimum required similarity
+     * @return the resolved Class With the given name and similarity
+     */
     public Class<T> resolveClass(double similarity) {
         return resolveClass(classIdentifier.packageName, classIdentifier.identifierName, similarity);
     }
@@ -395,6 +647,23 @@ public class ClassTester<T> {
         }
     }
 
+    /**
+     * Generates A derived Class from a given Class
+     *
+     * @param <T>              The Generic Class Type
+     * @param clazz            The source class
+     * @param className        the source Class Name
+     * @param derivedClassName the name for the derived Class
+     * @return the derived Class
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IllegalArgumentException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws SecurityException
+     */
     @SuppressWarnings("unchecked")
     public static <T> Class<? extends T> generateDerivedClass(Class<T> clazz, String className, String derivedClassName)
             throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException,
@@ -463,6 +732,14 @@ public class ClassTester<T> {
         return (Class<? extends T>) cls;
     }
 
+    /**
+     * Resolves an Instance of a given class (even abstract)
+     *
+     * @param <T>       The Instance type
+     * @param clazz     The class to generate the Instance from
+     * @param className the Class Name
+     * @return the instance
+     */
     @SuppressWarnings("unchecked")
     public static <T> T resolveInstance(Class<? super T> clazz, String className) {
         assertClassNotNull(clazz, className);
@@ -498,10 +775,87 @@ public class ClassTester<T> {
         return instance;
     }
 
+    /**
+     * Resolves an Instance of {@link #theClass} (even abstract)
+     *
+     * @param <T> The Instance type
+     * @return the instance
+     */
     public T resolveInstance() {
         return classInstance = resolveInstance(theClass, classIdentifier.identifierName);
     }
 
+    /**
+     * Resolves a Constructor with the given parameters
+     *
+     * @param parameters the Expected Parameters
+     * @return the best Match
+     */
+    @SuppressWarnings("unchecked")
+    public Constructor<T> resolveConstructor(ArrayList<ParameterMatcher> parameters) {
+        assertClassResolved();
+        Constructor<T>[] constructors = (Constructor<T>[]) assertDoesNotThrow(() -> theClass.getDeclaredConstructors());
+        assertTrue(constructors.length > 0, "Keine Konstruktoren gefunden.");
+        Constructor<T> bestMatch = null;
+        if (parameters != null && !parameters.isEmpty()) {
+            // Find Best match according to parameter options
+            bestMatch = Arrays.stream(constructors)
+                    .sorted((x, y) -> Integer
+                            .valueOf(MethodTester.countMatchingParameters(parameters,
+                                    new ArrayList<>(Arrays.asList(x.getParameters())), true))
+                            .compareTo(MethodTester.countMatchingParameters(parameters,
+                                    new ArrayList<>(Arrays.asList(x.getParameters())), true)))
+                    .findFirst().orElse(null);
+        } else {
+            bestMatch = Arrays.stream(constructors).filter(x -> x.getParameterCount() == 0).findFirst().orElse(null);
+        }
+        assertNotNull(bestMatch, "Der Passende Konstruktor wurde nicht gefunden");
+        return bestMatch;
+    }
+
+    /**
+     * Resolves a Constructor with the given parameters
+     *
+     * @param parameters the Expected Parameters
+     * @return the best Match
+     */
+    public Constructor<T> resolveConstructor(ParameterMatcher... parameters) {
+        return resolveConstructor(new ArrayList<>(Arrays.asList(parameters)));
+    }
+
+    /**
+     * Asserts that a {@link Constructor} was declared correctly
+     *
+     * @param constructor    the {@link Constructor}
+     * @param accessModifier the expected access Modifier
+     * @param parameters     the expected Parameters
+     */
+    public void assertConstructorValid(Constructor<T> constructor, int accessModifier,
+            ArrayList<ParameterMatcher> parameters) {
+        assertNotNull(constructor, "Der Passende Konstruktor wurde nicht gefunden");
+        TestUtils.assertModifier(accessModifier, constructor);
+        MethodTester.assertParametersMatch(parameters, new ArrayList<>(Arrays.asList(constructor.getParameters())),
+                true);
+    }
+
+    /**
+     * Asserts that a {@link Constructor} was declared correctly
+     *
+     * @param constructor    the {@link Constructor}
+     * @param accessModifier the expected access Modifier
+     * @param parameters     the expected Parameters
+     */
+    public void assertConstructorValid(Constructor<T> constructor, int accessModifier,
+            ParameterMatcher... parameters) {
+        assertConstructorValid(constructor, accessModifier, new ArrayList<>(Arrays.asList(parameters)));
+    }
+
+    /**
+     * Sets a field to {@link #classInstance}
+     *
+     * @param field the Field to modify
+     * @param value the new Value
+     */
     public void setField(Field field, Object value) {
         assertNotNull(field, "Das Feld wurde nicht gefunden.");
         assertclassInstanceResolved();
@@ -512,40 +866,134 @@ public class ClassTester<T> {
 
     }
 
+    /**
+     * Gets the Value of a given field of a given Instance
+     *
+     * @param instance the Class Instance
+     * @param field    the Field to get
+     * @return the Value
+     */
+    public static Object getFieldValue(Object instance, Field field) {
+        assertNotNull(field, "Das Feld wurde nicht gefunden.");
+        assertNotNull(instance, "Es wurde keine Klassen-Instanz gefunden.");
+        return assertDoesNotThrow(() -> field.get(instance));
+    }
+
+    /**
+     * Gets the Value of a given field of {@link #classInstance}
+     *
+     * @param field the Field to get
+     * @return the Value
+     */
     public Object getFieldValue(Field field) {
         assertNotNull(field, "Das Feld wurde nicht gefunden.");
         assertclassInstanceResolved();
+        if (!field.canAccess(getClassInstance())) {
+            assertDoesNotThrow(() -> field.setAccessible(true));
+        }
         return assertDoesNotThrow(() -> field.get(getClassInstance()));
     }
 
+    /**
+     * Asserts that a given field has a certain value
+     *
+     * @param field    the field
+     * @param expected the expected Value
+     */
     public void assertFieldEquals(Field field, Object expected) {
         assertEquals(expected, getFieldValue(field), "Das Attribut " + field.getName() + " hat den Falschen Wert.");
     }
 
+    /**
+     * Gets a specific Enum-Value
+     *
+     * @param <T>          The Generic Enum-Type
+     * @param enumClass    the Enum Class
+     * @param expectedName the expected Enum Class Name
+     * @param similarity   the min Similarity
+     * @return the specific Enum-Value
+     */
+    public static <T> Enum<?> getEnumValue(Class<Enum<?>> enumClass, String expectedName, double similarity) {
+        var enumConstants = enumClass.getEnumConstants();
+        var bestMatch = Arrays.stream(enumConstants).sorted((x, y) -> Double.valueOf(
+                TestUtils.similarity(expectedName, y.name())).compareTo(TestUtils.similarity(expectedName, x.name())))
+                .findFirst().orElse(null);
+        assertNotNull(bestMatch, "Enum-Wert" + expectedName + " existiert nicht.");
+        var sim = TestUtils.similarity(expectedName, bestMatch.name());
+        assertTrue(sim >= similarity,
+                "Enum-Wert" + expectedName + " existiert nicht. Ähnlichte Konstante:" + bestMatch.name());
+        return bestMatch;
+    }
+
+    /**
+     * Gets a specific Enum-Value
+     *
+     * @param expectedName the expected Enum Class Name
+     * @param similarity   the min Similarity
+     * @return the specific Enum-Value
+     */
+    @SuppressWarnings("unchecked")
+    public Enum<?> getEnumValue(String expectedName, double similarity) {
+        return getEnumValue((Class<Enum<?>>) theClass, expectedName, similarity);
+    }
+
+    /**
+     * asserts a given Class is an Interface
+     *
+     * @param theClass  the class to check
+     * @param className the expected Class Name
+     */
     public static void assertIsInterface(Class<?> theClass, String className) {
         assertClassNotNull(theClass, className);
         assertTrue(theClass.isInterface(), String.format("%s ist kein Interface.", className));
     }
 
+    /**
+     * asserts {@link #theClass} is an Interface
+     *
+     * @param className the expected Class Name
+     */
     public void assertIsInterface() {
         assertIsInterface(theClass, classIdentifier.identifierName);
     }
 
+    /**
+     * asserts a given Class is an Enum
+     *
+     * @param theClass  the class to check
+     * @param className the expected Class Name
+     */
     public static void assertIsEnum(Class<?> theClass, String className) {
         assertClassNotNull(theClass, className);
         assertTrue(theClass.isEnum(), String.format("%s ist kein Enum.", className));
     }
 
+    /**
+     * asserts {@link #theClass} is an Enum
+     *
+     * @param className the expected Class Name
+     */
     public void assertIsEnum() {
         assertIsEnum(theClass, classIdentifier.identifierName);
     }
 
+    /**
+     * asserts a given Class is a Plain Class
+     *
+     * @param theClass  the class to check
+     * @param className the expected Class Name
+     */
     public static void assertIsPlainClass(Class<?> theClass, String className) {
         assertClassNotNull(theClass, className);
         assertFalse(theClass.isInterface(), String.format("%s sollte kein Interface sein.", className));
         assertFalse(theClass.isEnum(), String.format("%s sollte kein Enum sein.", className));
     }
 
+    /**
+     * asserts {@link #theClass} is a Plain Class
+     *
+     * @param className the expected Plain Class
+     */
     public void assertIsPlainClass() {
         assertIsPlainClass(theClass, classIdentifier.identifierName);
     }

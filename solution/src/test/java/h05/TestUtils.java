@@ -1,19 +1,21 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import static java.lang.reflect.Modifier.*;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
+/**
+ * Test Utilities by Ruben
+ *
+ * @author Ruben Deisenroth
+ */
 public class TestUtils {
 
     public static final int BRIDGE = 0x00000040;
@@ -22,39 +24,6 @@ public class TestUtils {
     public static final int ANNOTATION = 0x00002000;
     public static final int ENUM = 0x00004000;
     public static final int MANDATED = 0x00008000;
-
-    /**
-     * Asserts that a given field has a getter method
-     *
-     * @param field the Field to check
-     */
-    public static void assertHasGetter(Field field, Object clazz_instance, Object testValue) {
-        // Existance
-        var clazz = clazz_instance.getClass();
-        var fieldName = field.getName();
-        System.out.println(fieldName);
-        var getter_name = String.format("get%s%s", fieldName.substring(0, 1).toUpperCase(), fieldName.substring(1));
-        var method = assertDoesNotThrow(() -> Stream.of(clazz.getDeclaredMethods())
-                .filter(x -> x.getName().equals(getter_name)).findFirst().orElseThrow(),
-                String.format("Getter existiert nicht: %s.", getter_name));
-
-        // Access Modifier
-        var mod = method.getModifiers();
-        var expected_mod = 1; // public
-        assertEquals(expected_mod, mod, String.format("Falscher Access Modifier. Gefordert: %s, Erhalten:%s",
-                Modifier.toString(expected_mod), Modifier.toString(mod)));
-
-        // Parameter
-        assertEquals(0, method.getParameterCount(), "Falsche Parameteranzahl.");
-
-        // Return Type
-        assertEquals(field.getType(), method.getReturnType());
-
-        // Return Value
-        field.setAccessible(true);
-        assertDoesNotThrow(() -> field.set(clazz_instance, testValue));
-        assertEquals(testValue, assertDoesNotThrow(() -> method.invoke(clazz_instance)));
-    }
 
     /**
      * Asserts matching Modifiers
@@ -68,57 +37,55 @@ public class TestUtils {
                 Modifier.toString(expected), Modifier.toString(actual)));
     }
 
+    /**
+     * Asserts matching Modifiers
+     *
+     * @param expected Erwarteter Wert
+     * @param clazz    Klasse mit Modifier
+     */
     public static void assertModifier(int expected, Class<?> clazz) {
         assertModifier(expected, clazz.getModifiers(), "Klasse " + clazz.getName());
     }
 
+    /**
+     * Asserts matching Modifiers
+     *
+     * @param expected Erwarteter Wert
+     * @param method   Methode mit Modifier
+     */
     public static void assertModifier(int expected, Method method) {
         assertModifier(expected, method.getModifiers(),
                 "Methode " + method.getDeclaringClass() + "." + method.getName());
     }
 
+    /**
+     * Asserts matching Modifiers
+     *
+     * @param expected    Erwarteter Wert
+     * @param constructor Konstruktor mit Modifier
+     */
+    public static void assertModifier(int expected, Constructor<?> constructor) {
+        assertModifier(expected, constructor.getModifiers(),
+                "Konstruktor " + constructor.getDeclaringClass() + "." + constructor.getName());
+    }
+
+    /**
+     * Asserts matching Modifiers
+     *
+     * @param expected Erwarteter Wert
+     * @param attribut Attribut mit Modifier
+     */
     public static void assertModifier(int expected, Field attribut) {
         assertModifier(expected, attribut.getModifiers(),
                 "Attribut " + attribut.getDeclaringClass() + "." + attribut.getName());
     }
 
-    // public static Modifier[] toModifierArray(int modifier) {
-    // var modifiers = new ArrayList<Modifier>();
-    // for(var currMod : new Modifier[]{Modifier.PUBLIC}){
-    // if((modifier & currMod) != 0){
-
-    // }
-    // }
-    // if ((mod & PUBLIC) != 0)
-    // sj.add("public");
-    // if ((mod & PROTECTED) != 0)
-    // sj.add("protected");
-    // if ((mod & PRIVATE) != 0)
-    // sj.add("private");
-
-    // /* Canonical order */
-    // if ((mod & ABSTRACT) != 0)
-    // sj.add("abstract");
-    // if ((mod & STATIC) != 0)
-    // sj.add("static");
-    // if ((mod & FINAL) != 0)
-    // sj.add("final");
-    // if ((mod & TRANSIENT) != 0)
-    // sj.add("transient");
-    // if ((mod & VOLATILE) != 0)
-    // sj.add("volatile");
-    // if ((mod & SYNCHRONIZED) != 0)
-    // sj.add("synchronized");
-    // if ((mod & NATIVE) != 0)
-    // sj.add("native");
-    // if ((mod & STRICT) != 0)
-    // sj.add("strictfp");
-    // if ((mod & INTERFACE) != 0)
-    // sj.add("interface");
-    // }
-
     /**
      * Calculates the similarity (a number within 0 and 1) between two strings.
+     *
+     * @param s1 String 1
+     * @param s2 String 2
+     * @return the similarity
      */
     public static double similarity(String s1, String s2) {
         String longer = s1, shorter = s2;
@@ -140,8 +107,15 @@ public class TestUtils {
 
     }
 
-    // Example implementation of the Levenshtein Edit Distance
-    // See http://rosettacode.org/wiki/Levenshtein_distance#Java
+    /**
+     * Calculates the similarity (a number within 0 and 1) between two strings.
+     *
+     * @param s1 string 1
+     * @param s2 string 2
+     * @return the calculated similarity (a number within 0 and 1) between two
+     *         strings.
+     * @see http://rosettacode.org/wiki/Levenshtein_distance#Java
+     */
     public static int editDistance(String s1, String s2) {
         s1 = s1.toLowerCase();
         s2 = s2.toLowerCase();
@@ -168,23 +142,14 @@ public class TestUtils {
         return costs[s2.length()];
     }
 
-    public static Class<?> findClass(String name, double maxSimilarity, int modifier, Class<?> superClass,
-            Class<?>[] implementInterfaces) {
-        return null;
-    }
-
-    public static Class<?> findClass(String name, int maxSimilarity) {
-        return findClass(name, maxSimilarity, -1, null, null);
-    }
-
     /**
      * Scans all classes accessible from the context class loader which belong to
      * the given package and subpackages.
      *
      * @param packageName The base package
      * @return The classes
-     * @throws ClassNotFoundException
-     * @throws IOException
+     * @throws ClassNotFoundException if the Classes were defined Faulty
+     * @throws IOException            if an IO Exception occirs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -210,7 +175,7 @@ public class TestUtils {
      * @param packageName The package name for classes found inside the base
      *                    directory
      * @return The classes
-     * @throws ClassNotFoundException
+     * @throws ClassNotFoundException if the Classes were defined Faulty
      */
     public static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
         var classes = new ArrayList<Class<?>>();

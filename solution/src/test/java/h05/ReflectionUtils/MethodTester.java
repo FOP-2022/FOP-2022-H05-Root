@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,14 +14,47 @@ import javax.management.RuntimeErrorException;
 
 import h05.TestUtils;
 
+/**
+ * A Method Tester
+ *
+ * @author Ruben Deisenroth
+ */
 public class MethodTester {
+    /**
+     * The Method-Identifier
+     */
     IdentifierMatcher methodIdentifier;
+    /**
+     * The resolved Method that will be tested
+     */
     Method theMethod;
+    /**
+     * The Expected Access Modifier
+     */
     int accessModifier;
+    /**
+     * The expected return Type
+     */
     private Class<?> returnType;
+    /**
+     * The expected parameters
+     */
     private ArrayList<ParameterMatcher> parameters;
+    /**
+     * A Class Tester (used for invoking)
+     */
     private ClassTester<?> classTester;
 
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester    A Class Tester (used for invoking)
+     * @param methodName     the expected method name
+     * @param similarity     the minimum matching similarity
+     * @param accessModifier The Expected Access Modifier
+     * @param returnType     The expected return Type
+     * @param parameters     The expected parameters
+     */
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier,
             Class<?> returnType, ArrayList<ParameterMatcher> parameters) {
         this.classTester = classTester;
@@ -30,56 +64,134 @@ public class MethodTester {
         this.parameters = parameters;
     }
 
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester    A Class Tester (used for invoking)
+     * @param methodName     the expected method name
+     * @param similarity     the minimum matching similarity
+     * @param accessModifier The Expected Access Modifier
+     * @param returnType     The expected return Type
+     */
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier,
             Class<?> returnType) {
         this(classTester, methodName, similarity, accessModifier, returnType, null);
     }
 
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester    A Class Tester (used for invoking)
+     * @param methodName     the expected method name
+     * @param similarity     the minimum matching similarity
+     * @param accessModifier The Expected Access Modifier
+     */
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier) {
         this(classTester, methodName, similarity, accessModifier, null, null);
     }
 
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester A Class Tester (used for invoking)
+     * @param methodName  the expected method name
+     * @param similarity  the minimum matching similarity
+     * @param returnType  The expected return Type
+     * @param parameters  The expected parameters
+     */
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity, Class<?> returnType,
             ArrayList<ParameterMatcher> parameters) {
         this(classTester, methodName, similarity, -1, returnType, parameters);
     }
 
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester A Class Tester (used for invoking)
+     * @param methodName  the expected method name
+     * @param similarity  the minimum matching similarity
+     */
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity) {
         this(classTester, methodName, similarity, -1, null);
     }
 
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester A Class Tester (used for invoking)
+     * @param methodName  the expected method name
+     */
     public MethodTester(ClassTester<?> classTester, String methodName) {
         this(classTester, methodName, 1, -1, null);
     }
 
+    /**
+     * returns the Value of {@link #classTester}
+     *
+     * @return the Value of {@link #classTester}
+     */
     public ClassTester<?> getClassTester() {
         return classTester;
     }
 
+    /**
+     * Set {@link #classTester} to the given value
+     *
+     * @param classTester the new Class Tester
+     */
     public void setClassTester(ClassTester<?> classTester) {
         this.classTester = classTester;
     }
 
+    /**
+     * returns the Value of {@link #methodIdentifier}
+     *
+     * @return the Value of {@link #methodIdentifier}
+     */
     public IdentifierMatcher getMethodIdentifier() {
         return methodIdentifier;
     }
 
+    /**
+     * Set {@link #methodIdentifier} to the given value
+     *
+     * @param classTester the new method Identifier
+     */
     public void setMethodIdentifier(IdentifierMatcher methodIdentifier) {
         this.methodIdentifier = methodIdentifier;
     }
 
+    /**
+     * returns the Value of {@link #returnType}
+     *
+     * @return the Value of {@link #returnType}
+     */
     public Class<?> getReturnType() {
         return returnType;
     }
 
+    /**
+     * Set {@link #returnType} to the given value
+     *
+     * @param classTester the new return Type
+     */
     public void setReturnType(Class<?> returnType) {
         this.returnType = returnType;
     }
 
+    /**
+     * Generates a Message for an invalid return type
+     *
+     * @param methodName the Method name
+     * @return the generated Message
+     */
     public static String getInvalidReturnTypeMessage(String methodName) {
         return String.format("falscher Rückgabetyp für Methode %s", methodName);
     }
 
+    /**
+     * asserts that the Return type matches the expected return Type
+     */
     public void assertReturnType() {
         if (returnType == null) {
             throw new RuntimeErrorException(new Error(), "Faulty Test: Cannot assert return type null");
@@ -88,22 +200,47 @@ public class MethodTester {
         assertSame(returnType, theMethod.getReturnType(), getInvalidReturnTypeMessage(methodIdentifier.identifierName));
     }
 
+    /**
+     * returns the Value of {@link #parameters}
+     *
+     * @return the Value of {@link #parameters}
+     */
     public ArrayList<ParameterMatcher> getParameters() {
         return parameters;
     }
 
+    /**
+     * Set {@link #parameters} to the given value
+     *
+     * @param classTester the new parameters
+     */
     public void setParameters(ArrayList<ParameterMatcher> parameters) {
         this.parameters = parameters;
     }
 
+    /**
+     * returns the Value of {@link #theMethod}
+     *
+     * @return the Value of {@link #theMethod}
+     */
     public Method getTheMethod() {
         return theMethod;
     }
 
+    /**
+     * Set {@link #theMethod} to the given value
+     *
+     * @param classTester the new Method
+     */
     public void setTheMethod(Method theMethod) {
         this.theMethod = theMethod;
     }
 
+    /**
+     * Adds expected Parameter Matchers to {@link #parameters}
+     *
+     * @param interfaceMatcher the Interface Metchers to add
+     */
     public void addParameter(ParameterMatcher... interfaceMatcher) {
         if (parameters == null) {
             parameters = new ArrayList<>();
@@ -111,29 +248,52 @@ public class MethodTester {
         parameters.addAll(Arrays.asList(interfaceMatcher));
     }
 
+    /**
+     * Adds expected Parameter Matchers to {@link #parameters}
+     *
+     * @param type       The expected parameter type
+     * @param name       The Name to match
+     * @param similarity The Minimum similarity required
+     */
     public void addParameter(Class<?> type, String name, double similarity) {
         addParameter(new ParameterMatcher(name, similarity, type));
     }
 
+    /**
+     * Adds expected Parameter Matchers to {@link #parameters}
+     *
+     * @param type The expected parameter type
+     */
     public void addParameter(Class<?> type) {
         addParameter(new ParameterMatcher(null, 1, type));
     }
 
+    /**
+     * Generates a Should Not Have Parameter Message
+     *
+     * @param methodName the Method name
+     * @return the generated Message
+     */
     public static String getShouldNotHaveParameterMessage(String methodName) {
         return String.format("Methode %s sollte keine Parameter haben.", methodName);
     }
 
-    public static int countMatchingParameters(Method m, String methodName, ArrayList<ParameterMatcher> parameters,
+    /**
+     * Counts the matching Parameters
+     *
+     * @param expectedParametes the Expected Parameter List
+     * @param actualParameters  the Actual Parameter List
+     * @param ignoreNames       whether to ignore Parameter Names
+     * @return the Amount of matching Parameters
+     */
+    public static int countMatchingParameters(
+            ArrayList<ParameterMatcher> expectedParametes,
+            ArrayList<Parameter> actualParameters,
             boolean ignoreNames) {
-        assertMethodNotNull(m, methodName);
-        if (parameters == null || parameters.isEmpty()) {
-            return 0;
-        }
         int count = 0;
-        var params = new ArrayList<>(List.of(m.getParameters()));
-        for (int i = 0; i < parameters.size(); i++) {
-            var matcher = parameters.get(i);
-            var param = params.get(i);
+        for (int i = 0; i < expectedParametes.size(); i++) {
+            var matcher = expectedParametes.get(i);
+            var param = actualParameters.get(i);
             if (param.getType() != matcher.parameterType) {
                 continue;
             }
@@ -147,17 +307,43 @@ public class MethodTester {
         return count;
     }
 
-    public static void assertParametersMatch(Method m, String methodName, ArrayList<ParameterMatcher> parameters,
+    /**
+     * Counts the matching Parameters
+     *
+     * @param m           The Method to verify
+     * @param methodName  The expected Method name
+     * @param parameters  the Expected Parameter List
+     * @param ignoreNames whether to ignore Parameter Names
+     * @return the Amount of matching Parameters
+     */
+    public static int countMatchingParameters(Method m, String methodName, ArrayList<ParameterMatcher> parameters,
             boolean ignoreNames) {
         assertMethodNotNull(m, methodName);
-        var params = new ArrayList<>(List.of(m.getParameters()));
         if (parameters == null || parameters.isEmpty()) {
-            assertTrue(params == null || params.isEmpty(), "Es sollen keine Interfaces implementiert werden.");
+            return 0;
+        }
+        return countMatchingParameters(parameters, new ArrayList<>(List.of(m.getParameters())), ignoreNames);
+    }
+
+    /**
+     * assert that the Method Parameters match
+     *
+     * @param expectedParameters the expected Parameter List
+     * @param actualParamters    the actual Parameter List
+     * @param ignoreNames        whether to ignore Parameter Names
+     */
+    public static void assertParametersMatch(ArrayList<ParameterMatcher> expectedParameters,
+            ArrayList<Parameter> actualParamters,
+            boolean ignoreNames) {
+
+        if (expectedParameters == null || expectedParameters.isEmpty()) {
+            assertTrue(actualParamters == null || actualParamters.isEmpty(),
+                    "Es sollen keine Interfaces implementiert werden.");
         } else {
-            for (int i = 0; i < parameters.size(); i++) {
-                var matcher = parameters.get(i);
-                assertTrue(i < params.size(), String.format("Methode %s hat zu wenige Parameter.", methodName));
-                var param = params.get(i);
+            for (int i = 0; i < expectedParameters.size(); i++) {
+                var matcher = expectedParameters.get(i);
+                assertTrue(i < actualParamters.size(), "Zu wenige Parameter.");
+                var param = actualParamters.get(i);
                 assertSame(param.getType(), matcher.parameterType, "Falscher Parametertyp an Index " + "i.");
                 if (!ignoreNames && param.isNamePresent() && matcher.identifierName != null && matcher.similarity > 0) {
                     assertTrue(TestUtils.similarity(matcher.identifierName, param.getName()) >= matcher.similarity,
@@ -165,64 +351,149 @@ public class MethodTester {
                                     + param.getName());
                 }
             }
-            assertEquals(params.size(), parameters.size(), "Die folgenden Parameter waren nicht gefrdert:"
-                    + params.subList(parameters.size(), params.size()).toString());
+            assertEquals(actualParamters.size(), expectedParameters.size(),
+                    "Die folgenden Parameter waren nicht gefrdert:"
+                            + actualParamters.subList(expectedParameters.size(), actualParamters.size()).toString());
         }
     }
 
+    /**
+     * assert that the Method Parameters match
+     *
+     * @param m           The Method to verify
+     * @param methodName  The expected Method name
+     * @param parameters  the Expected Parameter List
+     * @param ignoreNames whether to ignore Parameter Names
+     */
+    public static void assertParametersMatch(Method m, String methodName, ArrayList<ParameterMatcher> parameters,
+            boolean ignoreNames) {
+        assertMethodNotNull(m, methodName);
+        assertParametersMatch(parameters, new ArrayList<>(List.of(m.getParameters())), ignoreNames);
+    }
+
+    /**
+     * assert that the Method Parameters match with {@link #parameters}
+     */
     public void assertParametersMatch() {
         assertParametersMatch(theMethod, methodIdentifier.identifierName, parameters, false);
     }
 
+    /**
+     * Generates a Method not found Message
+     *
+     * @param methodName the expecteed Method name
+     * @return the generated Message
+     */
     public static String getMethodNotFoundMessage(String methodName) {
         return String.format("Methode %s existiert nicht.", methodName);
     }
 
+    /**
+     * Generates a Method not found Message
+     *
+     * @return the generated Message
+     */
     public String getMethodNotFoundMessage() {
         return getMethodNotFoundMessage(methodIdentifier.identifierName);
     }
 
+    /**
+     * returns {@code true} if {@link #theMethod} is not {@code null}
+     *
+     * @return {@code true} if {@link #theMethod} is not {@code null}
+     */
     public boolean methodResolved() {
         return theMethod != null;
     }
 
+    /**
+     * Assert that a given method is not {@code null}
+     *
+     * @param m    the Method
+     * @param name the expected Method name
+     */
     public static void assertMethodNotNull(Method m, String name) {
         assertNotNull(m, getMethodNotFoundMessage(name));
 
     }
 
+    /**
+     * Assert that the method is resolved
+     */
     public void assertMethodResolved() {
         assertTrue(methodResolved(), getMethodNotFoundMessage());
     }
 
+    /**
+     * Generates a Class tester null message
+     *
+     * @param methodName the expected Method name
+     * @return the generated message
+     */
     public static String getClassTesterNullMessage(String methodName) {
         return String.format("Fehlerhafter Test für Methode %s: Kein Klassentester gegeben.", methodName);
     }
 
+    /**
+     * Assert that {@link #classTester} is not {@code null}
+     */
     public void assertClassTesterNotNull() {
         assertNotNull(classTester, getClassTesterNullMessage(methodIdentifier.identifierName));
     }
 
+    /**
+     * returns {@code true} if {@link #classTester} is not
+     * {@code null} and {@link ClassTester#class_resolved} returns true
+     *
+     * @return {@code true} if {@link #classTester} is not {@code null}
+     */
     public boolean classResolved() {
         return classTester != null && classTester.class_resolved();
     }
 
+    /**
+     * Asserts that {@link ClassTester#classInstance} is not {@code null}
+     */
     public void assertClassResolved() {
         assertClassTesterNotNull();
         classTester.assertClassResolved();
     }
 
+    /**
+     * returns {@code true}, if the Method is invokable.
+     *
+     * <br>
+     * </br>
+     * To be exact: returns {@code true} if
+     * {@link #classTester} {@link #theMethod} and
+     * {@link ClassTester#classInstance} are
+     * resolved
+     *
+     * @return returns {@code true}, if the Method is invokable.
+     */
     public boolean invokeable() {
         return classResolved() && classTester.classInstanceResolved() && methodResolved()
                 && classTester.classInstanceResolved();
     }
 
+    /**
+     * Asserts that the Method is invokable.
+     *
+     * To be exact: asserts that {@link #classTester} {@link #theMethod} and
+     * {@link ClassTester#classInstance} are resolved
+     */
     public void assertInvokeable() {
         assertClassResolved();
         classTester.assertclassInstanceResolved();
         assertMethodResolved();
     }
 
+    /**
+     * Invokes {@link #theMethod} using {@link #classTester}
+     *
+     * @param params the Parameters used for invoking
+     * @return the Returned Value of the Method
+     */
     public Object invoke(Object... params) {
         assertInvokeable();
         assertDoesNotThrow(() -> theMethod.setAccessible(true), "Konnte Methode nicht ausführen.");
@@ -236,25 +507,74 @@ public class MethodTester {
         return returnValue;
     }
 
+    /**
+     * Asserts the Return Value of an invokation with the given parameters
+     *
+     * @param expected          the expected Return value
+     * @param additionalMessage an Additional Message Text
+     * @param params            the Parameters used for invokation
+     */
     public void assertReturnValueEquals(Object expected, String additionalMessage, Object... params) {
         assertEquals(expected, invoke(params), "Falsche Rückgabe bei Methode" + getMethodIdentifier().identifierName
                 + (params.length > 0 ? "mit Parameter(n):" + Arrays.toString(params) : "") + additionalMessage);
     }
 
+    /**
+     * Asserts the Return Value of an invokation with the given parameters
+     *
+     * @param expected the expected Return value
+     * @param params   the Parameters used for invokation
+     */
+    public void assertReturnValueEquals(Object expected, Object... params) {
+        assertReturnValueEquals(expected, "", params);
+    }
+
+    /**
+     * Returns the Value of {@link #accessModifier}
+     *
+     * @return the Value of {@link #accessModifier}
+     */
     public int getAccessModifier() {
         return accessModifier;
     }
 
+    /**
+     * Sets {@link #accessModifier} to the given Value
+     *
+     * @param accessModifier the new Access Modifier
+     */
     public void setAccessModifier(int accessModifier) {
         this.accessModifier = accessModifier;
     }
 
+    /**
+     * Asserts the actual access Modifier matches {@link #accessModifier}
+     */
     public void assertAccessModifier() {
         if (accessModifier >= 0) {
             TestUtils.assertModifier(accessModifier, theMethod);
         }
     }
 
+    /**
+     * Resolve the Method with tolerances
+     *
+     * <br>
+     * </br>
+     * The Method is first searched by name using using
+     * {@link TestUtils#similarity(String, String)}. If Multiple overloads are found
+     * then the function with the most matching parameters according to
+     * {@link #countMatchingParameters(Method, String, ArrayList, boolean)} is
+     * chosen.
+     *
+     * @param theClass   The Class to search in
+     * @param methodName The expected Method name
+     * @param similarity The minimum required similarity
+     * @param parameters The expected Parameters
+     * @return the resolved Method
+     * @see TestUtils#similarity(String, String)
+     * @see #countMatchingParameters(Method, String, ArrayList, boolean)
+     */
     public Method resolveMethod(Class<?> theClass, String methodName, double similarity,
             ArrayList<ParameterMatcher> parameters) {
         similarity = Math.max(0, Math.min(similarity, 1));
@@ -284,6 +604,21 @@ public class MethodTester {
         return theMethod = bestMatch;
     }
 
+    /**
+     * Resolve the Method with tolerances
+     *
+     * <br>
+     * </br>
+     * The Method is first searched by name using using
+     * {@link TestUtils#similarity(String, String)}. If Multiple overloads are found
+     * then the function with the most matching parameters according to
+     * {@link #countMatchingParameters(Method, String, ArrayList, boolean)} is
+     * chosen.
+     *
+     * @return the resolved Method
+     * @see TestUtils#similarity(String, String)
+     * @see #countMatchingParameters(Method, String, ArrayList, boolean)
+     */
     public Method resolveMethod() {
         assertClassTesterNotNull();
         if (!classResolved()) {
@@ -293,6 +628,22 @@ public class MethodTester {
                 parameters);
     }
 
+    /**
+     * Resolve the Method with tolerances
+     *
+     * <br>
+     * </br>
+     * The Method is first searched by name using using
+     * {@link TestUtils#similarity(String, String)}. If Multiple overloads are found
+     * then the function with the most matching parameters according to
+     * {@link #countMatchingParameters(Method, String, ArrayList, boolean)} is
+     * chosen.
+     *
+     * @param similarity The minimum required similarity
+     * @return the resolved Method
+     * @see TestUtils#similarity(String, String)
+     * @see #countMatchingParameters(Method, String, ArrayList, boolean)
+     */
     public Method resolveMethod(double similarity) {
         return resolveMethod(classTester.theClass, methodIdentifier.identifierName, similarity, parameters);
     }
