@@ -2,14 +2,13 @@ package h05;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+
+import com.google.common.reflect.ClassPath;
 
 /**
  * Test Utilities by Ruben
@@ -152,46 +151,8 @@ public class TestUtils {
      * @throws IOException            if an IO Exception occirs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        assert classLoader != null;
-        String path = packageName.replace('.', '/');
-        var resources = classLoader.getResources(path);
-        var dirs = new ArrayList<File>();
-        while (resources.hasMoreElements()) {
-            var resource = resources.nextElement();
-            dirs.add(new File(resource.getFile()));
-        }
-        var classes = new ArrayList<Class<?>>();
-        for (File directory : dirs) {
-            classes.addAll(findClasses(directory, packageName));
-        }
-        return classes.toArray(new Class[classes.size()]);
-    }
-
-    /**
-     * Recursive method used to find all classes in a given directory and subdirs.
-     *
-     * @param directory   The base directory
-     * @param packageName The package name for classes found inside the base
-     *                    directory
-     * @return The classes
-     * @throws ClassNotFoundException if the Classes were defined Faulty
-     */
-    public static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        var classes = new ArrayList<Class<?>>();
-        if (!directory.exists()) {
-            return classes;
-        }
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                assert !file.getName().contains(".");
-                classes.addAll(findClasses(file, packageName + "." + file.getName()));
-            } else if (file.getName().endsWith(".class")) {
-                classes.add(
-                        Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
-            }
-        }
-        return classes;
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        return ClassPath.from(loader).getTopLevelClasses(packageName).stream().map(x -> x.load())
+                .toArray(Class<?>[]::new);
     }
 }
