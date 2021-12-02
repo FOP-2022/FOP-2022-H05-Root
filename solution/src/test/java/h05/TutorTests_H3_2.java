@@ -15,31 +15,25 @@ import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 
-@DisplayName("H2")
+@DisplayName("H3.2")
 public class TutorTests_H3_2 {
 
     final String class_name = "Shark";
 
     @Test
-    @DisplayName("2 | Existenz Klasse " + class_name)
-    public void t02() {
-        var classTester = new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC, null,
+    @DisplayName("1 | Existenz Klasse " + class_name)
+    public void t01() {
+        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
+        new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC,
+                animalClassTester.getTheClass(),
                 new ArrayList<>(List.of(new IdentifierMatcher("Swimming", "h05", 0.8),
-                        new IdentifierMatcher("IntConsumer", "java.util.function.IntConsumer", 1.0))));
-        classTester.resolveClass();
-        classTester.assertIsPlainClass();
-        classTester.assertAccessModifier();
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8);
-        animalClassTester.resolveClass();
-        classTester.setSuperClass(animalClassTester.getTheClass());
-        classTester.assertImplementsInterfaces();
+                        new IdentifierMatcher("IntConsumer", "java.util.function.IntConsumer", 1.0)))).verify();
     }
 
     @Test
-    @DisplayName("3 | Attribute specificSpecies, x, y, degreeOfHunger + Getter")
-    public void t03() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.resolveClass();
+    @DisplayName("2 | Attribute specificSpecies, x, y, degreeOfHunger + Getter")
+    public void t02() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         for (var fieldMatcher : new AttributeMatcher[] {
                 new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, short.class),
                 new AttributeMatcher("x", 1.0, Modifier.PRIVATE, int.class),
@@ -52,11 +46,9 @@ public class TutorTests_H3_2 {
     }
 
     @Test
-    @DisplayName("4 | canLiveInSaltWater")
-    public void t04() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.resolveClass();
-        classTester.resolveInstance();
+    @DisplayName("3 | canLiveInSaltWater")
+    public void t03() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         Field specificSpeciesField = classTester
                 .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
         MethodTester mt = new MethodTester(classTester, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class);
@@ -71,11 +63,9 @@ public class TutorTests_H3_2 {
     }
 
     @Test
-    @DisplayName("5 | canLiveInFreshWater")
-    public void t05() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.resolveClass();
-        classTester.resolveInstance();
+    @DisplayName("4 | canLiveInFreshWater")
+    public void t04() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         Field specificSpeciesField = classTester.resolveAttribute(
                 new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
         MethodTester mt = new MethodTester(classTester, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class);
@@ -91,10 +81,10 @@ public class TutorTests_H3_2 {
     }
 
     @Test
-    @DisplayName("6 | letMeSwim mit Hungerreduktion")
-    public void t06() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.resolveClass();
+    @DisplayName("5 | letMeSwim mit Hungerreduktion")
+    public void t05() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        classTester.findClass();
         classTester.resolveInstance();
         Field degreeOfHungerField = classTester
                 .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
@@ -125,5 +115,23 @@ public class TutorTests_H3_2 {
             classTester.assertFieldEquals(xField, (int) (x + xParam * distanceParam), attributesBefore + "\n" + params);
             classTester.assertFieldEquals(yField, (int) (y + yParam * distanceParam), attributesBefore + "\n" + params);
         }
+    }
+
+    @Test
+    @DisplayName("6 | letMeMove mit Hungerreduktion")
+    public void t06() {
+
+    }
+
+    @Test
+    @DisplayName("7 | setSpecificSpecies")
+    public void t07() {
+
+    }
+
+    @Test
+    @DisplayName("8 | Konstruktor")
+    public void t08() {
+
     }
 }

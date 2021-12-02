@@ -22,32 +22,23 @@ public class TutorTests_H2 {
     @Test
     @DisplayName("1 | Enum AnimalType()")
     public void t01() {
-        var classTester = new ClassTester<>("h05", "AnimalType", 0.8, Modifier.PUBLIC | Modifier.FINAL | TestUtils.ENUM,
-                null, new ArrayList<>());
-        classTester.resolveClass();
-        classTester.assertIsEnum();
-        classTester.assertAccessModifier();
-        classTester.assertImplementsInterfaces();
-        classTester.assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
+        new ClassTester<>("h05", "AnimalType", 0.8, Modifier.PUBLIC | Modifier.FINAL | TestUtils.ENUM,
+                null, new ArrayList<>())
+                        .verify()
+                        .assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
     }
 
     @Test
     @DisplayName("2 | Existenz Klasse " + class_name)
     public void t02() {
-        var classTester = new ClassTester<>("h05", "Animal", 1.0, Modifier.PUBLIC | Modifier.ABSTRACT);
-        classTester.resolveClass();
-        classTester.assertIsPlainClass();
-        classTester.assertAccessModifier();
-        classTester.assertDoesNotImplementAnyInterfaces();
+        new ClassTester<>("h05", "Animal", 1.0, Modifier.PUBLIC | Modifier.ABSTRACT).verify();
     }
 
     @Test
     @DisplayName("3 | Attribut animalType + Getter")
     public void t03() {
-        var classTester = new ClassTester<>("h05", "Animal", 0.8);
-        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8);
-        classTester.resolveClass();
-        enumClassTester.resolveClass();
+        var classTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
+        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = classTester.resolveAttribute(
                 new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass()));
 
@@ -57,19 +48,13 @@ public class TutorTests_H2 {
     @Test
     @DisplayName("4 | Test ToString()")
     public void t4() {
-        var classTester = new ClassTester<>("h05", "Animal", 0.8);
-        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8);
-        classTester.resolveClass();
-        enumClassTester.resolveClass();
+        var classTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
+        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = classTester.resolveAttribute(
                 new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass()));
 
         var methodTester = new MethodTester(classTester, "toString", 0.8, Modifier.PUBLIC, String.class,
-                new ArrayList<>());
-        methodTester.resolveMethod();
-        methodTester.assertAccessModifier();
-        methodTester.assertParametersMatch();
-        methodTester.assertReturnType();
+                new ArrayList<>()).verify();
 
         assertDoesNotThrow(() -> animalTypeField.setAccessible(true));
 

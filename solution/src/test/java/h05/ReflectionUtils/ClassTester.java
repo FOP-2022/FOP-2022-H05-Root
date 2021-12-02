@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
@@ -374,12 +375,59 @@ public class ClassTester<T> {
     }
 
     /**
+     * Asserts that the Class is declared correctly.
+     *
+     * @return {@link ClassTester} this
+     */
+    public ClassTester<T> verify() {
+        if (!class_resolved()) {
+            resolveClass();
+        }
+        if (accessModifier >= 0) {
+            // Class Type
+            if (Modifier.isInterface(getAccessModifier())) {
+                assertIsInterface();
+            } else if ((getAccessModifier() & TestUtils.ENUM) != 0) {
+                assertIsEnum();
+            } else {
+                assertIsPlainClass();
+            }
+            assertAccessModifier();
+        }
+        assertSuperclass();
+        assertImplementsInterfaces();
+        return this;
+    }
+
+    /**
      * Sets the Super Class
      *
      * @param superClass the Super Class
      */
     public void setSuperClass(Class<? super T> superClass) {
         this.superClass = superClass;
+    }
+
+    /**
+     * Assert tthat the Superclass of {@link #theClass} matches {@link #superClass}
+     */
+    public void assertSuperclass() {
+        assertClassResolved();
+
+        if (superClass == null) {
+            if (getAccessModifier() >= 0) {
+                if ((getAccessModifier() & TestUtils.ENUM) != 0) {
+                    assertSame(Enum.class, theClass.getSuperclass());
+                } else if (Modifier.isInterface(getAccessModifier())) {
+                    assertSame(null, theClass.getSuperclass());
+                } else{
+                    assertSame(Object.class, theClass.getSuperclass());
+
+                }
+            }
+        } else {
+            assertSame(superClass, theClass.getSuperclass());
+        }
     }
 
     /**
@@ -538,7 +586,7 @@ public class ClassTester<T> {
      * @return the resolved Class With the given name and similarity
      */
     @SuppressWarnings("unchecked")
-    public Class<T> resolveClass(String packageName, String className, double similarity) {
+    public Class<T> findClass(String packageName, String className, double similarity) {
         // if (similarity >= 1) {
         // return theClass = (Class<T>) assertDoesNotThrow(
         // () -> Class.forName(String.format("%s.%s", packageName, className)),
@@ -561,8 +609,8 @@ public class ClassTester<T> {
      *
      * @return the resolved Class With the given name and similarity
      */
-    public Class<T> resolveClass() {
-        return resolveClass(classIdentifier.packageName, classIdentifier.identifierName, classIdentifier.similarity);
+    public Class<T> findClass() {
+        return findClass(classIdentifier.packageName, classIdentifier.identifierName, classIdentifier.similarity);
     }
 
     /**
@@ -571,8 +619,30 @@ public class ClassTester<T> {
      * @param similarity The minimum required similarity
      * @return the resolved Class With the given name and similarity
      */
-    public Class<T> resolveClass(double similarity) {
-        return resolveClass(classIdentifier.packageName, classIdentifier.identifierName, similarity);
+    public Class<T> findClass(double similarity) {
+        return findClass(classIdentifier.packageName, classIdentifier.identifierName, similarity);
+    }
+
+    /**
+     * Finds The Class and stores it in {@link #theClass}
+     *
+     * @return this
+     */
+    public ClassTester<T> resolveClass() {
+        theClass = findClass();
+        return this;
+    }
+
+    /**
+     * Resolves the Class and Instance and stores them in {@link #theClass} and
+     * {@link #classInstance}
+     *
+     * @return this
+     */
+    public ClassTester<T> resolve() {
+        resolveClass();
+        resolveInstance();
+        return this;
     }
 
     /**

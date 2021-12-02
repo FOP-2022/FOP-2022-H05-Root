@@ -201,6 +201,23 @@ public class MethodTester {
     }
 
     /**
+     * Verifies that the Method was declared correctly
+     *
+     * @returns this
+     */
+    public MethodTester verify() {
+        if (!methodResolved()) {
+            resolveMethod();
+        }
+        if (accessModifier >= 0) {
+            assertAccessModifier();
+        }
+        assertParametersMatch();
+        assertReturnType();
+        return this;
+    }
+
+    /**
      * returns the Value of {@link #parameters}
      *
      * @return the Value of {@link #parameters}
