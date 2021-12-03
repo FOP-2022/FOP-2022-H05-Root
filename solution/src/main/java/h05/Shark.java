@@ -95,7 +95,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
         int oldX = x, oldY = y;
         letMeSwim((char) ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(1, 6),
                 ThreadLocalRandom.current().nextInt(1, 6));
-        return String.format("%d -> %d and %d -> %d", oldX, oldY, x, y);
+        return String.format("%d -> %d and %d -> %d", oldX, x, oldY, y);
     }
 
     /**
