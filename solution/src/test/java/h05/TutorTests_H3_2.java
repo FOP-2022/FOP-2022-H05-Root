@@ -84,8 +84,6 @@ public class TutorTests_H3_2 {
     @DisplayName("5 | letMeSwim mit Hungerreduktion")
     public void t05() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
-        classTester.findClass();
-        classTester.resolveInstance();
         Field degreeOfHungerField = classTester
                 .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
                         Modifier.PRIVATE, int.class));
@@ -120,7 +118,12 @@ public class TutorTests_H3_2 {
     @Test
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
-
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
+                Modifier.PUBLIC, boolean.class).verify();
+        Field degreeOfHungerField = classTester
+                .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
+                        Modifier.PRIVATE, int.class));
     }
 
     @Test
