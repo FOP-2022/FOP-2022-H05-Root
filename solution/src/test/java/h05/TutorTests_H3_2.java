@@ -1,5 +1,7 @@
 package h05;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
+import h05.ReflectionUtils.ParameterMatcher;
 
 @DisplayName("H3.2")
 public class TutorTests_H3_2 {
@@ -118,23 +121,62 @@ public class TutorTests_H3_2 {
     @Test
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
-        MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
-                Modifier.PUBLIC, boolean.class).verify();
-        Field degreeOfHungerField = classTester
-                .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
-                        Modifier.PRIVATE, int.class));
+        // var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        // MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
+        // Modifier.PUBLIC, boolean.class).verify();
+        // Field degreeOfHungerField = classTester
+        // .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
+        // Modifier.PRIVATE, int.class));
     }
 
     @Test
     @DisplayName("7 | setSpecificSpecies")
     public void t07() {
-
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        MethodTester mt = new MethodTester(classTester, "setSpecificSpecies", 0.8,
+                Modifier.PUBLIC, short.class,
+                new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class)))).verify();
+        Field specificSpeciesField = classTester
+                .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, short.class));
+        for (int i = -20; i <= 20; i++) {
+            var expectedSpecificSpecies = (short) Math.max(0, Math.min(i, 10));
+            mt.assertReturnValueEquals(expectedSpecificSpecies, (short) i);
+            classTester.assertFieldEquals(specificSpeciesField,
+                    (short) Math.max(0, Math.min(expectedSpecificSpecies, 10)),
+                    "Parameter des Aufrufs von setSpecificSpecies: " + i);
+        }
     }
 
     @Test
     @DisplayName("8 | Konstruktor")
     public void t08() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolveClass();
+        var constructor = classTester.resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
+        classTester.assertConstructorValid(constructor, Modifier.PUBLIC,
+                new ParameterMatcher("specificSpecies", 0.8, short.class));
 
+        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
+        Field animalTypeField = classTester.resolveAttribute(
+                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(), true));
+        Field degreeOfHungerField = classTester
+                .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
+                        Modifier.PRIVATE, int.class));
+        Field specificSpeciesField = classTester
+                .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, short.class));
+        // Valid Value
+        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) 5)));
+        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
+        classTester.assertFieldEquals(degreeOfHungerField, 10);
+        classTester.assertFieldEquals(specificSpeciesField, (short) 5);
+        // Smaller Value
+        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) -42)));
+        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
+        classTester.assertFieldEquals(degreeOfHungerField, 10);
+        classTester.assertFieldEquals(specificSpeciesField, (short) 0);
+        // Bigger Value
+        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) 69)));
+        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
+        classTester.assertFieldEquals(degreeOfHungerField, 10);
+        classTester.assertFieldEquals(specificSpeciesField, (short) 10);
     }
 }

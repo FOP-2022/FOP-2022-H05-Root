@@ -355,7 +355,7 @@ public class MethodTester {
 
         if (expectedParameters == null || expectedParameters.isEmpty()) {
             assertTrue(actualParamters == null || actualParamters.isEmpty(),
-                    "Es sollen keine Interfaces implementiert werden.");
+                    "Es sollen keine Parameter vorhanden sein.");
         } else {
             for (int i = 0; i < expectedParameters.size(); i++) {
                 var matcher = expectedParameters.get(i);
