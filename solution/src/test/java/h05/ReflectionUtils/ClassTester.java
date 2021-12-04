@@ -246,13 +246,13 @@ public class ClassTester<T> {
      *
      * @param attribute the Attribute-{@link Field}
      */
-    public void assertHasGetter(Field attribute) {
+    public void assertHasGetter(Field attribute, ParameterMatcher... parameters) {
         assertNotNull(attribute);
 
         // Method Declaration
         var methodTester = new MethodTester(this, String.format("get%s%s",
                 attribute.getName().substring(0, 1).toUpperCase(), attribute.getName().substring(1)), 0.8,
-                Modifier.PUBLIC, attribute.getType());
+                Modifier.PUBLIC, attribute.getType(), new ArrayList<>(Arrays.asList(parameters)));
         methodTester.resolveMethod();
         methodTester.assertAccessModifier();
         methodTester.assertParametersMatch();
@@ -267,8 +267,39 @@ public class ClassTester<T> {
 
         var expectedReturnValue = getRandomValue(attribute.getType());
         assertDoesNotThrow(() -> attribute.set(getClassInstance(), expectedReturnValue));
-        var returnValue = methodTester.invoke();
+        var returnValue = methodTester
+                .invoke(Arrays.stream(parameters).map(x -> getRandomValue(x.parameterType)).toArray());
         assertEquals(expectedReturnValue, returnValue, "Falsche Rückgabe der Getter-Metode.");
+    }
+
+    /**
+     * Asserts that a given attribute has a getter
+     *
+     * @param attribute the Attribute-{@link Field}
+     * @param testValue the TestValue
+     */
+    public void assertHasSetter(Field attribute, Object testValue) {
+        assertNotNull(attribute);
+
+        // Method Declaration
+        var methodTester = new MethodTester(this, String.format("set%s%s",
+                attribute.getName().substring(0, 1).toUpperCase(), attribute.getName().substring(1)), 0.8,
+                Modifier.PUBLIC, void.class, new ArrayList<>(List.of(
+                        new ParameterMatcher(attribute.getName(), 0.8, attribute.getType())))).verify();
+
+        // test with Value
+        methodTester.invoke(testValue);
+        assertFieldEquals(attribute, testValue, "Falscher Wert durch Setter-Methode.");
+    }
+
+    /**
+     * Asserts that a given attribute has a getter
+     *
+     * @param attribute the Attribute-{@link Field}
+     */
+    public void assertHasSetter(Field attribute) {
+        assertNotNull(attribute);
+        assertHasSetter(attribute, getRandomValue(attribute.getType()));
     }
 
     /**
@@ -420,7 +451,7 @@ public class ClassTester<T> {
                     assertSame(Enum.class, theClass.getSuperclass());
                 } else if (Modifier.isInterface(getAccessModifier())) {
                     assertSame(null, theClass.getSuperclass());
-                } else{
+                } else {
                     assertSame(Object.class, theClass.getSuperclass());
 
                 }
@@ -858,6 +889,20 @@ public class ClassTester<T> {
     }
 
     /**
+     * Sets a field of {@link #classInstance} to a random Value Supported by its
+     * type
+     *
+     * @param field the Field to set
+     * @return the random Value
+     */
+    public Object setFieldRandom(Field field) {
+        assertNotNull(field, "Das Feld wurde nicht gefunden.");
+        var value = getRandomValue(field.getType());
+        setField(field, value);
+        return value;
+    }
+
+    /**
      * Gets the Value of a given field of a given Instance
      *
      * @param instance the Class Instance
@@ -879,7 +924,7 @@ public class ClassTester<T> {
     public Object getFieldValue(Field field) {
         assertNotNull(field, "Das Feld wurde nicht gefunden.");
         assertclassInstanceResolved();
-        if (!field.canAccess(getClassInstance())) {
+        if (!field.canAccess(Modifier.isStatic(field.getModifiers()) ? null : getClassInstance())) {
             assertDoesNotThrow(() -> field.setAccessible(true));
         }
         return assertDoesNotThrow(() -> field.get(getClassInstance()));

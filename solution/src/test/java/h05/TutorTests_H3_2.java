@@ -95,8 +95,12 @@ public class TutorTests_H3_2 {
         Field yField = classTester
                 .resolveAttribute(new AttributeMatcher("y", 1.0, int.class));
         MethodTester mt = new MethodTester(classTester, "letMeSwim", 0.8,
-                Modifier.PUBLIC, boolean.class);
-        mt.resolveMethod();
+                Modifier.PUBLIC, void.class,
+                new ArrayList<>(List.of(
+                    new ParameterMatcher("distance", 0.8, char.class),
+                    new ParameterMatcher("x", 1.0, double.class),
+                    new ParameterMatcher("y", 1.0, double.class)
+                ))).verify();
         for (int i = 0; i <= 20; i++) {
             int degreeOfHunger = ThreadLocalRandom.current().nextInt(-2000, 2000);
             int x = ThreadLocalRandom.current().nextInt(-2000, 2000);
@@ -123,7 +127,7 @@ public class TutorTests_H3_2 {
     public void t06() {
         // var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         // MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
-        // Modifier.PUBLIC, boolean.class).verify();
+        // Modifier.PUBLIC, String.class).verify();
         // Field degreeOfHungerField = classTester
         // .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
         // Modifier.PRIVATE, int.class));
