@@ -44,6 +44,30 @@ public class MethodTester {
      * A Class Tester (used for invoking)
      */
     private ClassTester<?> classTester;
+    /**
+     * whether to also match super implementations
+     */
+    public boolean allowSuperClass;
+
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester    A Class Tester (used for invoking)
+     * @param methodName     the expected method name
+     * @param similarity     the minimum matching similarity
+     * @param accessModifier The Expected Access Modifier
+     * @param returnType     The expected return Type
+     * @param parameters     The expected parameters
+     */
+    public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier,
+            Class<?> returnType, ArrayList<ParameterMatcher> parameters, boolean allowSuperClass) {
+        this.classTester = classTester;
+        this.methodIdentifier = new IdentifierMatcher(methodName, similarity);
+        this.accessModifier = accessModifier;
+        this.returnType = returnType;
+        this.parameters = parameters;
+        this.allowSuperClass = allowSuperClass;
+    }
 
     /**
      * Generates a new {@link MethodTester}
@@ -57,11 +81,8 @@ public class MethodTester {
      */
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier,
             Class<?> returnType, ArrayList<ParameterMatcher> parameters) {
-        this.classTester = classTester;
-        this.methodIdentifier = new IdentifierMatcher(methodName, similarity);
-        this.accessModifier = accessModifier;
-        this.returnType = returnType;
-        this.parameters = parameters;
+        this(classTester, methodName, similarity, accessModifier, returnType, parameters, false);
+
     }
 
     /**
@@ -525,6 +546,26 @@ public class MethodTester {
     }
 
     /**
+     * Gets random Valid Parameter Values
+     *
+     * @return the Random Parameters
+     */
+    public Object[] getRandomParams() {
+        return Arrays.stream(getTheMethod().getParameters()).map(x -> ClassTester.getRandomValue(x.getType()))
+                .toArray();
+    }
+
+    /**
+     * {@link #theMethod} using {@link #classTester} with Random parameters
+     *
+     * @return the Returned Value of the Method
+     */
+    public Object invokeWithRandomParams() {
+        assertMethodResolved();
+        return invoke(getRandomParams());
+    }
+
+    /**
      * Asserts the Return Value of an invokation with the given parameters
      *
      * @param expected          the expected Return value
@@ -574,6 +615,33 @@ public class MethodTester {
     }
 
     /**
+     * Gets all Fields from a given Class and its superclasses recursively
+     *
+     * @param methods the fields so far (initially give it new ArrayList<>())
+     * @param clazz   the Class to search
+     * @return all Fields from a given Class and its superclasses recursively
+     */
+    private static ArrayList<Method> getAllMethods(ArrayList<Method> methods, Class<?> clazz) {
+        methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+
+        if (clazz.getSuperclass() != null) {
+            getAllMethods(methods, clazz.getSuperclass());
+        }
+
+        return methods;
+    }
+
+    /**
+     * Gets all Fields from a given Class and its superclasses recursively
+     *
+     * @param clazz the Class to search
+     * @return all Fields from a given Class and its superclasses recursively
+     */
+    public static ArrayList<Method> getAllMethods(Class<?> clazz) {
+        return getAllMethods(new ArrayList<>(), clazz);
+    }
+
+    /**
      * Resolve the Method with tolerances
      *
      * <br>
@@ -584,20 +652,22 @@ public class MethodTester {
      * {@link #countMatchingParameters(Method, String, ArrayList, boolean)} is
      * chosen.
      *
-     * @param theClass   The Class to search in
-     * @param methodName The expected Method name
-     * @param similarity The minimum required similarity
-     * @param parameters The expected Parameters
+     * @param theClass        The Class to search in
+     * @param methodName      The expected Method name
+     * @param similarity      The minimum required similarity
+     * @param parameters      The expected Parameters
+     * @param allowSuperClass whether to search in Super classes as well
      * @return the resolved Method
      * @see TestUtils#similarity(String, String)
      * @see #countMatchingParameters(Method, String, ArrayList, boolean)
      */
     public Method resolveMethod(Class<?> theClass, String methodName, double similarity,
-            ArrayList<ParameterMatcher> parameters) {
+            ArrayList<ParameterMatcher> parameters, boolean allowSuperClass) {
         similarity = Math.max(0, Math.min(similarity, 1));
         ClassTester.assertClassNotNull(theClass, "zu Methode " + methodName);
-        Method[] methods = assertDoesNotThrow(() -> theClass.getDeclaredMethods());
-        var bestMatch = Arrays.stream(methods)
+        ArrayList<Method> methods = allowSuperClass ? getAllMethods(theClass)
+                : new ArrayList<>(Arrays.asList(theClass.getDeclaredMethods()));
+        var bestMatch = methods.stream()
                 .sorted((x, y) -> Double.valueOf(TestUtils.similarity(methodName, y.getName()))
                         .compareTo(TestUtils.similarity(methodName, x.getName())))
                 .findFirst().orElse(null);
@@ -607,7 +677,7 @@ public class MethodTester {
                 + " with " + sim + " similarity.");
         if (parameters != null) {
             // Account for overloads
-            var matches = Arrays.stream(methods).filter(x -> TestUtils.similarity(methodName, x.getName()) == sim)
+            var matches = methods.stream().filter(x -> TestUtils.similarity(methodName, x.getName()) == sim)
                     .collect(Collectors.toCollection(ArrayList::new));
             if (matches.size() > 1) {
                 // Find Best match according to parameter options
@@ -632,6 +702,30 @@ public class MethodTester {
      * {@link #countMatchingParameters(Method, String, ArrayList, boolean)} is
      * chosen.
      *
+     * @param theClass   The Class to search in
+     * @param methodName The expected Method name
+     * @param similarity The minimum required similarity
+     * @param parameters The expected Parameters
+     * @return the resolved Method
+     * @see TestUtils#similarity(String, String)
+     * @see #countMatchingParameters(Method, String, ArrayList, boolean)
+     */
+    public Method resolveMethod(Class<?> theClass, String methodName, double similarity,
+            ArrayList<ParameterMatcher> parameters) {
+        return resolveMethod(theClass, methodName, similarity, parameters, false);
+    }
+
+    /**
+     * Resolve the Method with tolerances
+     *
+     * <br>
+     * </br>
+     * The Method is first searched by name using using
+     * {@link TestUtils#similarity(String, String)}. If Multiple overloads are found
+     * then the function with the most matching parameters according to
+     * {@link #countMatchingParameters(Method, String, ArrayList, boolean)} is
+     * chosen.
+     *
      * @return the resolved Method
      * @see TestUtils#similarity(String, String)
      * @see #countMatchingParameters(Method, String, ArrayList, boolean)
@@ -642,7 +736,7 @@ public class MethodTester {
             classTester.resolveClass();
         }
         return resolveMethod(classTester.theClass, methodIdentifier.identifierName, methodIdentifier.similarity,
-                parameters);
+                parameters, allowSuperClass);
     }
 
     /**

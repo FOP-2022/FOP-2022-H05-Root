@@ -30,11 +30,10 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean, Cloneable {
                 && salty == ((SaltWaterCrocodileAsAmphibean) obj).salty;
     }
 
-    // Alternative Solution, if Clonable was not implemented
-    // @Override
-    // protected Object clone() throws CloneNotSupportedException {
-    // return new SaltWaterCrocodileAsAmphibean(salty);
-    // }
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new SaltWaterCrocodileAsAmphibean(salty);
+    }
 
     @Override
     public byte getNumberOfLegs() {

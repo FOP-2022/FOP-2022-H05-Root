@@ -18,6 +18,7 @@ import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
+import h05.ReflectionUtils.ParameterMatcher;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -30,25 +31,16 @@ public class TutorTests_H3_4 {
     @Test
     @DisplayName("2 | Existenz Klasse " + class_name)
     public void t02() {
-        var classTester = new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC, null,
-                new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", 0.8))));
-        classTester.findClass();
-        classTester.assertIsPlainClass();
-        classTester.assertAccessModifier();
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8);
-        animalClassTester.findClass();
-        classTester.setSuperClass(animalClassTester.getTheClass());
-        classTester.assertImplementsInterfaces();
+        new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC, null,
+                new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", 0.8),
+                        new IdentifierMatcher("Cloneable", "h05", 1.0)))).verify();
     }
 
     @Test
-    @DisplayName("3 | Attribut salty + Getter")
+    @DisplayName("3 | Methode Clone")
     public void t03() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.findClass();
-        classTester.resolveInstance();
-        var mt = new MethodTester(classTester, "clone", 0.8);
-        mt.resolveMethod();
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        var mt = new MethodTester(classTester, "clone", 0.8, Modifier.PUBLIC, Object.class, null, false).verify();
         Field saltyField = classTester
                 .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
 
@@ -67,90 +59,78 @@ public class TutorTests_H3_4 {
     @Test
     @DisplayName("4 | canLiveInSaltWater")
     public void t04() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.findClass();
-        classTester.resolveInstance();
-        Field specificSpeciesField = classTester
-                .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
-        MethodTester mt = new MethodTester(classTester, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class,
-                new ArrayList<>(List.of(
-                // new ParameterMatcher("reductionOfHunger",0.8,int.class)
-                )));
-        mt.resolveMethod();
-        for (int i = -20; i <= 20; i++) {
-            var specificSpecies = i;
-            classTester.setField(specificSpeciesField, (short) specificSpecies);
-            mt.assertReturnValueEquals(IntStream.of(2, 5, 9).anyMatch(x -> x == specificSpecies),
-                    "bei " + specificSpeciesField.getName() + "==" + i);
-            classTester.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
-        }
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
+        Field saltyField = classTester
+                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+        classTester.setFieldRandom(saltyField);
+        MethodTester mt = new MethodTester(classTester, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
+                .verify();
+        MethodTester saltyMt = new MethodTester(saltyClassTester, "canLiveInSaltWater", 0.8, -1, boolean.class)
+                .verify();
+        mt.assertReturnValueEquals(saltyMt.invoke());
     }
 
     @Test
     @DisplayName("5 | canLiveInFreshWater")
     public void t05() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8);
-        classTester.findClass();
-        classTester.resolveInstance();
-        Field specificSpeciesField = classTester
-                .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
-        MethodTester mt = new MethodTester(classTester, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class,
-                new ArrayList<>(List.of(
-                // new ParameterMatcher("reductionOfHunger",0.8,int.class)
-                )));
-        mt.resolveMethod();
-        for (int i = -20; i <= 20; i++) {
-            var specificSpecies = i;
-            classTester.setField(specificSpeciesField, (short) specificSpecies);
-            mt.assertReturnValueEquals(Math.abs(specificSpecies % 4) == 2,
-                    "bei " + specificSpeciesField.getName() + "==" + i);
-            classTester.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
-        }
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
+        Field saltyField = classTester
+                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+        classTester.setFieldRandom(saltyField);
+        MethodTester mt = new MethodTester(classTester, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
+                .verify();
+        MethodTester saltyMt = new MethodTester(saltyClassTester, "canLiveInFreshWater", 0.8, -1, boolean.class)
+                .verify();
+        mt.assertReturnValueEquals(saltyMt.invoke());
     }
 
     @Test
-    @DisplayName("6 | letMeSwim mit Hungerreduktion")
+    @DisplayName("6 | letMeSwim")
     public void t06() {
-        // var classTester = new ClassTester<>("h05", class_name, 0.8);
-        // classTester.resolveClass();
-        // classTester.resolveInstance();
-        // Field degreeOfHungerField = classTester
-        // .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
-        // Modifier.PRIVATE, int.class));
-        // Field xField = classTester
-        // .resolveAttribute(new AttributeMatcher("x", 1.0, int.class));
-        // Field yField = classTester
-        // .resolveAttribute(new AttributeMatcher("y", 1.0, int.class));
-        // MethodTester mt = new MethodTester(classTester, "letMeSwim", 0.8,
-        // Modifier.PUBLIC, boolean.class,
-        // new ArrayList<>(List.of(
-        // // new ParameterMatcher("reductionOfHunger",0.8,int.class)
-        // )));
-        // mt.resolveMethod();
-        // for (int i = 0; i <= 20; i++) {
-        // var degreeOfHunger = ThreadLocalRandom.current().nextInt(-2000, 2000);
-        // var x = ThreadLocalRandom.current().nextInt(-2000, 2000);
-        // var y = ThreadLocalRandom.current().nextInt(-2000, 2000);
-        // classTester.setField(degreeOfHungerField, degreeOfHunger);
-        // classTester.setField(xField, x);
-        // classTester.setField(yField, y);
-        // mt.invoke(char distance, double x, double y);
-        // classTester.assertFieldEquals(degreeOfHungerField, degreeOfHunger);
-        // classTester.assertFieldEquals(xField, x);
-        // classTester.assertFieldEquals(yField, x);
-        // }
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
+        Field saltyField = classTester
+                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+        classTester.setFieldRandom(saltyField);
+        MethodTester mt = new MethodTester(classTester, "letMeSwim", 0.8,
+                Modifier.PUBLIC, void.class,
+                new ArrayList<>(List.of(
+                        new ParameterMatcher("distance", 0.8, char.class),
+                        new ParameterMatcher("x", 1.0, double.class),
+                        new ParameterMatcher("y", 1.0, double.class)))).verify();
+        MethodTester saltyMt = new MethodTester(saltyClassTester, "letMeSwim", 0.8,
+                -1, void.class,
+                new ArrayList<>(List.of(
+                        new ParameterMatcher("distance", 0.8, char.class),
+                        new ParameterMatcher("x", 1.0, double.class),
+                        new ParameterMatcher("y", 1.0, double.class)))).verify();
+        var params = mt.getRandomParams();
+        mt.assertReturnValueEquals(saltyMt.invoke(params), params);
     }
 
     @Test
-    public void testTest() {
-        Class<?> dynamicType = new ByteBuddy()
-                .subclass(Object.class)
-                .method(ElementMatchers.named("toString"))
-                .intercept(FixedValue.value("Hello World!"))
-                .make()
-                .load(getClass().getClassLoader())
-                .getLoaded();
+    @DisplayName("8 | Konstruktor")
+    public void t08() {
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolveClass();
+        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
+        var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
 
-        assertEquals(assertDoesNotThrow(() -> dynamicType.getConstructor().newInstance().toString()), "Hello World!");
+        var constructor = classTester
+                .resolveConstructor(new ParameterMatcher("animal", 0.8, animalClassTester.getTheClass()));
+        classTester.assertConstructorValid(constructor, Modifier.PUBLIC,
+                new ParameterMatcher("animal", 0.8, animalClassTester.getTheClass()));
+
+        Field saltyField = classTester
+                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+        // Valid Value
+        classTester.setClassInstance(
+                assertDoesNotThrow(() -> constructor.newInstance(saltyClassTester.getClassInstance())));
+        classTester.assertFieldEquals(saltyField, saltyClassTester.getClassInstance());
+        // Invalid Value
+        classTester.setClassInstance(
+                assertDoesNotThrow(() -> constructor.newInstance(animalClassTester.getClassInstance())));
+        classTester.assertFieldEquals(saltyField, null);
     }
 }
