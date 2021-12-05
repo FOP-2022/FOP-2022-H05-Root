@@ -4,6 +4,7 @@ plugins {
 allprojects {
   apply(plugin = "java")
   repositories {
+    mavenLocal()
     mavenCentral()
   }
   java {

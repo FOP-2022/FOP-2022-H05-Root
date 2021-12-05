@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -15,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
+
+import org.sourcegrade.jagr.api.testing.TestCycle;
 
 import h05.TestUtils;
 import net.bytebuddy.ByteBuddy;
@@ -50,6 +53,8 @@ public class ClassTester<T> {
      * The Class Instance of the Class Being Tested
      */
     T classInstance;
+
+    public static TestCycle cycle;
 
     /**
      * Creates a new {@link ClassTester}
@@ -623,13 +628,13 @@ public class ClassTester<T> {
         // () -> Class.forName(String.format("%s.%s", packageName, className)),
         // getClassNotFoundMessage(className));
         // }
-        var classes = assertDoesNotThrow(() -> TestUtils.getClasses(packageName));
+        var classes = assertDoesNotThrow(() -> TestUtils.getClasses(packageName, cycle));
         var bestMatch = Arrays.stream(classes)
                 .sorted((x, y) -> Double.valueOf(TestUtils.similarity(className, y.getSimpleName()))
                         .compareTo(TestUtils.similarity(className, x.getSimpleName())))
                 .findFirst().orElse(null);
-        var sim = TestUtils.similarity(bestMatch.getSimpleName(), className);
         assertNotNull(bestMatch, getClassNotFoundMessage());
+        var sim = TestUtils.similarity(bestMatch.getSimpleName(), className);
         assertTrue(sim >= similarity, getClassNotFoundMessage() + "Ähnlichster Klassenname:" + bestMatch.getSimpleName()
                 + " with " + sim + " similarity.");
         return theClass = (Class<T>) bestMatch;
