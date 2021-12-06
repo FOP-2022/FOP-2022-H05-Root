@@ -9,7 +9,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import org.sourcegrade.jagr.api.testing.TestCycle;
+import com.google.common.reflect.ClassPath;
+
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 /**
  * Test Utilities by Ruben
@@ -147,27 +149,21 @@ public class TestUtils {
      * the given package and subpackages.
      *
      * @param packageName The base package
-     * @param loader      The Class Loader
-     * @return The classes
-     * @throws ClassNotFoundException if the Classes were defined Faulty
-     * @throws IOException            if an IO Exception occurs
-     */
-    public static Class<?>[] getClasses(String packageName, TestCycle cycle)
-            throws ClassNotFoundException, IOException {
-        return cycle.getSubmission().getCompileResult().getResourceInfo().getClasses().stream()
-                .map(x -> assertDoesNotThrow(() -> Class.forName(x))).toArray(Class<?>[]::new);
-    }
-
-    /**
-     * Scans all classes accessible from the context class loader which belong to
-     * the given package and subpackages.
-     *
-     * @param packageName The base package
      * @return The classes
      * @throws ClassNotFoundException if the Classes were defined Faulty
      * @throws IOException            if an IO Exception occurs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
-        return getClasses(packageName, null);
+        var cycle = TestCycleResolver.getCurrent();
+        if (cycle != null) {
+            // Autograder Run
+            return cycle.getSubmission().getCompileResult().getRuntimeResources().getClassNames().stream()
+                    .map(x -> assertDoesNotThrow(() -> Class.forName(x))).toArray(Class<?>[]::new);
+        } else {
+            // Regular Junit Run
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            return ClassPath.from(loader).getTopLevelClasses(packageName).stream().map(x -> x.load())
+                    .toArray(Class<?>[]::new);
+        }
     }
 }

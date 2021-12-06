@@ -12,7 +12,8 @@ submit {
 }
 
 dependencies {
+  testImplementation("org.sourcegrade:jagr-grader-api:0.3-SNAPSHOT")
   testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-  testImplementation("net.bytebuddy:byte-buddy:1.12.2")
+  testImplementation("org.mockito:mockito-core:4.1.0")
   testImplementation("com.google.guava:guava:31.0.1-jre")
 }

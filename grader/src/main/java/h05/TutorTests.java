@@ -1,11 +1,13 @@
 package h05;
 
-import org.sourcegrade.jagr.api.rubric.TestForSubmission;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author Ruben Deisenroth
- */
-@TestForSubmission("h05")
+import org.junit.jupiter.api.Test;
+
 public class TutorTests {
-    // Will move tests here later
+
+    @Test
+    public void test1() {
+        // assertEquals(expected, actual);
+    }
 }

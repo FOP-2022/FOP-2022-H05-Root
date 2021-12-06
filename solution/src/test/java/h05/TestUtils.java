@@ -1,5 +1,6 @@
 package h05;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import com.google.common.reflect.ClassPath;
+
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 /**
  * Test Utilities by Ruben
@@ -151,8 +154,16 @@ public class TestUtils {
      * @throws IOException            if an IO Exception occurs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
-        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        return ClassPath.from(loader).getTopLevelClasses(packageName).stream().map(x -> x.load())
-                .toArray(Class<?>[]::new);
+        var cycle = TestCycleResolver.getCurrent();
+        if (cycle != null) {
+            // Autograder Run
+            return cycle.getSubmission().getCompileResult().getRuntimeResources().getClassNames().stream()
+                    .map(x -> assertDoesNotThrow(() -> Class.forName(x))).toArray(Class<?>[]::new);
+        } else {
+            // Regular Junit Run
+            final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            return ClassPath.from(loader).getTopLevelClasses(packageName).stream().map(x -> x.load())
+                    .toArray(Class<?>[]::new);
+        }
     }
 }

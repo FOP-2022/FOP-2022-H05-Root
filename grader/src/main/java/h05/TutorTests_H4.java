@@ -1,9 +1,15 @@
 package h05;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,6 +20,9 @@ import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.FixedValue;
+import net.bytebuddy.matcher.ElementMatchers;
 
 @TestForSubmission("h05")
 @DisplayName("H4")
@@ -109,25 +118,20 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("8 | FamilyFriendlyZoo - canLiveTogether")
     public void t08() {
-        // var classTester = new ClassTester<>("h05", "FamilyFriendlyZoo",
-        // 0.8).resolve();
-        // var animalClassTester = new ClassTester<>("h05", "Animal",
-        // 0.8).resolveClass();
-        // var mt = new MethodTester(classTester, "FamilyFriendlyZoo", 0.8,
-        // Modifier.PUBLIC, boolean.class,
-        // new ArrayList<>(List.of(
-        // new ParameterMatcher("a1", 0.8, animalClassTester.getTheClass()),
-        // new ParameterMatcher("a2", 0.8, animalClassTester.getTheClass()))))
-        // .verify();
-        // var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark",
-        // "SaltWaterCrocodyle" };
+        // var classTester = new ClassTester<>("h05", "FamilyFriendlyZoo", 0.8).resolve();
+        // var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
+        // var mt = new MethodTester(classTester, "FamilyFriendlyZoo", 0.8, Modifier.PUBLIC, boolean.class,
+        //         new ArrayList<>(List.of(
+        //                 new ParameterMatcher("a1", 0.8, animalClassTester.getTheClass()),
+        //                 new ParameterMatcher("a2", 0.8, animalClassTester.getTheClass()))))
+        //                         .verify();
+        // var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark", "SaltWaterCrocodyle" };
         // for (final var name1 : animalSubtypes) {
-        // for (final var name2 : animalSubtypes) {
-        // var ct1 = new ClassTester<>("h05", name1, 0.8).resolve();
-        // var ct2 = new ClassTester<>("h05", name2, 0.8).resolve();
-        // mt.assertReturnValueEquals(true, ct1.getClassInstance(),
-        // ct2.getClassInstance());
-        // }
+        //     for (final var name2 : animalSubtypes) {
+        //         var ct1 = new ClassTester<>("h05", name1, 0.8).resolve();
+        //         var ct2 = new ClassTester<>("h05", name2, 0.8).resolve();
+        //         mt.assertReturnValueEquals(true, ct1.getClassInstance(), ct2.getClassInstance());
+        //     }
         // }
     }
 

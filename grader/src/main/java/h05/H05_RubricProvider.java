@@ -44,22 +44,19 @@ public class H05_RubricProvider implements RubricProvider {
             .grader(Grader.descendingPriority(
                     Grader.testAwareBuilder()
                             .requirePass(JUnitTestRef
-                                    .ofMethod(() -> TutorTests_H1_1.class.getMethod("t01",
-                                            TestCycle.class)))
+                                    .ofMethod(() -> TutorTests_H1_1.class.getMethod("t01")))
                             .pointsPassedMax()
                             .pointsFailedMin()
                             .build(),
                     Grader.testAwareBuilder()
                             .requirePass(JUnitTestRef
-                                    .ofMethod(() -> TutorTests_H1_1.class.getMethod("t02",
-                                            TestCycle.class)))
+                                    .ofMethod(() -> TutorTests_H1_1.class.getMethod("t02")))
                             .pointsPassedMax()
                             .pointsFailedMin()
                             .build(),
                     Grader.testAwareBuilder()
                             .requirePass(JUnitTestRef
-                                    .ofMethod(() -> TutorTests_H1_1.class.getMethod("t03",
-                                            TestCycle.class)))
+                                    .ofMethod(() -> TutorTests_H1_1.class.getMethod("t03")))
                             .pointsPassedMax()
                             .pointsFailedMin()
                             .build()))
@@ -76,8 +73,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Existenz Interface Swimming")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t01",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t01")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -86,8 +82,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Methode canLiveInSaltWater() ist korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t02",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t02")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -96,8 +91,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Methode canLiveInFreshWater() ist korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t03",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t03")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -106,8 +100,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Methode letMeSwim() ist korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t04",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_2.class.getMethod("t04")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -128,8 +121,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Existenz Interface Amphibean")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_3.class.getMethod("t01",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_3.class.getMethod("t01")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -138,8 +130,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Enum EnvironmentType ist korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_3.class.getMethod("t02",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_3.class.getMethod("t02")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -148,8 +139,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Methode getPreferredEnvironment() ist korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H1_3.class.getMethod("t03",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H1_3.class.getMethod("t03")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -168,8 +158,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Enum AnimalType wurde korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H2.class.getMethod("t01",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H2.class.getMethod("t01")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -178,8 +167,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Klasse Animal wurde korrekt deklariert.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H2.class.getMethod("t02",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H2.class.getMethod("t02")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -188,8 +176,7 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Attribut animalType wurde korrekt deklariert und hat eine Getter-Methode.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H2.class.getMethod("t03",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H2.class.getMethod("t03")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
@@ -198,12 +185,31 @@ public class H05_RubricProvider implements RubricProvider {
             .shortDescription("Methode toString() wurde korrekt überschrieben.")
             .grader(Grader.testAwareBuilder()
                     .requirePass(JUnitTestRef
-                            .ofMethod(() -> TutorTests_H2.class.getMethod("t04",
-                                    TestCycle.class)))
+                            .ofMethod(() -> TutorTests_H2.class.getMethod("t04")))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
             .build();
+
+    ///////////////////////////////////////////////// H3
+
+    ///////////////////////////////////////////////// H3.1
+
+    ///////////////////////////////////////////////// H3.2
+    public static final Criterion H3_2_T6 = Criterion.builder()
+            .shortDescription("Methode letMeMove() wurde korrekt implementiert.")
+            .grader(Grader.testAwareBuilder()
+                    .requirePass(JUnitTestRef
+                            .ofMethod(() -> TutorTests_H3_2.class.getMethod("t06")))
+                    .pointsPassedMax()
+                    .pointsFailedMin()
+                    .build())
+            .build();
+    ///////////////////////////////////////////////// H3.3
+
+    ///////////////////////////////////////////////// H3.4
+
+    ///////////////////////////////////////////////// H4
 
     ///////////////////////////////////////////////// Tasks
     public static final Criterion H1 = Criterion.builder()
@@ -224,7 +230,7 @@ public class H05_RubricProvider implements RubricProvider {
 
     public static final Rubric RUBRIC = Rubric.builder()
             .title("h05")
-            .addChildCriteria(H1, H2)
+            .addChildCriteria(H1, H2, H3_2_T6)
             .build();
 
     @Override

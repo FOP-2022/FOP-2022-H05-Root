@@ -9,10 +9,7 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
-import org.sourcegrade.jagr.api.testing.TestCycle;
-import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
@@ -25,10 +22,8 @@ public class TutorTests_H2 {
     final String class_name = "Animal";
 
     @Test
-    @ExtendWith(TestCycleResolver.class)
     @DisplayName("1 | Enum AnimalType()")
-    public void t01(TestCycle testCycle) {
-        ClassTester.cycle = testCycle;
+    public void t01() {
         new ClassTester<>("h05", "AnimalType", 0.8, Modifier.PUBLIC | Modifier.FINAL | TestUtils.ENUM,
                 null, new ArrayList<>())
                         .verify()
@@ -36,18 +31,14 @@ public class TutorTests_H2 {
     }
 
     @Test
-    @ExtendWith(TestCycleResolver.class)
     @DisplayName("2 | Existenz Klasse " + class_name)
-    public void t02(TestCycle testCycle) {
-        ClassTester.cycle = testCycle;
+    public void t02() {
         new ClassTester<>("h05", "Animal", 1.0, Modifier.PUBLIC | Modifier.ABSTRACT).verify();
     }
 
     @Test
-    @ExtendWith(TestCycleResolver.class)
     @DisplayName("3 | Attribut animalType + Getter")
-    public void t03(TestCycle cycle) {
-        ClassTester.cycle = cycle;
+    public void t03() {
         var classTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = classTester.resolveAttribute(
@@ -57,10 +48,8 @@ public class TutorTests_H2 {
     }
 
     @Test
-    @ExtendWith(TestCycleResolver.class)
     @DisplayName("4 | Test ToString()")
-    public void t04(TestCycle testCycle) {
-        ClassTester.cycle = testCycle;
+    public void t04() {
         var classTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = classTester.resolveAttribute(
