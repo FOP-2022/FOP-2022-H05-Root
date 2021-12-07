@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mockingDetails;
+import static org.mockito.Mockito.spy;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,7 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import org.mockito.MockingDetails;
 
 import h05.TestUtils;
 import net.bytebuddy.ByteBuddy;
@@ -119,6 +124,20 @@ public class ClassTester<T> {
      */
     public ClassTester(String packageName, String className) {
         this(packageName, className, 1, -1, null, new ArrayList<>(), null);
+    }
+
+    public ClassTester(Class<T> clazz) {
+        this(
+                clazz.getPackageName(),
+                clazz.getSimpleName(),
+                0.8,
+                clazz.getModifiers(),
+                clazz.getSuperclass(),
+                Arrays.stream(clazz.getInterfaces())
+                        .map(x -> new IdentifierMatcher(x.getSimpleName(), x.getPackageName(), 0.8))
+                        .collect(Collectors.toCollection(ArrayList::new)),
+                null);
+        setTheClass(clazz);
     }
 
     /**
@@ -358,6 +377,35 @@ public class ClassTester<T> {
     }
 
     /**
+     * Gets the {@link MockingDetails} of {@link #theClass}
+     *
+     * @return the {@link MockingDetails} of {@link #theClass}
+     */
+    public MockingDetails getMockingDetails() {
+        return mockingDetails(getClassInstance());
+    }
+
+    /**
+     * Returns true if {@link #theClass} is Mocked
+     *
+     * @return true if {@link #theClass} is Mocked
+     * @see MockingDetails#isMock()
+     */
+    public boolean is_mock() {
+        return classInstanceResolved() && mockingDetails(getClassInstance()).isMock();
+    }
+
+    /**
+     * Returns true if {@link #theClass} is a Spy
+     *
+     * @return true if {@link #theClass} is a Spy
+     * @see MockingDetails#isSpy()
+     */
+    public boolean is_spy() {
+        return classInstanceResolved() && mockingDetails(getClassInstance()).isSpy();
+    }
+
+    /**
      * Generates a class not found Message
      *
      * @param className the Class Name
@@ -365,6 +413,30 @@ public class ClassTester<T> {
      */
     public static String getClassNotFoundMessage(String className) {
         return String.format("Klasse %s existiert nicht.", className);
+    }
+
+    /**
+     * Makes the class a Spy if not done already
+     *
+     * @return this
+     */
+    public ClassTester<T> assureSpied() {
+        assertclassInstanceResolved();
+        if (!is_spy()) {
+            setClassInstance(spy(getClassInstance()));
+        }
+        return this;
+    }
+
+    /**
+     * Makes the class a Spy if not done already
+     *
+     * @return this
+     */
+    public ClassTester<T> assertSpied() {
+        assertclassInstanceResolved();
+        assertTrue(is_spy(), "Faulty Test: Class was not spied on");
+        return this;
     }
 
     /**
@@ -873,19 +945,28 @@ public class ClassTester<T> {
     }
 
     /**
+     * Sets a field to a given Class
+     *
+     * @param instance the Instance to set the field
+     * @param field    the Field to modify
+     * @param value    the new Value
+     */
+    public static void setField(Object instance, Field field, Object value) {
+        assertNotNull(field, "Das Feld wurde nicht gefunden.");
+        assertDoesNotThrow(() -> {
+            field.setAccessible(true);
+            field.set(instance, value);
+        }, "Konnte nicht auf Attribut " + field.getName() + " zugreifen.");
+    }
+
+    /**
      * Sets a field to {@link #classInstance}
      *
      * @param field the Field to modify
      * @param value the new Value
      */
     public void setField(Field field, Object value) {
-        assertNotNull(field, "Das Feld wurde nicht gefunden.");
-        assertclassInstanceResolved();
-        assertDoesNotThrow(() -> {
-            field.setAccessible(true);
-            field.set(getClassInstance(), value);
-        }, "Konnte nicht auf Attribut " + field.getName() + " zugreifen.");
-
+        setField(getClassInstance(), field, value);
     }
 
     /**

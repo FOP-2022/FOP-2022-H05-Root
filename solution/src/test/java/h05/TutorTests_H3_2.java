@@ -3,7 +3,6 @@ package h05;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -15,6 +14,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
@@ -22,6 +22,7 @@ import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
 
+@TestForSubmission("h05")
 @DisplayName("H3.2")
 public class TutorTests_H3_2 {
 
@@ -137,14 +138,19 @@ public class TutorTests_H3_2 {
     @Test
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve().assureSpied();
         MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
                 Modifier.PUBLIC, String.class).verify();
-        var mock = spy(classTester.getClassInstance());
-        classTester.setClassInstance(mock);
+        var tlrClassTester = new ClassTester<>(ThreadLocalRandom.class);
+        // tlrClassTester.setClassInstance(ThreadLocalRandom.current());
+        //  MethodTester nextIntMT = new MethodTester(tlrClassTester, "nextInt");
+        //  nextIntMT.resolveMethod();
+        // var tlr = Mockito.spy(ThreadLocalRandom.class);
+        // var field = tlrClassTester.resolveAttribute(new AttributeMatcher("instance", 1.0, tlrClassTester.getTheClass()));
+        // ClassTester.setField(null, field, tlr);
+        // ThreadLocalRandomTester.current().
         mt.invoke();
-        assertEquals(1, Mockito.mockingDetails(mock).getInvocations().stream()
-                .filter(x -> x.getMethod().getName().equals(mt.getTheMethod().getName())).count());
+        assertEquals(1, mt.getInvocationCount());
     }
 
     @Test

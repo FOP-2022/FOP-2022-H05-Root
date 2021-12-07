@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
 
+import org.mockito.invocation.Invocation;
+
 import h05.TestUtils;
 
 /**
@@ -546,6 +548,27 @@ public class MethodTester {
     }
 
     /**
+     * Gets the Invocations of the Method
+     *
+     * @return the Invocations of the Method
+     */
+    public List<Invocation> getInvocations() {
+        assertMethodResolved();
+        classTester.assertSpied();
+        return classTester.getMockingDetails().getInvocations().stream()
+                .filter(x -> x.getMethod().getName().equals(getTheMethod().getName())).toList();
+    }
+
+    /**
+     * Gets the Invocation Count (How often Has the Method been invoked?)
+     *
+     * @return the Invocation Count
+     */
+    public int getInvocationCount() {
+        return getInvocations().size();
+    }
+
+    /**
      * Gets random Valid Parameter Values
      *
      * @return the Random Parameters
@@ -566,8 +589,8 @@ public class MethodTester {
     }
 
     // public boolean needsJavadoc() {
-    //     assertMethodResolved();
-    //     // theMethod.
+    // assertMethodResolved();
+    // // theMethod.
     // }
 
     /**

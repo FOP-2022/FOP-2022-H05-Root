@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
@@ -16,6 +17,7 @@ import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
 
+@TestForSubmission("h05")
 @DisplayName("H3.3")
 public class TutorTests_H3_3 {
 
@@ -83,8 +85,8 @@ public class TutorTests_H3_3 {
     }
 
     @Test
-    @DisplayName("8 | Konstruktor")
-    public void t08() {
+    @DisplayName("7 | Konstruktor")
+    public void t07() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolveClass();
         var constructor = classTester.resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
         classTester.assertConstructorValid(constructor, Modifier.PUBLIC);

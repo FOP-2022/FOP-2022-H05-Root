@@ -13,6 +13,7 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
@@ -23,22 +24,23 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.matcher.ElementMatchers;
 
+@TestForSubmission("h05")
 @DisplayName("H3.4")
 public class TutorTests_H3_4 {
 
     final String class_name = "SaltWaterCrocodileAsAmphibean";
 
     @Test
-    @DisplayName("2 | Existenz Klasse " + class_name)
-    public void t02() {
+    @DisplayName("1 | Existenz Klasse " + class_name)
+    public void t01() {
         new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC, null,
                 new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", 0.8),
                         new IdentifierMatcher("Cloneable", "h05", 1.0)))).verify();
     }
 
     @Test
-    @DisplayName("3 | Methode Clone")
-    public void t03() {
+    @DisplayName("2 | Methode Clone")
+    public void t02() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         var mt = new MethodTester(classTester, "clone", 0.8, Modifier.PUBLIC, Object.class, null, false).verify();
         Field saltyField = classTester
@@ -57,8 +59,8 @@ public class TutorTests_H3_4 {
     }
 
     @Test
-    @DisplayName("4 | canLiveInSaltWater")
-    public void t04() {
+    @DisplayName("3 | canLiveInSaltWater")
+    public void t03() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
         Field saltyField = classTester
@@ -72,8 +74,8 @@ public class TutorTests_H3_4 {
     }
 
     @Test
-    @DisplayName("5 | canLiveInFreshWater")
-    public void t05() {
+    @DisplayName("4 | canLiveInFreshWater")
+    public void t04() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
         Field saltyField = classTester
@@ -87,8 +89,8 @@ public class TutorTests_H3_4 {
     }
 
     @Test
-    @DisplayName("6 | letMeSwim")
-    public void t06() {
+    @DisplayName("5 | letMeSwim")
+    public void t05() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
         var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();
         Field saltyField = classTester
@@ -111,8 +113,8 @@ public class TutorTests_H3_4 {
     }
 
     @Test
-    @DisplayName("8 | Konstruktor")
-    public void t08() {
+    @DisplayName("6 | Konstruktor")
+    public void t06() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolveClass();
         var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
         var saltyClassTester = new ClassTester<>("h05", "SaltWaterCrocodile", 0.8).resolve();

@@ -138,14 +138,19 @@ public class TutorTests_H3_2 {
     @Test
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve().assureSpied();
         MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
                 Modifier.PUBLIC, String.class).verify();
-        var mock = spy(classTester.getClassInstance());
-        classTester.setClassInstance(mock);
+        var tlrClassTester = new ClassTester<>(ThreadLocalRandom.class);
+        // tlrClassTester.setClassInstance(ThreadLocalRandom.current());
+        //  MethodTester nextIntMT = new MethodTester(tlrClassTester, "nextInt");
+        //  nextIntMT.resolveMethod();
+        // var tlr = Mockito.spy(ThreadLocalRandom.class);
+        // var field = tlrClassTester.resolveAttribute(new AttributeMatcher("instance", 1.0, tlrClassTester.getTheClass()));
+        // ClassTester.setField(null, field, tlr);
+        // ThreadLocalRandomTester.current().
         mt.invoke();
-        assertEquals(1, Mockito.mockingDetails(mock).getInvocations().stream()
-                .filter(x -> x.getMethod().getName().equals(mt.getTheMethod().getName())).count());
+        assertEquals(1, mt.getInvocationCount());
     }
 
     @Test

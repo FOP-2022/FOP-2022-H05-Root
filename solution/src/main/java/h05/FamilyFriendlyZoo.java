@@ -27,12 +27,12 @@ public class FamilyFriendlyZoo implements Zoo {
     private boolean canLiveTogetherHelper(Animal a1, Animal a2, boolean swapped) {
         // Haie sind nicht mit anderen Knorpelfischen kompatibel
         if (a1 instanceof Shark && a2.getAnimalType() == AnimalType.CHONDRICHTHYES && !(a2 instanceof Shark)) {
-            return swapped ? false : canLiveTogetherHelper(a2, a1, true);
+            return false;
         }
 
         // Krokodile dürfen nicht mit Säugetieren zusammenleben
         if (a1.getAnimalType() == AnimalType.CROCODYLIDAE && a2.getAnimalType() == AnimalType.MAMMALIA) {
-            return swapped ? false : canLiveTogetherHelper(a2, a1, true);
+            return false;
         }
 
         // Vögel dürfen nur mit Tieren zusammenleben, die (falls Sie laufen können) bei
@@ -41,9 +41,9 @@ public class FamilyFriendlyZoo implements Zoo {
                 && ((Walking) a2).getAverageSpeed(10) >= 3) {
             // Haiart 4 darf nicht mit anderen Haiarten zusammenleben
             // Krokodile Sind nur mit
-            return swapped ? false : canLiveTogetherHelper(a2, a1, true);
+            return false;
         }
-        return true;
+        return swapped ? true : canLiveTogetherHelper(a2, a1, true);
     }
 
     @Override

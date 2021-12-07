@@ -9,11 +9,13 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.MethodTester;
 
+@TestForSubmission("h05")
 @DisplayName("H2")
 public class TutorTests_H2 {
 
