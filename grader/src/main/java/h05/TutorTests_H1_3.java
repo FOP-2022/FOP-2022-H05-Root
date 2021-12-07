@@ -28,6 +28,15 @@ public class TutorTests_H1_3 {
     }
 
     @Test
+    @DisplayName("1 | Existenz Interface " + interface_name)
+    public void t01_alt1() {
+        new ClassTester<>("h05", "Amphibian", 1.0,
+                Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE, null,
+                new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", 0.8),
+                        new IdentifierMatcher("Swimming", "h05", 0.8)))).verify();
+    }
+
+    @Test
     @DisplayName("2 | Enum EnvironmentType()")
     public void t02() {
         new ClassTester<>("h05", "EnvironmentType", 0.8,

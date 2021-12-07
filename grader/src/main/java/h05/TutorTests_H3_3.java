@@ -85,8 +85,8 @@ public class TutorTests_H3_3 {
     }
 
     @Test
-    @DisplayName("8 | Konstruktor")
-    public void t08() {
+    @DisplayName("7 | Konstruktor")
+    public void t07() {
         var classTester = new ClassTester<>("h05", class_name, 0.8).resolveClass();
         var constructor = classTester.resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
         classTester.assertConstructorValid(constructor, Modifier.PUBLIC);
