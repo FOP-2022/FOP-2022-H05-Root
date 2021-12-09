@@ -208,25 +208,21 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("10 | SurvivalOfTheFittestZoo - letterOfTheDay")
     public void t10() {
-        // var classTester = new ClassTester<>("h05", "SurvivalOfTheFittestZoo",
-        // 0.8).resolve();
-        // var animalClassTester = new ClassTester<>("h05", "Animal",
-        // 0.8).resolveClass();
-        // var mt = new MethodTester(classTester, "isAllowed", 0.8, Modifier.PUBLIC,
-        // boolean.class,
-        // new ArrayList<>(List.of(
-        // new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
-        // .verify();
-        // var enumClassTester = new ClassTester<>("h05", "AnimalType",
-        // 0.8).resolveClass();
-        // Field animalTypeField = animalClassTester.resolveAttribute(
-        // new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
-
-        // for (int i = 0; i < 100; i++) {
-        // animalClassTester.resolveInstance();
-        // var animalType = animalClassTester.setFieldRandom(animalTypeField);
-        // mt.assertReturnValueEquals(enumClassTester.getEnumValue("AVES", 0.8) ==
-        // animalType,
-        // animalClassTester.getClassInstance());
+        var mt = new MethodTester(
+                familyFriendlyZooCT.resolve(),
+                "letterOfTheDay",
+                0.8,
+                Modifier.PUBLIC,
+                char.class)
+                        .verify();
+        ThreadLocalRandomTester.initialize();
+        mt.invoke();
+        var usedRanges = ThreadLocalRandomTester.current().getUsedRanges();
+        assertEquals(usedRanges.size(), 1);
+        usedRanges.forEach(r -> {
+            assertEquals((int) 'a', r.lowerEndpoint());
+            assertEquals((int) 'z' + 1, r.upperEndpoint());
+        });
+        ThreadLocalRandomTester.removeCurrentTester();
     }
 }

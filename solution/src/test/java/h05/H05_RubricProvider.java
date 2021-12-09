@@ -1,6 +1,10 @@
 package h05;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.sourcegrade.jagr.api.rubric.*;
+import org.sourcegrade.jagr.api.testing.ClassTransformer;
+import org.sourcegrade.jagr.api.testing.RubricConfiguration;
 import org.sourcegrade.jagr.api.testing.TestCycle;
 
 @RubricForSubmission("h05")
@@ -577,4 +581,9 @@ public class H05_RubricProvider implements RubricProvider {
         return RUBRIC;
     }
 
+    @Override
+    public void configure(RubricConfiguration configuration) {
+        configuration
+                .addTransformer(ClassTransformer.replacement(ThreadLocalRandomTester.class, ThreadLocalRandom.class));
+    }
 }

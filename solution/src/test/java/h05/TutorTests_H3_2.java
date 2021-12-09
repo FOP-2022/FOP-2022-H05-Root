@@ -145,17 +145,16 @@ public class TutorTests_H3_2 {
                         .assureSpied(),
                 "letMeMove", 0.8,
                 Modifier.PUBLIC, String.class).verify();
-        // var tlrClassTester = new ClassTester<>(ThreadLocalRandom.class);
-        // tlrClassTester.setClassInstance(ThreadLocalRandom.current());
-        // MethodTester nextIntMT = new MethodTester(tlrClassTester, "nextInt");
-        // nextIntMT.resolveMethod();
-        // var tlr = Mockito.spy(ThreadLocalRandom.class);
-        // var field = tlrClassTester.resolveAttribute(new AttributeMatcher("instance",
-        // 1.0, tlrClassTester.getTheClass()));
-        // ClassTester.setField(null, field, tlr);
-        // ThreadLocalRandomTester.current().
+        ThreadLocalRandomTester.initialize();
         mt.invoke();
         assertEquals(1, mt.getInvocationCount());
+        var usedRanges = ThreadLocalRandomTester.current().getUsedRanges();
+        assertEquals(usedRanges.size(), 3);
+        usedRanges.forEach(r -> {
+            assertEquals(1, r.lowerEndpoint());
+            assertEquals(6, r.upperEndpoint());
+        });
+        ThreadLocalRandomTester.removeCurrentTester();
     }
 
     @Test
