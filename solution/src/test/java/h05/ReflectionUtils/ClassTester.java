@@ -503,6 +503,20 @@ public class ClassTester<T> {
     }
 
     /**
+     * Asserts that the Class is declared correctly.
+     *
+     * @param minSimilarity the Minimum required Similarity
+     * @return {@link ClassTester} this
+     */
+    public ClassTester<T> verify(double minSimilarity) {
+        final var currSim = getClassIdentifier().similarity;
+        getClassIdentifier().similarity = minSimilarity;
+        verify();
+        getClassIdentifier().similarity = currSim;
+        return this;
+    }
+
+    /**
      * Sets the Super Class
      *
      * @param superClass the Super Class
@@ -737,13 +751,26 @@ public class ClassTester<T> {
     }
 
     /**
+     * Resolves the class if necessary (We do not care about fields fields being
+     * made accessible here)
+     *
+     * @return this
+     */
+    public ClassTester<T> assureClassResolved() {
+        if (!class_resolved()) {
+            resolveClass();
+        }
+        return this;
+    }
+
+    /**
      * Resolves the Class and Instance and stores them in {@link #theClass} and
      * {@link #classInstance}
      *
      * @return this
      */
     public ClassTester<T> resolve() {
-        resolveClass();
+        assureClassResolved();
         resolveInstance();
         return this;
     }

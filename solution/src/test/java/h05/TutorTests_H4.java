@@ -40,29 +40,29 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("2 | Existenz Interface Zoo")
     public void t01() {
-        new ClassTester<>("h05", "Zoo", 1.0, Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE).verify();
+        zooCT.verify(1.0d);
     }
 
     @Test
     @DisplayName("2 | Zoo - canLiveTogether")
     public void t02() {
-        var classTester = new ClassTester<>("h05", "Zoo", 0.8).resolveClass();
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        new MethodTester(classTester, "canLiveTogether", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT, boolean.class,
+        zooCT.resolveClass();
+        animalCT.resolveClass();
+        new MethodTester(
+                zooCT, "canLiveTogether", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT, boolean.class,
                 new ArrayList<>(List.of(
-                        new ParameterMatcher("a1", 0.8, animalClassTester.getTheClass()),
-                        new ParameterMatcher("a2", 0.8, animalClassTester.getTheClass()))))
+                        new ParameterMatcher("a1", 0.8, animalCT.getTheClass()),
+                        new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
                                 .verify();
     }
 
     @Test
     @DisplayName("3 | Zoo - isAllowed")
     public void t03() {
-        var classTester = new ClassTester<>("h05", "Zoo", 0.8).resolveClass();
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        new MethodTester(classTester, "isAllowed", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT, boolean.class,
+        new MethodTester(zooCT.assureClassResolved(), "isAllowed", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT,
+                boolean.class,
                 new ArrayList<>(List.of(
-                        new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
+                        new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
                                 .verify();
     }
 
@@ -70,19 +70,17 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("4 | Existenz Klasse SurvivalOfTheFittestZoo")
     public void t04() {
-        new ClassTester<>("h05", "SurvivalOfTheFittestZoo", 1.0, Modifier.PUBLIC, null, new ArrayList<>(List.of(
-                new IdentifierMatcher("Zoo", 0.8)))).verify();
+        survivalOfTheFittestZooCT.verify(1.0d);
     }
 
     @Test
     @DisplayName("5 | SurvivalOfTheFittestZoo - canLiveTogether")
     public void t05() {
-        var classTester = new ClassTester<>("h05", "SurvivalOfTheFittestZoo", 0.8).resolve();
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        var mt = new MethodTester(classTester, "canLiveTogether", 0.8, Modifier.PUBLIC, boolean.class,
+        var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "canLiveTogether", 0.8, Modifier.PUBLIC,
+                boolean.class,
                 new ArrayList<>(List.of(
-                        new ParameterMatcher("a1", 0.8, animalClassTester.getTheClass()),
-                        new ParameterMatcher("a2", 0.8, animalClassTester.getTheClass()))))
+                        new ParameterMatcher("a1", 0.8, animalCT.assureClassResolved().getTheClass()),
+                        new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
                                 .verify();
         var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark", "SaltWaterCrocodyle" };
         for (final var name1 : animalSubtypes) {
@@ -97,21 +95,19 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("6 | SurvivalOfTheFittestZoo - isAllowed")
     public void t06() {
-        var classTester = new ClassTester<>("h05", "SurvivalOfTheFittestZoo", 0.8).resolve();
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        var mt = new MethodTester(classTester, "isAllowed", 0.8, Modifier.PUBLIC, boolean.class,
+        var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "isAllowed", 0.8, Modifier.PUBLIC, boolean.class,
                 new ArrayList<>(List.of(
-                        new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
+                        new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
                                 .verify();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
-        Field animalTypeField = animalClassTester.resolveAttribute(
+        Field animalTypeField = animalCT.resolveAttribute(
                 new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
 
         for (int i = 0; i < 100; i++) {
-            animalClassTester.resolveInstance();
-            var animalType = animalClassTester.setFieldRandom(animalTypeField);
+            animalCT.resolveInstance();
+            var animalType = animalCT.setFieldRandom(animalTypeField);
             mt.assertReturnValueEquals(enumClassTester.getEnumValue("AVES", 0.8) == animalType,
-                    animalClassTester.getClassInstance());
+                    animalCT.getClassInstance());
         }
     }
 
@@ -120,8 +116,7 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("7 | Existenz Klasse FamilyFriendlyZoo")
     public void t07() {
-        new ClassTester<>("h05", "FamilyFriendlyZoo", 1.0, Modifier.PUBLIC, null, new ArrayList<>(List.of(
-                new IdentifierMatcher("Zoo", 0.8)))).verify();
+        familyFriendlyZooCT.verify(1.0d);
     }
 
     @Test

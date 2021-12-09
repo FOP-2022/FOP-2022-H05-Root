@@ -11,6 +11,7 @@ import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
+import static h05.H05_Class_Testers.*;
 
 @TestForSubmission("h05")
 @DisplayName("H1_3")
@@ -21,10 +22,7 @@ public class TutorTests_H1_3 {
     @Test
     @DisplayName("1 | Existenz Interface " + interface_name)
     public void t01() {
-        new ClassTester<>("h05", interface_name, 1.0,
-                Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE, null,
-                new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", 0.8),
-                        new IdentifierMatcher("Swimming", "h05", 0.8)))).verify();
+        amphibeanCT.verify(1.0d);
     }
 
     @Test
@@ -32,25 +30,23 @@ public class TutorTests_H1_3 {
     public void t01_alt1() {
         new ClassTester<>("h05", "Amphibian", 1.0,
                 Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE, null,
-                new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", 0.8),
-                        new IdentifierMatcher("Swimming", "h05", 0.8)))).verify();
+                new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", minSim),
+                        new IdentifierMatcher("Swimming", "h05", minSim)))).verify(1.0d);
     }
 
     @Test
     @DisplayName("2 | Enum EnvironmentType()")
     public void t02() {
-        new ClassTester<>("h05", "EnvironmentType", 0.8,
-                Modifier.PUBLIC | Modifier.FINAL | TestUtils.ENUM)
-                        .verify()
-                        .assertEnumConstants(new String[] { "ON_SHORE", "IN_WATER" });
+        environmentTypeCT
+                .verify(1.0d)
+                .assertEnumConstants(new String[] { "ON_SHORE", "IN_WATER" });
     }
 
     @Test
     @DisplayName("3 | Methode getPreferredEnvironment()")
     public void t03() {
-        var classTester = new ClassTester<>("h05", interface_name, 0.8);
-        var environmentTypeClass = new ClassTester<>("h05", "EnvironmentType", 0.8).findClass();
-        new MethodTester(classTester, "getPreferredEnvironment", 0.8,
-                Modifier.PUBLIC | Modifier.ABSTRACT, environmentTypeClass, new ArrayList<>()).verify();
+        new MethodTester(amphibeanCT.assureClassResolved(), "getPreferredEnvironment", 0.8,
+                Modifier.PUBLIC | Modifier.ABSTRACT, environmentTypeCT.assureClassResolved().getTheClass(),
+                new ArrayList<>()).verify();
     }
 }

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
-import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.MethodTester;
+import static h05.H05_Class_Testers.*;
 
 @TestForSubmission("h05")
 @DisplayName("H2")
@@ -24,47 +24,43 @@ public class TutorTests_H2 {
     @Test
     @DisplayName("1 | Enum AnimalType()")
     public void t01() {
-        new ClassTester<>("h05", "AnimalType", 0.8, Modifier.PUBLIC | Modifier.FINAL | TestUtils.ENUM,
-                null, new ArrayList<>())
-                        .verify()
-                        .assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
+        animalTypeCT
+                .verify(1.0d)
+                .assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
     }
 
     @Test
     @DisplayName("2 | Existenz Klasse " + class_name)
     public void t02() {
-        new ClassTester<>("h05", "Animal", 1.0, Modifier.PUBLIC | Modifier.ABSTRACT).verify();
+        animalCT.verify(1.0d);
     }
 
     @Test
     @DisplayName("3 | Attribut animalType + Getter")
     public void t03() {
-        var classTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
-        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
-        Field animalTypeField = classTester.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass()));
+        Field animalTypeField = animalCT.resolve().resolveAttribute(
+                new AttributeMatcher("animalType", 1.0d, Modifier.PROTECTED,
+                        animalTypeCT.assureClassResolved().getClass()));
 
-        classTester.assertHasGetter(animalTypeField);
+        animalCT.assertHasGetter(animalTypeField);
     }
 
     @Test
     @DisplayName("4 | Test ToString()")
     public void t04() {
-        var classTester = new ClassTester<>("h05", "Animal", 0.8).resolve();
-        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
-        Field animalTypeField = classTester.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass()));
+        Field animalTypeField = animalCT.resolve().resolveAttribute(
+                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED,
+                        animalTypeCT.assureClassResolved().getClass()));
 
-        var methodTester = new MethodTester(classTester, "toString", 0.8, Modifier.PUBLIC, String.class,
+        var methodTester = new MethodTester(animalCT.resolve(), "toString", 0.8, Modifier.PUBLIC, String.class,
                 new ArrayList<>()).verify();
 
         assertDoesNotThrow(() -> animalTypeField.setAccessible(true));
 
-        Object animalInstance = classTester.resolveInstance();
-        classTester.setClassInstance(animalInstance);
+        Object animalInstance = animalCT.getClassInstance();
 
         // Normal
-        var expectedAnimalType = enumClassTester.getRandomEnumConstant();
+        var expectedAnimalType = animalTypeCT.getRandomEnumConstant();
         var expectedAnswer = String.format("My species is called %s which is part of animal type %s.",
                 animalInstance.getClass().getSimpleName(),
                 expectedAnimalType.name().substring(0, 1) + expectedAnimalType.name().substring(1).toLowerCase());
@@ -74,7 +70,7 @@ public class TutorTests_H2 {
         // Null
         expectedAnswer = String.format("My species is called %s which is part of animal type Null.",
                 animalInstance.getClass().getSimpleName());
-        classTester.setField(animalTypeField, null);
+        animalCT.setField(animalTypeField, null);
         assertEquals(expectedAnswer, methodTester.invoke(), "Falsche Rückgabe der toString-Metode.");
     }
 }

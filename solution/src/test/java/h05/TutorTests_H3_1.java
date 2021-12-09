@@ -3,6 +3,7 @@ package h05;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -14,9 +15,9 @@ import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
+import static h05.H05_Class_Testers.*;
 
 @TestForSubmission("h05")
 @DisplayName("H3_1")
@@ -26,32 +27,29 @@ public class TutorTests_H3_1 {
 
     @Test
     @DisplayName("1 | Existenz Klasse " + class_name)
+    @SuppressWarnings("unchecked")
     public void t01() {
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC,
-                animalClassTester.getTheClass(),
-                new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", 0.8)))).verify();
+        ostrichCT.setSuperClass((Class<Object>) animalCT.assureClassResolved().getTheClass());
+        ostrichCT.verify(1.0d);
     }
 
     @Test
     @DisplayName("2 | Attribut distanceSoFar + Getter")
     public void t02() {
-        var classTester = new ClassTester<>("h05", "Ostrich", 0.8).resolveClass();
-        Field distanceSoFarField = classTester
+        Field distanceSoFarField = ostrichCT.resolve()
                 .resolveAttribute(new AttributeMatcher(
                         "distanceSoFar",
                         0.8,
                         Modifier.PRIVATE,
                         double.class));
-        classTester.assertHasGetter(distanceSoFarField);
+        ostrichCT.assertHasGetter(distanceSoFarField);
     }
 
     @Test
     @DisplayName("3 | Methode getNumberOfLegs()")
     public void t03() {
-        var classTester = new ClassTester<>("h05", "Ostrich", 0.8).resolve();
         var methodTester = new MethodTester(
-                classTester,
+                ostrichCT.resolve(),
                 "getNumberOfLegs",
                 0.8,
                 Modifier.PUBLIC,
@@ -64,9 +62,8 @@ public class TutorTests_H3_1 {
     @Test
     @DisplayName("4 | Methode getAverageSpeed()")
     public void t04() {
-        var classTester = new ClassTester<>("h05", "Ostrich", 0.8).resolve();
         var methodTester = new MethodTester(
-                classTester,
+                ostrichCT.resolve(),
                 "getAverageSpeed",
                 0.8,
                 Modifier.PUBLIC,
@@ -96,31 +93,30 @@ public class TutorTests_H3_1 {
     @Test
     @DisplayName("5 | Methode letMeMove()")
     public void t05() {
-        var classTester = new ClassTester<>("h05", "Ostrich", 0.8).resolve();
-        var methodTester = new MethodTester(classTester, "letMeMove", 0.8, Modifier.PUBLIC, String.class)
+        var methodTester = new MethodTester(ostrichCT.resolve(), "letMeMove", 0.8, Modifier.PUBLIC, String.class)
                 .verify();
 
-        Field distanceSoFarField = classTester
+        Field distanceSoFarField = ostrichCT
                 .resolveAttribute(new AttributeMatcher("distanceSoFar", 0.8, Modifier.PRIVATE, double.class));
 
         double initialDistance = (double) ClassTester.getRandomValue(double.class);
-        classTester.setField(distanceSoFarField, initialDistance);
+        ostrichCT.setField(distanceSoFarField, initialDistance);
 
         methodTester.assertReturnValueEquals(String.format("Distance so far: %s", initialDistance + 1d));
-        classTester.assertFieldEquals(distanceSoFarField, initialDistance + 1d);
+        ostrichCT.assertFieldEquals(distanceSoFarField, initialDistance + 1d);
     }
 
     @Test
     @DisplayName("6 | Konstruktor")
+    @SuppressWarnings("unchecked")
     public void t06() {
-        var classTester = new ClassTester<>("h05", "Ostrich", 0.8).resolveClass();
-        var constructor = classTester.resolveConstructor();
-        classTester.assertConstructorValid(constructor, Modifier.PUBLIC);
+        Constructor<Object> constructor = (Constructor<Object>) ostrichCT.assureClassResolved().resolveConstructor();
+        ((ClassTester<Object>) ostrichCT).assertConstructorValid(constructor, Modifier.PUBLIC);
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
-        Field animalTypeField = classTester.resolveAttribute(
+        Field animalTypeField = ostrichCT.resolveAttribute(
                 new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(), true));
-        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
-        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("AVES", 0.8));
+        ((ClassTester<Object>) ostrichCT).setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
+        ostrichCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("AVES", 0.8));
     }
 }

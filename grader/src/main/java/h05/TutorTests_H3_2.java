@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import h05.ReflectionUtils.ClassTester;
 import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
+import static h05.H05_Class_Testers.*;
 
 @TestForSubmission("h05")
 @DisplayName("H3.2")
@@ -30,80 +32,80 @@ public class TutorTests_H3_2 {
 
     @Test
     @DisplayName("1 | Existenz Klasse " + class_name)
+    @SuppressWarnings("unchecked")
     public void t01() {
-        var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        new ClassTester<>("h05", class_name, 1.0, Modifier.PUBLIC,
-                animalClassTester.getTheClass(),
-                new ArrayList<>(List.of(new IdentifierMatcher("Swimming", "h05", 0.8),
-                        new IdentifierMatcher("IntConsumer", "java.util.function.IntConsumer",
-                                1.0)))).verify();
+        sharkCT.setSuperClass((Class<Object>) animalCT.assureClassResolved().getTheClass());
+        sharkCT.verify(1.0d);
     }
 
     @Test
     @DisplayName("2 | Attribute specificSpecies, x, y, degreeOfHunger + Getter")
     public void t02() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
+        sharkCT.resolve();
         for (var fieldMatcher : new AttributeMatcher[] {
                 new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, short.class),
                 new AttributeMatcher("x", 1.0, Modifier.PRIVATE, int.class),
                 new AttributeMatcher("y", 1.0, Modifier.PRIVATE, int.class),
                 new AttributeMatcher("degreeOfHunger", 0.8, Modifier.PRIVATE, int.class)
         }) {
-            Field theField = classTester.resolveAttribute(fieldMatcher);
-            classTester.assertHasGetter(theField);
+            Field theField = sharkCT.resolveAttribute(fieldMatcher);
+            sharkCT.assertHasGetter(theField);
         }
     }
 
     @Test
     @DisplayName("3 | canLiveInSaltWater")
     public void t03() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
-        Field specificSpeciesField = classTester
+        sharkCT.resolve();
+        Field specificSpeciesField = sharkCT
                 .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE,
                         int.class));
-        MethodTester mt = new MethodTester(classTester, "canLiveInSaltWater", 0.8, Modifier.PUBLIC,
+        MethodTester mt = new MethodTester(
+                sharkCT, "canLiveInSaltWater", 0.8, Modifier.PUBLIC,
                 boolean.class);
         mt.resolveMethod();
         for (int i = -20; i <= 20; i++) {
             var specificSpecies = i;
-            classTester.setField(specificSpeciesField, (short) specificSpecies);
+            sharkCT.setField(specificSpeciesField, (short) specificSpecies);
             mt.assertReturnValueEquals(IntStream.of(2, 5, 9).anyMatch(x -> x == specificSpecies),
                     "bei " + specificSpeciesField.getName() + "==" + i);
-            classTester.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
+            sharkCT.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
         }
     }
 
     @Test
     @DisplayName("4 | canLiveInFreshWater")
     public void t04() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
-        Field specificSpeciesField = classTester.resolveAttribute(
+        sharkCT.resolve();
+        Field specificSpeciesField = sharkCT.resolveAttribute(
                 new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, int.class));
-        MethodTester mt = new MethodTester(classTester, "canLiveInFreshWater", 0.8, Modifier.PUBLIC,
+        MethodTester mt = new MethodTester(
+                sharkCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC,
                 boolean.class);
         mt.resolveMethod();
         for (int i = -20; i <= 20; i++) {
             var specificSpecies = i;
-            classTester.setField(specificSpeciesField, (short) specificSpecies);
+            sharkCT.setField(specificSpeciesField, (short) specificSpecies);
             mt.assertReturnValueEquals(
                     Math.abs(specificSpecies % 4) == 2,
                     "bei " + specificSpeciesField.getName() + "==" + i);
-            classTester.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
+            sharkCT.assertFieldEquals(specificSpeciesField, (short) specificSpecies);
         }
     }
 
     @Test
     @DisplayName("5 | letMeSwim mit Hungerreduktion")
     public void t05() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
-        Field degreeOfHungerField = classTester
+        sharkCT.resolve();
+        Field degreeOfHungerField = sharkCT
                 .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
                         Modifier.PRIVATE, int.class));
-        Field xField = classTester
+        Field xField = sharkCT
                 .resolveAttribute(new AttributeMatcher("x", 1.0, int.class));
-        Field yField = classTester
+        Field yField = sharkCT
                 .resolveAttribute(new AttributeMatcher("y", 1.0, int.class));
-        MethodTester mt = new MethodTester(classTester, "letMeSwim", 0.8,
+        MethodTester mt = new MethodTester(
+                sharkCT, "letMeSwim", 0.8,
                 Modifier.PUBLIC, void.class,
                 new ArrayList<>(List.of(
                         new ParameterMatcher("distance", 0.8, char.class),
@@ -116,9 +118,9 @@ public class TutorTests_H3_2 {
             int y = ThreadLocalRandom.current().nextInt(-2000, 2000);
             double yParam = ThreadLocalRandom.current().nextDouble(-2000, 2000);
             char distanceParam = (char) ThreadLocalRandom.current().nextInt(-2000, 2000);
-            classTester.setField(degreeOfHungerField, degreeOfHunger);
-            classTester.setField(xField, x);
-            classTester.setField(yField, y);
+            sharkCT.setField(degreeOfHungerField, degreeOfHunger);
+            sharkCT.setField(xField, x);
+            sharkCT.setField(yField, y);
             mt.invoke(distanceParam, xParam, yParam);
             String attributesBefore = String.format(
                     "Attribute von Shark vor Aufruf: degreeOfHunger = %s, x = %s, y = %s",
@@ -126,11 +128,11 @@ public class TutorTests_H3_2 {
             String params = String.format("Parameter: distance = %s, x = %s, y = %s", distanceParam, xParam,
                     yParam);
 
-            classTester.assertFieldEquals(degreeOfHungerField, degreeOfHunger + 1,
+            sharkCT.assertFieldEquals(degreeOfHungerField, degreeOfHunger + 1,
                     attributesBefore + "\n" + params);
-            classTester.assertFieldEquals(xField, (int) (x + xParam * distanceParam),
+            sharkCT.assertFieldEquals(xField, (int) (x + xParam * distanceParam),
                     attributesBefore + "\n" + params);
-            classTester.assertFieldEquals(yField, (int) (y + yParam * distanceParam),
+            sharkCT.assertFieldEquals(yField, (int) (y + yParam * distanceParam),
                     attributesBefore + "\n" + params);
         }
     }
@@ -138,15 +140,18 @@ public class TutorTests_H3_2 {
     @Test
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve().assureSpied();
-        MethodTester mt = new MethodTester(classTester, "letMeMove", 0.8,
+        MethodTester mt = new MethodTester(
+                sharkCT.resolve()
+                        .assureSpied(),
+                "letMeMove", 0.8,
                 Modifier.PUBLIC, String.class).verify();
-        var tlrClassTester = new ClassTester<>(ThreadLocalRandom.class);
+        // var tlrClassTester = new ClassTester<>(ThreadLocalRandom.class);
         // tlrClassTester.setClassInstance(ThreadLocalRandom.current());
-        //  MethodTester nextIntMT = new MethodTester(tlrClassTester, "nextInt");
-        //  nextIntMT.resolveMethod();
+        // MethodTester nextIntMT = new MethodTester(tlrClassTester, "nextInt");
+        // nextIntMT.resolveMethod();
         // var tlr = Mockito.spy(ThreadLocalRandom.class);
-        // var field = tlrClassTester.resolveAttribute(new AttributeMatcher("instance", 1.0, tlrClassTester.getTheClass()));
+        // var field = tlrClassTester.resolveAttribute(new AttributeMatcher("instance",
+        // 1.0, tlrClassTester.getTheClass()));
         // ClassTester.setField(null, field, tlr);
         // ThreadLocalRandomTester.current().
         mt.invoke();
@@ -156,18 +161,17 @@ public class TutorTests_H3_2 {
     @Test
     @DisplayName("7 | setSpecificSpecies")
     public void t07() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolve();
-        MethodTester mt = new MethodTester(classTester, "setSpecificSpecies", 0.8,
+        MethodTester mt = new MethodTester(sharkCT.resolve(), "setSpecificSpecies", 0.8,
                 Modifier.PUBLIC, short.class,
                 new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class))))
                         .verify();
-        Field specificSpeciesField = classTester
+        Field specificSpeciesField = sharkCT
                 .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE,
                         short.class));
         for (int i = -20; i <= 20; i++) {
             var expectedSpecificSpecies = (short) Math.max(0, Math.min(i, 10));
             mt.assertReturnValueEquals(expectedSpecificSpecies, (short) i);
-            classTester.assertFieldEquals(specificSpeciesField,
+            sharkCT.assertFieldEquals(specificSpeciesField,
                     (short) Math.max(0, Math.min(expectedSpecificSpecies, 10)),
                     "Parameter des Aufrufs von setSpecificSpecies: " + i);
         }
@@ -175,37 +179,38 @@ public class TutorTests_H3_2 {
 
     @Test
     @DisplayName("8 | Konstruktor")
+    @SuppressWarnings("unchecked")
     public void t08() {
-        var classTester = new ClassTester<>("h05", class_name, 0.8).resolveClass();
-        var constructor = classTester
+        var constructor = (Constructor<Object>) sharkCT.assureClassResolved()
                 .resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
-        classTester.assertConstructorValid(constructor, Modifier.PUBLIC,
+        ((ClassTester<Object>) sharkCT).assertConstructorValid(constructor, Modifier.PUBLIC,
                 new ParameterMatcher("specificSpecies", 0.8, short.class));
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
-        Field animalTypeField = classTester.resolveAttribute(
+        Field animalTypeField = sharkCT.resolveAttribute(
                 new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(),
                         true));
-        Field degreeOfHungerField = classTester
+        Field degreeOfHungerField = sharkCT
                 .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,
                         Modifier.PRIVATE, int.class));
-        Field specificSpeciesField = classTester
+        Field specificSpeciesField = sharkCT
                 .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE,
                         short.class));
         // Valid Value
-        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) 5)));
-        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
-        classTester.assertFieldEquals(degreeOfHungerField, 10);
-        classTester.assertFieldEquals(specificSpeciesField, (short) 5);
+        ((ClassTester<Object>) sharkCT).setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) 5)));
+        sharkCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
+        sharkCT.assertFieldEquals(degreeOfHungerField, 10);
+        sharkCT.assertFieldEquals(specificSpeciesField, (short) 5);
         // Smaller Value
-        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) -42)));
-        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
-        classTester.assertFieldEquals(degreeOfHungerField, 10);
-        classTester.assertFieldEquals(specificSpeciesField, (short) 0);
+        ((ClassTester<Object>) sharkCT)
+                .setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) -42)));
+        sharkCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
+        sharkCT.assertFieldEquals(degreeOfHungerField, 10);
+        sharkCT.assertFieldEquals(specificSpeciesField, (short) 0);
         // Bigger Value
-        classTester.setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) 69)));
-        classTester.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
-        classTester.assertFieldEquals(degreeOfHungerField, 10);
-        classTester.assertFieldEquals(specificSpeciesField, (short) 10);
+        ((ClassTester<Object>) sharkCT).setClassInstance(assertDoesNotThrow(() -> constructor.newInstance((short) 69)));
+        sharkCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CHONDRICHTHYES", 0.8));
+        sharkCT.assertFieldEquals(degreeOfHungerField, 10);
+        sharkCT.assertFieldEquals(specificSpeciesField, (short) 10);
     }
 }
