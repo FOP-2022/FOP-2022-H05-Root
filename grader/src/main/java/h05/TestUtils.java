@@ -159,10 +159,10 @@ public class TestUtils {
      * @throws IOException            if an IO Exception occurs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
-        var cycle = TestCycleResolver.getCurrent();
+        var cycle = Alex_fix_test_initialisation.getTestCycle();
         if (cycle != null) {
             // Autograder Run
-            return cycle.getSubmission().getCompileResult().getRuntimeResources().getClassNames().stream()
+            return cycle.getSubmission().getClassNames().stream()
                     .map(x -> assertDoesNotThrow(() -> Class.forName(x))).toArray(Class<?>[]::new);
         } else {
             // Regular Junit Run
@@ -172,7 +172,14 @@ public class TestUtils {
         }
     }
 
+    /**
+     * Returns {@code true} if {@link Alex_fix_test_initialisation#getTestCycle()}
+     * does not return {@code null}
+     *
+     * @return {@code true} if {@link Alex_fix_test_initialisation#getTestCycle()}
+     *         does not return {@code null}
+     */
     public static boolean isAutograderRun() {
-        return org.sourcegrade.jagr.api.testing.extension.TestCycleResolver.getCurrent() != null;
+        return Alex_fix_test_initialisation.getTestCycle() != null;
     }
 }

@@ -14,8 +14,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
@@ -197,7 +199,7 @@ public class TutorTests_H4 {
 
     @Test
     @DisplayName("10 | familyFriendlyZoo - letterOfTheDay")
-    @AutograderOnlyTest
+    @ExtendWith(TestCycleResolver.class)
     public void t10() {
         var mt = new MethodTester(
                 familyFriendlyZooCT.resolve(),

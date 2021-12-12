@@ -2,7 +2,6 @@ package h05;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,13 +13,12 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledIf;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
 import static h05.H05_Class_Testers.*;
@@ -138,8 +136,8 @@ public class TutorTests_H3_2 {
         }
     }
 
-    @AutograderOnlyTest
     @Test
+    @ExtendWith(TestCycleResolver.class)
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     // @EnabledIf(expression=""TestUtils.isAutograderRun()"")
     public void t06() {

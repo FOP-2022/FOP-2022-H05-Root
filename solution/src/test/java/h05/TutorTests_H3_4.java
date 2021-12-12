@@ -1,7 +1,6 @@
 package h05;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -10,20 +9,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.implementation.FixedValue;
-import net.bytebuddy.matcher.ElementMatchers;
 import static h05.H05_Class_Testers.*;
 
 @TestForSubmission("h05")
@@ -34,7 +27,6 @@ public class TutorTests_H3_4 {
 
     @Test
     @DisplayName("1 | Existenz Klasse " + class_name)
-    @SuppressWarnings("unchecked")
     public void t01() {
         saltWaterCrocodileAsAmphibeanCT.verify(1.0d);
     }
