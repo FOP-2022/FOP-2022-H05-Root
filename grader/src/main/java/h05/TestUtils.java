@@ -4,13 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Optional;
 
 import com.google.common.reflect.ClassPath;
 
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 /**
@@ -165,5 +170,9 @@ public class TestUtils {
             return ClassPath.from(loader).getTopLevelClasses(packageName).stream().map(x -> x.load())
                     .toArray(Class<?>[]::new);
         }
+    }
+
+    public static boolean isAutograderRun() {
+        return org.sourcegrade.jagr.api.testing.extension.TestCycleResolver.getCurrent() != null;
     }
 }

@@ -15,7 +15,7 @@ public class SurvivalOfTheFittestZoo implements Zoo {
     @Override
     public boolean isAllowed(Animal a) {
         // Der Zoobesitzer mag keine Vögel
-        return a.getAnimalType() == AnimalType.AVES;
+        return a.getAnimalType() != AnimalType.AVES;
     }
 
 }

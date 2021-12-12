@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIf;
 import org.mockito.Mockito;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
@@ -137,8 +138,10 @@ public class TutorTests_H3_2 {
         }
     }
 
+    @AutograderOnlyTest
     @Test
     @DisplayName("6 | letMeMove mit Hungerreduktion")
+    // @EnabledIf(expression=""TestUtils.isAutograderRun()"")
     public void t06() {
         MethodTester mt = new MethodTester(
                 sharkCT.resolve()

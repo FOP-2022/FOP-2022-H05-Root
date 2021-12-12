@@ -41,7 +41,7 @@ public class TutorTests_H3_1 {
                         "distanceSoFar",
                         0.8,
                         Modifier.PRIVATE,
-                        double.class));
+                        int.class));
         ostrichCT.assertHasGetter(distanceSoFarField);
     }
 
@@ -97,13 +97,14 @@ public class TutorTests_H3_1 {
                 .verify();
 
         Field distanceSoFarField = ostrichCT
-                .resolveAttribute(new AttributeMatcher("distanceSoFar", 0.8, Modifier.PRIVATE, double.class));
+                .resolveAttribute(new AttributeMatcher("distanceSoFar", 0.8, Modifier.PRIVATE, int.class));
 
-        double initialDistance = (double) ClassTester.getRandomValue(double.class);
+        var initialDistance = ClassTester.getRandomValue(distanceSoFarField.getType());
         ostrichCT.setField(distanceSoFarField, initialDistance);
 
-        methodTester.assertReturnValueEquals(String.format("Distance so far: %s", initialDistance + 1d));
-        ostrichCT.assertFieldEquals(distanceSoFarField, initialDistance + 1d);
+        methodTester.assertReturnValueEquals(
+                String.format("Distance so far: %s", ((Number) initialDistance).intValue() + 1));
+        ostrichCT.assertFieldEquals(distanceSoFarField, ((Number) initialDistance).intValue() + 1);
     }
 
     @Test

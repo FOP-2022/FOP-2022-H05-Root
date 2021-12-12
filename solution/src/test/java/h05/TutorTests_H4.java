@@ -2,35 +2,25 @@ package h05;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.implementation.FixedValue;
-import net.bytebuddy.matcher.ElementMatchers;
 import static h05.H05_Class_Testers.*;
 
 @TestForSubmission("h05")
@@ -106,7 +96,7 @@ public class TutorTests_H4 {
         for (int i = 0; i < 100; i++) {
             animalCT.resolveInstance();
             var animalType = animalCT.setFieldRandom(animalTypeField);
-            mt.assertReturnValueEquals(enumClassTester.getEnumValue("AVES", 0.8) == animalType,
+            mt.assertReturnValueEquals(enumClassTester.getEnumValue("AVES", 0.8) != animalType,
                     animalCT.getClassInstance());
         }
     }
@@ -206,7 +196,8 @@ public class TutorTests_H4 {
     }
 
     @Test
-    @DisplayName("10 | SurvivalOfTheFittestZoo - letterOfTheDay")
+    @DisplayName("10 | familyFriendlyZoo - letterOfTheDay")
+    @AutograderOnlyTest
     public void t10() {
         var mt = new MethodTester(
                 familyFriendlyZooCT.resolve(),

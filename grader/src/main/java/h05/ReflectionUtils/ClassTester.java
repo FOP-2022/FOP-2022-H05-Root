@@ -19,6 +19,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.primitives.Primitives;
+
 import org.mockito.MockingDetails;
 
 import h05.TestUtils;
@@ -782,8 +784,8 @@ public class ClassTester<T> {
      * @return the Default Value for the given Type
      */
     public static Object getDefaultValue(Class<?> type) {
-        if (type == byte.class || type == Byte.class) {
-            return (byte) 0;
+        if (type == null) {
+            return null;
         } else if (type == short.class || type == Short.class) {
             return (short) 0;
         } else if (type == int.class || type == Integer.class) {
@@ -795,10 +797,8 @@ public class ClassTester<T> {
         } else if (type == double.class || type == Double.class) {
             return (double) 0;
         } else if (type == char.class || type == Character.class) {
-            return (char) 0;
-        } else if (type == char.class) {
-            return 'a';
-        } else if (type == boolean.class) {
+            return (char) 'a';
+        } else if (type == boolean.class || type == Boolean.class) {
             return false;
         } else {
             return null;
@@ -971,6 +971,33 @@ public class ClassTester<T> {
         assertConstructorValid(constructor, accessModifier, new ArrayList<>(Arrays.asList(parameters)));
     }
 
+    public static void setFieldTyped(Field field, Object obj, Object value)
+            throws IllegalArgumentException, IllegalAccessException {
+        if (field == null) {
+            return;
+        }
+        var type = field.getType();
+        if (type == byte.class || type == Byte.class) {
+            field.setByte(obj, (byte) value);
+        } else if (type == short.class || type == Short.class) {
+            field.setShort(obj, (short) value);
+        } else if (type == int.class || type == Integer.class) {
+            field.setInt(obj, (int) value);
+        } else if (type == long.class || type == Long.class) {
+            field.setLong(obj, (long) value);
+        } else if (type == float.class || type == Float.class) {
+            field.setFloat(obj, (float) value);
+        } else if (type == double.class || type == Double.class) {
+            field.setDouble(obj, (double) value);
+        } else if (type == char.class || type == Character.class) {
+            field.setChar(obj, (char) value);
+        } else if (type == boolean.class || type == Boolean.class) {
+            field.setBoolean(obj, (boolean) value);
+        } else {
+            field.set(obj, value);
+        }
+    }
+
     /**
      * Sets a field to a given Class
      *
@@ -982,7 +1009,7 @@ public class ClassTester<T> {
         assertNotNull(field, "Das Feld wurde nicht gefunden.");
         assertDoesNotThrow(() -> {
             field.setAccessible(true);
-            field.set(instance, value);
+            setFieldTyped(field, instance, value);
         }, "Konnte nicht auf Attribut " + field.getName() + " zugreifen.");
     }
 
