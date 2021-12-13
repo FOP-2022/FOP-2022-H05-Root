@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Answers.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
 import static org.mockito.Mockito.spy;
 
@@ -847,6 +849,7 @@ public class ClassTester<T> {
      * @param className        the source Class Name
      * @param derivedClassName the name for the derived Class
      * @return the derived Class
+     * @deprecated
      */
     public static <T> Class<? extends T> generateDerivedClass(Class<T> clazz, String className,
             String derivedClassName) {
@@ -870,30 +873,7 @@ public class ClassTester<T> {
     @SuppressWarnings("unchecked")
     public static <T> T resolveInstance(Class<? super T> clazz, String className) {
         assertClassNotNull(clazz, className);
-        if (Modifier.isAbstract(clazz.getModifiers())) {
-            clazz = (Class<T>) generateDerivedClass(clazz, className,
-                    className + ThreadLocalRandom.current().nextInt(1000, 10000));
-        }
-        assertFalse(Modifier.isAbstract(clazz.getModifiers()), "Kann keine Abstrakten Klasssen instanzieren.");
-        var constructors = clazz.getDeclaredConstructors();
-        T instance = null;
-        for (var c : constructors) {
-            try {
-                c.setAccessible(true);
-                var params = c.getParameters();
-
-                var constructorArgs = Arrays.stream(params).map(x -> {
-                    return getDefaultValue(x.getType());
-                }).toArray();
-                instance = (T) c.newInstance(constructorArgs);
-                break;
-            } catch (Exception e) {
-                e.printStackTrace();
-                continue;
-            }
-        }
-        assertNotNull(instance, "Could not create Instance.");
-        return instance;
+        return (T) mock(clazz, CALLS_REAL_METHODS);
     }
 
     /**
