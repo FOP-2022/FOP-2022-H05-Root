@@ -180,6 +180,7 @@ public class TestUtils {
      *         does not return {@code null}
      */
     public static boolean isAutograderRun() {
-        return Alex_fix_test_initialisation.getTestCycle() != null;
+        return true;
+        // return Alex_fix_test_initialisation.getTestCycle() != null;
     }
 }
