@@ -197,9 +197,8 @@ public class TutorTests_H4 {
         }
     }
 
-    @Test
+    @JagrOnlyTest
     @DisplayName("10 | familyFriendlyZoo - letterOfTheDay")
-    @ExtendWith(TestCycleResolver.class)
     public void t10() {
         var mt = new MethodTester(
                 familyFriendlyZooCT.resolve(),

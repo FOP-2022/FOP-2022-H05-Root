@@ -556,7 +556,7 @@ public class MethodTester {
         assertMethodResolved();
         classTester.assertSpied();
         return classTester.getMockingDetails().getInvocations().stream()
-                .filter(x -> x.getMethod().getName().equals(getTheMethod().getName())).toList();
+                .filter(x -> x.getMethod().getName().equals(getTheMethod().getName())).collect(Collectors.toList());
     }
 
     /**
