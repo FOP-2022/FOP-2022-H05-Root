@@ -593,6 +593,20 @@ public class MethodTester {
     // // theMethod.
     // }
 
+    public static String safeArrayToString(Object... array) {
+        var paramsString = "[]";
+        if (array != null) {
+            try {
+                paramsString = Arrays.toString(array);
+            } catch (Exception e) {
+                Arrays.stream(
+                        array).map(x -> x.getClass().getName() + "@" + Integer.toHexString(x.hashCode()))
+                        .collect(Collectors.joining(", ", "[", "]"));
+            }
+        }
+        return paramsString;
+    }
+
     /**
      * Asserts the Return Value of an invokation with the given parameters
      *
@@ -601,8 +615,9 @@ public class MethodTester {
      * @param params            the Parameters used for invokation
      */
     public void assertReturnValueEquals(Object expected, String additionalMessage, Object... params) {
+
         assertEquals(expected, invoke(params), "Falsche Rückgabe bei Methode" + getMethodIdentifier().identifierName
-                + (params.length > 0 ? "mit Parameter(n):" + Arrays.toString(params) : "") + additionalMessage);
+                + (params.length > 0 ? "mit Parameter(n):" + safeArrayToString(params) : "") + additionalMessage);
     }
 
     /**

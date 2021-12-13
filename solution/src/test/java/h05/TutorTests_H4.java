@@ -74,7 +74,7 @@ public class TutorTests_H4 {
                         new ParameterMatcher("a1", 0.8, animalCT.assureClassResolved().getTheClass()),
                         new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
                                 .verify();
-        var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark", "SaltWaterCrocodyle" };
+        var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark", "SaltWaterCrocodile" };
         for (final var name1 : animalSubtypes) {
             for (final var name2 : animalSubtypes) {
                 var ct1 = new ClassTester<>("h05", name1, 0.8).resolve();
