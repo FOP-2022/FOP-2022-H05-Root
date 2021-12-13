@@ -136,8 +136,7 @@ public class TutorTests_H3_2 {
         }
     }
 
-    @Test
-    @ExtendWith(TestCycleResolver.class)
+    @JagrOnlyTest
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     // @EnabledIf(expression=""TestUtils.isAutograderRun()"")
     public void t06() {

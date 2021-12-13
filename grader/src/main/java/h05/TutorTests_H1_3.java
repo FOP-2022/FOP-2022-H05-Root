@@ -26,7 +26,7 @@ public class TutorTests_H1_3 {
     }
 
     @Test
-    @DisplayName("1 | Existenz Interface " + interface_name)
+    @DisplayName("1-Alt | Existenz Interface Amphibian")
     public void t01_alt1() {
         new ClassTester<>("h05", "Amphibian", 1.0,
                 Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE, null,
