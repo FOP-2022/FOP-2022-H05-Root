@@ -126,7 +126,7 @@ public class TutorTests_H4 {
                         new ParameterMatcher("a2", minSim, animalCT.getTheClass()))))
                                 .verify();
         Field animalTypeField = animalCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, animalTypeCT.getClass()));
+                new AttributeMatcher("animalType", 0.8, -1, animalTypeCT.getClass()));
         var getAverageSpeeedMT = new MethodTester(walkingCT, "getAverageSpeed", 0.8,
                 Modifier.PUBLIC | Modifier.ABSTRACT,
                 double.class, new ArrayList<>(List.of(new ParameterMatcher("distance", 0.8, double.class))));

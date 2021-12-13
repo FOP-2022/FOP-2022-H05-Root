@@ -93,7 +93,7 @@ public class TutorTests_H3_3 {
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = saltWaterCrocodileCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(), true));
+                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass(), true));
         // Valid Value
         ((ClassTester<Object>) saltWaterCrocodileCT)
                 .setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));

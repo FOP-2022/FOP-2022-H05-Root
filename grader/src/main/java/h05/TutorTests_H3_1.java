@@ -116,7 +116,7 @@ public class TutorTests_H3_1 {
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = ostrichCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(), true));
+                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass(), true));
         ((ClassTester<Object>) ostrichCT).setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
         ostrichCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("AVES", 0.8));
     }

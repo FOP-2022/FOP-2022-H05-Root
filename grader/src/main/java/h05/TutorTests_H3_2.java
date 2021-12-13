@@ -187,7 +187,7 @@ public class TutorTests_H3_2 {
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = sharkCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED, enumClassTester.getClass(),
+                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass(),
                         true));
         Field degreeOfHungerField = sharkCT
                 .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8,

@@ -49,7 +49,7 @@ public class TutorTests_H2 {
     @DisplayName("4 | Test ToString()")
     public void t04() {
         Field animalTypeField = animalCT.resolve().resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, Modifier.PROTECTED,
+                new AttributeMatcher("animalType", 0.8, -1,
                         animalTypeCT.assureClassResolved().getClass()));
 
         var methodTester = new MethodTester(animalCT.resolve(), "toString", 0.8, Modifier.PUBLIC, String.class,
