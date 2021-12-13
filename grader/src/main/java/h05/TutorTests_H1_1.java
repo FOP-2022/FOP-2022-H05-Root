@@ -4,9 +4,12 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;

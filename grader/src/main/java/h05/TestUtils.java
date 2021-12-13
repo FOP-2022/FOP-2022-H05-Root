@@ -4,18 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Optional;
 
 import com.google.common.reflect.ClassPath;
 
-import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 /**
@@ -159,7 +154,7 @@ public class TestUtils {
      * @throws IOException            if an IO Exception occurs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
-        var cycle = Alex_fix_test_initialisation.getTestCycle();
+        var cycle = TestCycleResolver.getTestCycle();
         if (cycle != null) {
             // Autograder Run
             return cycle.getSubmission().getClassNames().stream()
@@ -173,14 +168,13 @@ public class TestUtils {
     }
 
     /**
-     * Returns {@code true} if {@link Alex_fix_test_initialisation#getTestCycle()}
+     * Returns {@code true} if {@link A#getTestCycle()}
      * does not return {@code null}
      *
-     * @return {@code true} if {@link Alex_fix_test_initialisation#getTestCycle()}
+     * @return {@code true} if {@link A#getTestCycle()}
      *         does not return {@code null}
      */
     public static boolean isAutograderRun() {
-        return true;
-        // return Alex_fix_test_initialisation.getTestCycle() != null;
+        return TestCycleResolver.getTestCycle() != null;
     }
 }
