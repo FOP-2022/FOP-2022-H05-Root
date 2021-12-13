@@ -15,6 +15,7 @@ import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import h05.ReflectionUtils.AttributeMatcher;
 import h05.ReflectionUtils.ClassTester;
+import h05.ReflectionUtils.IdentifierMatcher;
 import h05.ReflectionUtils.MethodTester;
 import h05.ReflectionUtils.ParameterMatcher;
 import static h05.H05_Class_Testers.*;
@@ -29,6 +30,14 @@ public class TutorTests_H3_4 {
     @DisplayName("1 | Existenz Klasse " + class_name)
     public void t01() {
         saltWaterCrocodileAsAmphibeanCT.verify(1.0d);
+    }
+
+    @Test
+    @DisplayName("1-Alt | Existenz Klasse " + class_name)
+    public void t01_alt() {
+        new ClassTester<>("h05",
+                "SaltWaterCrocodileAsAmphibean", minSim, Modifier.PUBLIC, null,
+                new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", minSim)))).verify(1.0d);
     }
 
     @Test

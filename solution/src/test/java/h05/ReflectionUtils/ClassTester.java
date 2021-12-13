@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Answers.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
@@ -24,6 +25,7 @@ import java.util.stream.Stream;
 import com.google.common.primitives.Primitives;
 
 import org.mockito.MockingDetails;
+import org.opentest4j.AssertionFailedError;
 
 import h05.TestUtils;
 import net.bytebuddy.ByteBuddy;
@@ -1053,8 +1055,26 @@ public class ClassTester<T> {
      * @param additionalMessage an Addition Error Message
      */
     public void assertFieldEquals(Field field, Object expected, String additionalMessage) {
-        assertEquals(expected, getFieldValue(field), "Das Attribut " + field.getName() + " hat den Falschen Wert."
-                + (additionalMessage == null ? "" : "\n" + additionalMessage));
+        assertNotNull(field, "Fehlerhafter Test:Das Attribut konnte nicht gefunden werden.");
+        var message = "Das Attribut " + field.getName() + " hat den falschen Wert."
+                + (additionalMessage == null ? "" : "\n" + additionalMessage);
+        if (field.getType() instanceof Class) {
+            var actual = getFieldValue(field);
+            if (expected == null && actual != null || (expected != null && !expected.equals(actual))) {
+                fail(message + "Expected: [" +
+                        expected == null
+                                ? null
+                                : expected.getClass().getName() + "@" + Integer.toHexString(expected.hashCode())
+                                        + "], but got: ["
+                                        +
+                                        (actual == null ? null
+                                                : actual.getClass().getName() + "@"
+                                                        + Integer.toHexString(actual.hashCode()))
+                                        + "]");
+            }
+        } else {
+            assertEquals(expected, getFieldValue(field), message);
+        }
     }
 
     /**

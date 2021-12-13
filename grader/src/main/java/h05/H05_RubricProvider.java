@@ -430,7 +430,10 @@ public class H05_RubricProvider implements RubricProvider {
             .maxPoints(0)
             .minPoints(-1)
             .grader(Grader.testAwareBuilder()
-                    .requirePass(JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t01")))
+                    .requirePass(JUnitTestRef.or(
+                        JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t01")),
+                        JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t01_alt"))
+                    ))
                     .pointsPassedMax()
                     .pointsFailedMin()
                     .build())
