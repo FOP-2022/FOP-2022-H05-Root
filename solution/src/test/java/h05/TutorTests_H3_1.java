@@ -114,10 +114,10 @@ public class TutorTests_H3_1 {
         Constructor<Object> constructor = (Constructor<Object>) ostrichCT.assureClassResolved().resolveConstructor();
         ((ClassTester<Object>) ostrichCT).assertConstructorValid(constructor, Modifier.PUBLIC);
 
-        var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
+        animalTypeCT.assureClassResolved();
         Field animalTypeField = ostrichCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass(), true));
+                new AttributeMatcher("animalType", 0.8, -1, animalTypeCT.getClass(), true));
         ((ClassTester<Object>) ostrichCT).setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
-        ostrichCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("AVES", 0.8));
+        ostrichCT.assertFieldEquals(animalTypeField, animalTypeCT.getEnumValue("AVES", 0.8));
     }
 }
