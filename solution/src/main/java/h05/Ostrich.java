@@ -7,10 +7,10 @@ package h05;
  */
 public class Ostrich extends Animal implements Walking {
 
-    public Ostrich() {
-        super();
-        animalType = AnimalType.AVES;
-    }
+    // public Ostrich() {
+    //     super();
+    //     animalType = AnimalType.AVES;
+    // }
 
     /**
      * Die bisher zurückgelegte Strecke
