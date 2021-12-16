@@ -594,7 +594,7 @@ public class H05_RubricProvider implements RubricProvider {
                 .addJavaDoc(new MethodTester(swimmingCT, "canLiveInSaltWater")::getMethodDocumentation, H1_2)
                 .addJavaDoc(new MethodTester(swimmingCT, "canLiveInFreshWater")::getMethodDocumentation, H1_2)
                 .addJavaDoc(new MethodTester(swimmingCT, "letMeSwim")::getMethodDocumentation, H1_2)
-                .addJavaDoc(new MethodTester(amphibeanCT, "getPreferredEnvironment")::getMethodDocumentation, H1_3)
+                .addJavaDoc(new MethodTester(amphibeanCT, "getPreferredEnvironmentType")::getMethodDocumentation, H1_3)
                 .addJavaDoc(new MethodTester(animalCT, "getAnimalType")::getMethodDocumentation, H2)
                 .addJavaDoc(new MethodTester(animalCT, "letMeMove")::getMethodDocumentation, H2)
                 .addJavaDoc(new MethodTester(ostrichCT, "getDistanceSoFar")::getMethodDocumentation, H3_1)

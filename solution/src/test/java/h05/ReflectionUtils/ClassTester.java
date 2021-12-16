@@ -912,7 +912,6 @@ public class ClassTester<T> {
      * @param derivedClassName
      *            the name for the derived Class
      * @return the derived Class
-     * @deprecated
      */
     public static <T> Class<? extends T> generateDerivedClass(Class<T> clazz, String className,
         String derivedClassName) {
@@ -1039,8 +1038,8 @@ public class ClassTester<T> {
             var constructor = resolveConstructor(parameters);
             return d.forTopLevelType(getTheClass().getName()).forConstructor(
                 constructor.getParameterTypes());
-        } catch (Exception e) {
-            return null;
+        } catch (Throwable e) {
+            return d.forTopLevelType("").forConstructor();
         }
     }
 

@@ -889,8 +889,8 @@ public class MethodTester {
             var resolvedMethod = assureMethodResolved().getTheMethod();
             return d.forTopLevelType(classTester.getTheClass().getName()).forMethod(
                 resolvedMethod.getName(), resolvedMethod.getParameterTypes());
-        } catch (Exception e) {
-            return null;
+        } catch (Throwable e) {
+            return d.forTopLevelType("").forMethod("");
         }
     }
 
