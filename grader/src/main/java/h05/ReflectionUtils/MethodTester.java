@@ -439,7 +439,12 @@ public class MethodTester {
                 var matcher = expectedParameters.get(i);
                 assertTrue(i < actualParamters.size(), "Zu wenige Parameter.");
                 var param = actualParamters.get(i);
-                assertSame(param.getType(), matcher.parameterType, "Falscher Parametertyp an Index " + "i.");
+                if (matcher.allowSubTypes) {
+                    assertInstanceOf(matcher.parameterType, param.getType(),
+                        "Falscher Parametertyp an Index " + "i. (Subtypen erlaubt)");
+                } else {
+                    assertSame(matcher.parameterType, param.getType(), "Falscher Parametertyp an Index " + "i.");
+                }
                 if (!ignoreNames && param.isNamePresent() && matcher.identifierName != null && matcher.similarity > 0) {
                     assertTrue(TestUtils.similarity(matcher.identifierName, param.getName()) >= matcher.similarity,
                         "Falscher Parametername. Erwartet: " + matcher.identifierName + ", Erhalten: "
@@ -682,7 +687,6 @@ public class MethodTester {
      *            the Parameters used for invokation
      */
     public void assertReturnValueEquals(Object expected, String additionalMessage, Object... params) {
-
         assertEquals(expected, invoke(params), "Falsche Rückgabe bei Methode" + getMethodIdentifier().identifierName
             + (params.length > 0 ? "mit Parameter(n):" + safeArrayToString(params) : "") + additionalMessage);
     }

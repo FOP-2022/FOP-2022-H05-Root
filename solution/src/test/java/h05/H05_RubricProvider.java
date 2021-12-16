@@ -409,12 +409,11 @@ public class H05_RubricProvider implements RubricProvider {
         .build();
     public static final Criterion H3_4_T2 = Criterion.builder()
         .shortDescription(
-            "Methoden equals() und clone() sind vollständig korrekt. // TODO: Equals Test")
+            "Methoden equals() und clone() sind vollständig korrekt.")
         .grader(Grader.testAwareBuilder()
             .requirePass(JUnitTestRef.and(
-                JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t02"))
-            // JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t03")),
-            ))
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t02")),
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_4.class.getMethod("t02_two"))))
             .pointsPassedMax()
             .pointsFailedMin()
             .build())

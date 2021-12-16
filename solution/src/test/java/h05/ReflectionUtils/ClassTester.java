@@ -896,7 +896,7 @@ public class ClassTester<T> {
         } else if (type.isEnum()) {
             return getRandomEnumConstant((Class<Enum<?>>) type, type.getName());
         } else {
-            return resolveInstance(type, type.getName() + "Impl" + ThreadLocalRandom.current().nextInt(1000, 10000));
+            return findInstance(type, type.getName() + "Impl" + ThreadLocalRandom.current().nextInt(1000, 10000));
         }
     }
 
@@ -936,9 +936,49 @@ public class ClassTester<T> {
      * @return the instance
      */
     @SuppressWarnings("unchecked")
-    public static <T> T resolveInstance(Class<? super T> clazz, String className) {
+    public static <T> T findInstance(Class<? super T> clazz, String className) {
         assertClassNotNull(clazz, className);
         return (T) mock(clazz, CALLS_REAL_METHODS);
+    }
+
+    /**
+     * Resolves an Instance of a given class (even abstract)
+     *
+     * @param <T>
+     *            The Instance type
+     * @param clazz
+     *            The class to generate the Instance from
+     * @param className
+     *            the Class Name
+     * @return the instance
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T legacyFindInstance(Class<? super T> clazz, String className) {
+        assertClassNotNull(clazz, className);
+        if (Modifier.isAbstract(clazz.getModifiers())) {
+            clazz = (Class<T>) generateDerivedClass(clazz, className,
+                className + ThreadLocalRandom.current().nextInt(1000, 10000));
+        }
+        assertFalse(Modifier.isAbstract(clazz.getModifiers()), "Kann keine Abstrakten Klasssen instanzieren.");
+        var constructors = clazz.getDeclaredConstructors();
+        T instance = null;
+        for (var c : constructors) {
+            try {
+                c.setAccessible(true);
+                var params = c.getParameters();
+
+                var constructorArgs = Arrays.stream(params).map(x -> {
+                    return getDefaultValue(x.getType());
+                }).toArray();
+                instance = (T) c.newInstance(constructorArgs);
+                break;
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
+            }
+        }
+        assertNotNull(instance, "Could not create Instance.");
+        return instance;
     }
 
     /**
@@ -949,7 +989,39 @@ public class ClassTester<T> {
      * @return the instance
      */
     public T resolveInstance() {
-        return classInstance = resolveInstance(theClass, classIdentifier.identifierName);
+        return classInstance = findInstance(theClass, classIdentifier.identifierName);
+    }
+
+    /**
+     * Resolves an Instance of {@link #theClass} (even abstract)
+     *
+     * @param <T>
+     *            The Instance type
+     * @return the instance
+     */
+    public T getNewInstance() {
+        return findInstance(theClass, classIdentifier.identifierName);
+    }
+
+    /**
+     * Resolves an Instance of {@link #theClass} (even abstract)
+     *
+     * @param <T>
+     *            The Instance type
+     * @return the instance
+     */
+    public T getNewRealInstance() {
+        return legacyFindInstance(theClass, classIdentifier.identifierName);
+    }
+
+    /**
+     * Resolve a real Instance
+     *
+     * @return the real instance
+     */
+    public ClassTester<T> resolveRealInstance() {
+        setClassInstance(legacyFindInstance(theClass, classIdentifier.identifierName));
+        return this;
     }
 
     /**
