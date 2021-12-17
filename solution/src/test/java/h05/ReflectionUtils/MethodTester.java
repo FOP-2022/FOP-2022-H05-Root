@@ -63,6 +63,10 @@ public class MethodTester {
      * whether to also match super implementations
      */
     public boolean allowSuperClass;
+    /**
+     * Whether to allow derived return Types
+     */
+    private boolean looseReturnTypeChecking;
 
     /**
      * Generates a new {@link MethodTester}
@@ -110,6 +114,31 @@ public class MethodTester {
         Class<?> returnType, ArrayList<ParameterMatcher> parameters) {
         this(classTester, methodName, similarity, accessModifier, returnType, parameters, false);
 
+    }
+
+    /**
+     * Generates a new {@link MethodTester}
+     *
+     * @param classTester
+     *            A Class Tester (used for invoking)
+     * @param methodName
+     *            the expected method name
+     * @param similarity
+     *            the minimum matching similarity
+     * @param accessModifier
+     *            The Expected Access Modifier
+     * @param returnType
+     *            The expected return Type
+     * @param parameters
+     *            The expected parameters
+     * @param looseReturnTypeChecking
+     *            whether or not to allow Derived return Types
+     */
+    public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier,
+        Class<?> returnType, ArrayList<ParameterMatcher> parameters, boolean allowSuperClass,
+        boolean looseReturnTypeChecking) {
+        this(classTester, methodName, similarity, accessModifier, returnType, parameters, allowSuperClass);
+        this.looseReturnTypeChecking = looseReturnTypeChecking;
     }
 
     /**
@@ -250,6 +279,25 @@ public class MethodTester {
     }
 
     /**
+     * returns true if {@link #looseReturnTypeChecking} is true
+     *
+     * @return true if {@link #looseReturnTypeChecking} is true
+     */
+    public boolean isLooseReturnTypeChecking() {
+        return looseReturnTypeChecking;
+    }
+
+    /**
+     * Allow or disallow Loose return Type Checking
+     *
+     * @param looseReturnTypeChecking
+     *            the new Rule
+     */
+    public void setLooseReturnTypeChecking(boolean looseReturnTypeChecking) {
+        this.looseReturnTypeChecking = looseReturnTypeChecking;
+    }
+
+    /**
      * Generates a Message for an invalid return type
      *
      * @param methodName
@@ -268,7 +316,13 @@ public class MethodTester {
             throw new RuntimeErrorException(new Error(), "Faulty Test: Cannot assert return type null");
         }
         assertMethodResolved();
-        assertSame(returnType, theMethod.getReturnType(), getInvalidReturnTypeMessage(methodIdentifier.identifierName));
+        if (looseReturnTypeChecking) {
+            assertInstanceOf(returnType, theMethod.getReturnType(),
+                getInvalidReturnTypeMessage(methodIdentifier.identifierName));
+        } else {
+            assertSame(returnType, theMethod.getReturnType(),
+                getInvalidReturnTypeMessage(methodIdentifier.identifierName));
+        }
     }
 
     /**

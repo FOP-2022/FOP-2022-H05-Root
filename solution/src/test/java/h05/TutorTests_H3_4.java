@@ -44,11 +44,31 @@ public class TutorTests_H3_4 {
     @Test
     @DisplayName("2 | Methode Clone")
     public void t02() {
-        saltWaterCrocodileAsAmphibeanCT.resolve();
+        saltWaterCrocodileAsAmphibeanCT.resolveReal();
         var mt = new MethodTester(
-            saltWaterCrocodileAsAmphibeanCT, "clone", 0.8, Modifier.PUBLIC, Object.class, null, false).verify();
+            saltWaterCrocodileAsAmphibeanCT, "clone", 0.8, Modifier.PUBLIC, Object.class, null, false, true).verify();
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
-            .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, -1, short.class));
+
+        var saltyInstance = saltWaterCrocodileCT.resolve().getClassInstance();
+
+        saltWaterCrocodileAsAmphibeanCT.setField(saltyField, saltyInstance);
+
+        var clonedSWCAA = mt.invoke();
+        assertNotSame(saltyInstance, clonedSWCAA);
+        assertNotNull(clonedSWCAA, "Falsche Rückgabe bei Methode Clone: ");
+        assertSame(saltyInstance, ClassTester.getFieldValue(clonedSWCAA, saltyField));
+    }
+
+    @Test
+    @DisplayName("2-Alt | Methode Clone")
+    public void t02_alt2() {
+        saltWaterCrocodileAsAmphibeanCT.resolveReal();
+        var mt = new MethodTester(
+            saltWaterCrocodileAsAmphibeanCT, "clone", 0.8, Modifier.PUBLIC | Modifier.VOLATILE, Object.class, null,
+            false, true).verify();
+        Field saltyField = saltWaterCrocodileAsAmphibeanCT
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, -1, short.class));
 
         var saltyInstance = saltWaterCrocodileCT.resolve().getClassInstance();
 
@@ -65,7 +85,7 @@ public class TutorTests_H3_4 {
     public void t02_two() {
         saltWaterCrocodileAsAmphibeanCT.resolveClass();
         var mt = new MethodTester(
-            saltWaterCrocodileAsAmphibeanCT, "equals", 0.8, Modifier.PUBLIC, boolean.class,
+            saltWaterCrocodileAsAmphibeanCT, "equals", 0.8, Modifier.PUBLIC | Modifier.VOLATILE, boolean.class,
             new ArrayList<>(List.of(new ParameterMatcher(Object.class, true))), false).verify();
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
             .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
