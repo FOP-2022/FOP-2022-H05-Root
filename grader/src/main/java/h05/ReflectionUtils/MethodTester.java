@@ -718,15 +718,16 @@ public class MethodTester {
             "Could not Create Spoon Launcher");
         CtType<?> type = assertDoesNotThrow(
             () -> spoon.getModel().getAllTypes().stream().filter(CtType::isTopLevel).findFirst().orElseThrow(),
-            "Could not resolve Class Source for Class " + classTester.getClassIdentifier().identifierName + "." + "available Class Sources:"+ spoon
-                .getModel().getAllTypes().toString());
+            "Could not resolve Class Source for Class " + classTester.getClassIdentifier().identifierName + "."
+                + "available Class Sources:" + spoon
+                    .getModel().getAllTypes().toString());
         CtMethod<?> method = assertDoesNotThrow(
             () -> type.getMethodsByName(getMethodIdentifier().identifierName).stream().findFirst()
                 .orElseThrow(),
             "Could not resolve Method Source for Method " + getTheMethod().getName());
 
         for (var construct : disallowedConstructs) {
-            assertTrue(!method.getElements(new TypeFilter<>(construct)).isEmpty(),
+            assertTrue(method.getElements(new TypeFilter<>(construct)).isEmpty(),
                 String.format("Ein verboteners Sprachkonstrukt wurde in Methode %s verwendet: %s.",
                     getMethodIdentifier().identifierName, construct.getSimpleName()));
         }
