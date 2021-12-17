@@ -882,6 +882,18 @@ public class ClassTester<T> {
     }
 
     /**
+     * Resolves the Class and Instance and stores them in {@link #theClass} and
+     * {@link #classInstance}
+     *
+     * @return this
+     */
+    public ClassTester<T> resolveReal() {
+        assureClassResolved();
+        resolveRealInstance();
+        return this;
+    }
+
+    /**
      * Returns the Default Value for the given Type
      *
      * @param type

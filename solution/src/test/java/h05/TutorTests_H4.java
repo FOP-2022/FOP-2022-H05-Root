@@ -114,13 +114,11 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("8 | FamilyFriendlyZoo - canLiveTogether")
     public void t08() {
-        // TODO: getClass() auf die Mockito Klasse Überschreiben
         walkingCT.resolveClass();
         familyFriendlyZooCT.resolve();
         animalCT.resolveClass();
         animalTypeCT.resolveClass();
-        sharkCT.resolve();
-        saltWaterCrocodileCT.resolve();
+        sharkCT.resolveReal();
         var mt = new MethodTester(familyFriendlyZooCT, "canLiveTogether", minSim, Modifier.PUBLIC, boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a1", minSim, animalCT.getTheClass()),

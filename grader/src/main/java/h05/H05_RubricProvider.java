@@ -337,8 +337,11 @@ public class H05_RubricProvider implements RubricProvider {
                 JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t04")),
                 JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t05")),
                 JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t06")),
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t07_syntax")),
                 JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t07")),
-                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t08"))))
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t08")),
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t09")),
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t09_syntax"))))
             .pointsPassedMax()
             .pointsFailedMin()
             .build())

@@ -713,7 +713,7 @@ public class MethodTester {
      *            the Disallowed Constructs
      */
     public void assertConstructsNotUsed(List<Class<? extends CtCodeElement>> disallowedConstructs) {
-        assertMethodResolved();
+        assureMethodResolved();
         Launcher spoon = getClassTester().assureSpoonLauncherModelsBuild().getSpoon();
         CtType<?> type = spoon.getModel().getAllTypes().stream().filter(CtType::isTopLevel).findFirst().orElseThrow();
         CtMethod<?> method = type.getMethodsByName(getMethodIdentifier().identifierName).stream().findFirst()

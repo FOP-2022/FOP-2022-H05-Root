@@ -193,6 +193,7 @@ public class TutorTests_H3_2 {
     @JagrOnlyTest
     @DisplayName("7 | setSpecificSpecies - verbindliche Anforderung")
     public void t07_syntax() {
+        // TODO: Fix Test
         sharkCT.assureClassResolved().resolveRealInstance();
         MethodTester mt = new MethodTester(sharkCT, "setSpecificSpecies", 0.8,
             Modifier.PUBLIC, short.class,
@@ -239,16 +240,35 @@ public class TutorTests_H3_2 {
         sharkCT.assertFieldEquals(specificSpeciesField, (short) 10);
     }
 
-    @JagrOnlyTest
-    @DisplayName("9 | accept + verbindliche Anforderung")
+    @Test
+    @DisplayName("9 | accept - logik")
     public void t09() {
-        // TODO: Accept Test + Syntax Test
-        // sharkCT.assureClassResolved().resolveRealInstance();
-        // MethodTester mt = new MethodTester(sharkCT, "setSpecificSpecies", 0.8,
-        //     Modifier.PUBLIC, short.class,
-        //     new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class))));
-        // mt.resolveMethod();
-        // mt.assertConstructsNotUsed(List.of(
-        //     CtConditional.class));
+        // degreeOfHunger -= reductionOfHunger > 0 ? reductionOfHunger : 0;
+        sharkCT.assureClassResolved().resolveRealInstance();
+        MethodTester mt = new MethodTester(sharkCT, "accept", 0.8,
+            Modifier.PUBLIC, void.class,
+            new ArrayList<>(List.of(new ParameterMatcher("reductionOfHunger", 0.8, int.class)))).verify();
+        Field degreeOfHungerField = sharkCT
+            .resolveAttribute(new AttributeMatcher("degreeOfHunger", 0.8, -1,
+                int.class));
+        sharkCT.setField(degreeOfHungerField, 1000);
+        var expectedDOH = 1000;
+        for (int i = -20; i <= 20; i++) {
+            mt.invoke(i);
+            expectedDOH -= i > 0 ? i : 0;
+            sharkCT.assertFieldEquals(degreeOfHungerField, expectedDOH);
+        }
+    }
+
+    @JagrOnlyTest
+    @DisplayName("9 | accept - Verbindliche Anforderung")
+    public void t09_syntax() {
+        // TODO: Fix Test
+        new MethodTester(sharkCT, "accept", 0.8,
+            Modifier.PUBLIC, void.class,
+            new ArrayList<>(List.of(new ParameterMatcher("reductionOfHunger", 0.8, int.class))))
+                .assertConstructsNotUsed(List.of(
+                    CtIf.class,
+                    CtSwitch.class));
     }
 }
