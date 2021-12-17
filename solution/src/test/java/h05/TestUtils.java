@@ -30,20 +30,28 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected Erwarteter Wert
-     * @param actual   Eigentlicher Wert
-     * @param name     Feld Name
+     * @param expected
+     *            Erwarteter Wert
+     * @param actual
+     *            Eigentlicher Wert
+     * @param name
+     *            Feld Name
      */
     public static void assertModifier(int expected, int actual, String name) {
+        if (expected < 0) {
+            return;
+        }
         assertEquals(expected, actual, String.format("Falsche Modifiers für %s! Gefordert: %s Erhalten: %s", name,
-                Modifier.toString(expected), Modifier.toString(actual)));
+            Modifier.toString(expected), Modifier.toString(actual)));
     }
 
     /**
      * Asserts matching Modifiers
      *
-     * @param expected Erwarteter Wert
-     * @param clazz    Klasse mit Modifier
+     * @param expected
+     *            Erwarteter Wert
+     * @param clazz
+     *            Klasse mit Modifier
      */
     public static void assertModifier(int expected, Class<?> clazz) {
         assertModifier(expected, clazz.getModifiers(), "Klasse " + clazz.getName());
@@ -52,41 +60,49 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected Erwarteter Wert
-     * @param method   Methode mit Modifier
+     * @param expected
+     *            Erwarteter Wert
+     * @param method
+     *            Methode mit Modifier
      */
     public static void assertModifier(int expected, Method method) {
         assertModifier(expected, method.getModifiers(),
-                "Methode " + method.getDeclaringClass() + "." + method.getName());
+            "Methode " + method.getDeclaringClass() + "." + method.getName());
     }
 
     /**
      * Asserts matching Modifiers
      *
-     * @param expected    Erwarteter Wert
-     * @param constructor Konstruktor mit Modifier
+     * @param expected
+     *            Erwarteter Wert
+     * @param constructor
+     *            Konstruktor mit Modifier
      */
     public static void assertModifier(int expected, Constructor<?> constructor) {
         assertModifier(expected, constructor.getModifiers(),
-                "Konstruktor " + constructor.getDeclaringClass() + "." + constructor.getName());
+            "Konstruktor " + constructor.getDeclaringClass() + "." + constructor.getName());
     }
 
     /**
      * Asserts matching Modifiers
      *
-     * @param expected Erwarteter Wert
-     * @param attribut Attribut mit Modifier
+     * @param expected
+     *            Erwarteter Wert
+     * @param attribut
+     *            Attribut mit Modifier
      */
     public static void assertModifier(int expected, Field attribut) {
         assertModifier(expected, attribut.getModifiers(),
-                "Attribut " + attribut.getDeclaringClass() + "." + attribut.getName());
+            "Attribut " + attribut.getDeclaringClass() + "." + attribut.getName());
     }
 
     /**
      * Calculates the similarity (a number within 0 and 1) between two strings.
      *
-     * @param s1 String 1
-     * @param s2 String 2
+     * @param s1
+     *            String 1
+     * @param s2
+     *            String 2
      * @return the similarity
      */
     public static double similarity(String s1, String s2) {
@@ -112,8 +128,10 @@ public class TestUtils {
     /**
      * Calculates the similarity (a number within 0 and 1) between two strings.
      *
-     * @param s1 string 1
-     * @param s2 string 2
+     * @param s1
+     *            string 1
+     * @param s2
+     *            string 2
      * @return the calculated similarity (a number within 0 and 1) between two
      *         strings.
      * @see http://rosettacode.org/wiki/Levenshtein_distance#Java
@@ -148,22 +166,25 @@ public class TestUtils {
      * Scans all classes accessible from the context class loader which belong to
      * the given package and subpackages.
      *
-     * @param packageName The base package
+     * @param packageName
+     *            The base package
      * @return The classes
-     * @throws ClassNotFoundException if the Classes were defined Faulty
-     * @throws IOException            if an IO Exception occurs
+     * @throws ClassNotFoundException
+     *             if the Classes were defined Faulty
+     * @throws IOException
+     *             if an IO Exception occurs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
         var cycle = TestCycleResolver.getTestCycle();
         if (cycle != null) {
             // Autograder Run
             return cycle.getSubmission().getClassNames().stream()
-                    .map(x -> assertDoesNotThrow(() -> Class.forName(x))).toArray(Class<?>[]::new);
+                .map(x -> assertDoesNotThrow(() -> Class.forName(x))).toArray(Class<?>[]::new);
         } else {
             // Regular Junit Run
             final ClassLoader loader = Thread.currentThread().getContextClassLoader();
             return ClassPath.from(loader).getTopLevelClasses(packageName).stream().map(x -> x.load())
-                    .toArray(Class<?>[]::new);
+                .toArray(Class<?>[]::new);
         }
     }
 

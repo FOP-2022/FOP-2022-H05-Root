@@ -68,7 +68,7 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("5 | SurvivalOfTheFittestZoo - canLiveTogether")
     public void t05() {
-        var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "canLiveTogether", 0.8, Modifier.PUBLIC,
+        var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "canLiveTogether", 0.8, -1,
             boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a1", 0.8, animalCT.assureClassResolved().getTheClass()),
@@ -87,7 +87,7 @@ public class TutorTests_H4 {
     @Test
     @DisplayName("6 | SurvivalOfTheFittestZoo - isAllowed")
     public void t06() {
-        var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "isAllowed", 0.8, Modifier.PUBLIC, boolean.class,
+        var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "isAllowed", 0.8, -1, boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
                     .verify();
@@ -119,7 +119,7 @@ public class TutorTests_H4 {
         animalCT.resolveClass();
         animalTypeCT.resolveClass();
         sharkCT.resolveReal();
-        var mt = new MethodTester(familyFriendlyZooCT, "canLiveTogether", minSim, Modifier.PUBLIC, boolean.class,
+        var mt = new MethodTester(familyFriendlyZooCT, "canLiveTogether", minSim, -1, boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a1", minSim, animalCT.getTheClass()),
                 new ParameterMatcher("a2", minSim, animalCT.getTheClass()))))
@@ -180,7 +180,7 @@ public class TutorTests_H4 {
     public void t09() {
         var classTester = new ClassTester<>("h05", "FamilyFriendlyZoo", 0.8).resolve();
         var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
-        var mt = new MethodTester(classTester, "isAllowed", 0.8, Modifier.PUBLIC, boolean.class,
+        var mt = new MethodTester(classTester, "isAllowed", 0.8, -1, boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
                     .verify();

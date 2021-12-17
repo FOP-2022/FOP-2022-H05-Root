@@ -22,16 +22,16 @@ public class TutorTests_H1_3 {
     @Test
     @DisplayName("1 | Existenz Interface " + interface_name)
     public void t01() {
-        amphibeanCT.verify(1.0d);
+        amphibeanCT.verify(1.0d).assertIsInterface();
     }
 
     @Test
     @DisplayName("1-Alt | Existenz Interface Amphibian")
     public void t01_alt1() {
         new ClassTester<>("h05", "Amphibian", 1.0,
-                Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE, null,
+                -1, null,
                 new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", minSim),
-                        new IdentifierMatcher("Swimming", "h05", minSim)))).verify(1.0d);
+                        new IdentifierMatcher("Swimming", "h05", minSim)))).verify(1.0d).assertIsInterface();;
     }
 
     @Test

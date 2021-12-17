@@ -19,7 +19,7 @@ public class H05_Class_Testers {
     public final static ClassTester<?> swimmingCT = new ClassTester<>("h05", "Swimming", minSim,
             Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE);
     public final static ClassTester<?> amphibeanCT = new ClassTester<>("h05", "Amphibean", minSim,
-            Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE, null, new ArrayList<>(List
+            -1, null, new ArrayList<>(List
                     .of(new IdentifierMatcher("Walking", "h05", minSim),
                             new IdentifierMatcher("Swimming", "h05", minSim))));
     public final static ClassTester<?> environmentTypeCT = new ClassTester<>("h05", "EnvironmentType", minSim,
@@ -32,25 +32,25 @@ public class H05_Class_Testers {
     public final static ClassTester<?> ostrichCT = new ClassTester<>("h05", "Ostrich", minSim, Modifier.PUBLIC,
             animalCT.getTheClass(), new ArrayList<>(List.of(new IdentifierMatcher("Walking", "h05", minSim))));
     public final static ClassTester<?> sharkCT = new ClassTester<>("h05", "Shark",
-            minSim, Modifier.PUBLIC,
+            minSim,-1,
             animalCT.getTheClass(),
             new ArrayList<>(List.of(new IdentifierMatcher("Swimming", "h05", minSim),
                     new IdentifierMatcher("IntConsumer", "java.util.function.IntConsumer", minSim))));
     public final static ClassTester<?> saltWaterCrocodileCT = new ClassTester<>("h05", "SaltWaterCrocodile", minSim,
-            Modifier.PUBLIC,
+            -1,
             animalCT.getTheClass(),
             new ArrayList<>(List.of(new IdentifierMatcher("Swimming", "h05", minSim),
                     new IdentifierMatcher("Walking", "h05", minSim))));
     public final static ClassTester<?> saltWaterCrocodileAsAmphibeanCT = new ClassTester<>("h05",
-            "SaltWaterCrocodileAsAmphibean", minSim, Modifier.PUBLIC, null,
+            "SaltWaterCrocodileAsAmphibean", minSim, -1, null,
             new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", minSim),
                     new IdentifierMatcher("Cloneable", "h05", minSim))));
     public final static ClassTester<?> zooCT = new ClassTester<>("h05", "Zoo", minSim,
             Modifier.PUBLIC | Modifier.ABSTRACT | Modifier.INTERFACE);
     public final static ClassTester<?> survivalOfTheFittestZooCT = new ClassTester<>("h05", "SurvivalOfTheFittestZoo",
-            minSim, Modifier.PUBLIC, null, new ArrayList<>(List.of(
+            minSim, -1, null, new ArrayList<>(List.of(
                     new IdentifierMatcher("Zoo", minSim))));
     public final static ClassTester<?> familyFriendlyZooCT = new ClassTester<>("h05", "FamilyFriendlyZoo", minSim,
-            Modifier.PUBLIC, null, new ArrayList<>(List.of(
+            -1, null, new ArrayList<>(List.of(
                     new IdentifierMatcher("Zoo", minSim))));
 }

@@ -5,7 +5,7 @@ package h05;
  *
  * @author Ruben Deisenroth
  */
-public interface Amphibean extends Walking, Swimming {
+interface Amphibean extends Walking, Swimming {
     /**
      * gets the preferred {@link EnvironmentType}
      *

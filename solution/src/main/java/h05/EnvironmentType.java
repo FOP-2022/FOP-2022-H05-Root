@@ -5,6 +5,6 @@ package h05;
  *
  * @author Ruben Deisenroth
  */
-public enum EnvironmentType {
+enum EnvironmentType {
     ON_SHORE, IN_WATER
 }

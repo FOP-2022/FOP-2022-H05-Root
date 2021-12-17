@@ -92,7 +92,7 @@ public class TutorTests_H3_4 {
             .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
-            saltWaterCrocodileAsAmphibeanCT, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
+            saltWaterCrocodileAsAmphibeanCT, "canLiveInSaltWater", 0.8, -1, boolean.class)
                 .verify();
         MethodTester saltyMt = new MethodTester(
             saltWaterCrocodileCT, "canLiveInSaltWater", 0.8, -1, boolean.class)
@@ -109,7 +109,7 @@ public class TutorTests_H3_4 {
             .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
-            saltWaterCrocodileAsAmphibeanCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
+            saltWaterCrocodileAsAmphibeanCT, "canLiveInFreshWater", 0.8, -1, boolean.class)
                 .verify();
         MethodTester saltyMt = new MethodTester(
             saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, -1, boolean.class)
@@ -127,7 +127,7 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
             saltWaterCrocodileAsAmphibeanCT, "letMeSwim", 0.8,
-            Modifier.PUBLIC, void.class,
+            -1, void.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("distance", 0.8, char.class),
                 new ParameterMatcher("x", 1.0, double.class),
@@ -153,7 +153,7 @@ public class TutorTests_H3_4 {
 
         var constructor = (Constructor<Object>) saltWaterCrocodileAsAmphibeanCT
             .resolveConstructor(new ParameterMatcher("animal", 0.8, animalCT.getTheClass()));
-        ((ClassTester<Object>) saltWaterCrocodileAsAmphibeanCT).assertConstructorValid(constructor, Modifier.PUBLIC,
+        ((ClassTester<Object>) saltWaterCrocodileAsAmphibeanCT).assertConstructorValid(constructor, -1,
             new ParameterMatcher("animal", 0.8, animalCT.getTheClass()));
 
         Field saltyField = saltWaterCrocodileAsAmphibeanCT

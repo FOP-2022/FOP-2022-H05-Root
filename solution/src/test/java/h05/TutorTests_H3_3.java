@@ -89,7 +89,7 @@ public class TutorTests_H3_3 {
         saltWaterCrocodileCT.assureClassResolved();
         var constructor = (Constructor<Object>) saltWaterCrocodileCT
             .resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
-        ((ClassTester<Object>) saltWaterCrocodileCT).assertConstructorValid(constructor, Modifier.PUBLIC);
+        ((ClassTester<Object>) saltWaterCrocodileCT).assertConstructorValid(constructor, -1);
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = saltWaterCrocodileCT.resolveAttribute(
