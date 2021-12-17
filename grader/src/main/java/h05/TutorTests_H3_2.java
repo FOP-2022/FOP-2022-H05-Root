@@ -194,13 +194,11 @@ public class TutorTests_H3_2 {
     @DisplayName("7 | setSpecificSpecies - verbindliche Anforderung")
     public void t07_syntax() {
         // TODO: Fix Test
-        sharkCT.assureClassResolved().resolveRealInstance();
-        MethodTester mt = new MethodTester(sharkCT, "setSpecificSpecies", 0.8,
+        new MethodTester(sharkCT, "setSpecificSpecies", 0.8,
             Modifier.PUBLIC, short.class,
-            new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class))));
-        mt.resolveMethod();
-        mt.assertConstructsNotUsed(List.of(
-            CtConditional.class));
+            new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class))))
+                .assertConstructsNotUsed(List.of(
+                    CtConditional.class));
     }
 
     @Test

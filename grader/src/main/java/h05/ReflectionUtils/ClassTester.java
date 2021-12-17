@@ -266,10 +266,12 @@ public class ClassTester<T> {
         if (spoon == null) {
             spoon = new Launcher();
         }
-        if (spoon.getModel() == null) {
+        var allTypes = spoon.getModel().getAllTypes();
+        if (allTypes == null || allTypes.isEmpty()) {
             var cycle = TestCycleResolver.getTestCycle();
             var sourceFileName = getTheClass().getName().replace('.', '/') + ".java";
             SourceFile sourceFile = cycle.getSubmission().getSourceFile(sourceFileName);
+            // fail(sourceFile.getFileName() + "\n" + sourceFile.getContent());
             spoon.addInputResource(
                 new spoon.support.compiler.VirtualFile(Objects.requireNonNull(sourceFile).getContent(),
                     sourceFileName));
