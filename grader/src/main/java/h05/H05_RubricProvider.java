@@ -170,8 +170,10 @@ public class H05_RubricProvider implements RubricProvider {
     public static final Criterion H2_T3 = Criterion.builder()
         .shortDescription("Attribut animalType wurde korrekt deklariert und hat eine Getter-Methode.")
         .grader(Grader.testAwareBuilder()
-            .requirePass(JUnitTestRef
-                .ofMethod(() -> TutorTests_H2.class.getMethod("t03")))
+            .requirePass(
+                JUnitTestRef.or(
+                    JUnitTestRef.ofMethod(() -> TutorTests_H2.class.getMethod("t03")),
+                    JUnitTestRef.ofMethod(() -> TutorTests_H2.class.getMethod("t03_alt"))))
             .pointsPassedMax()
             .pointsFailedMin()
             .build())
@@ -309,8 +311,9 @@ public class H05_RubricProvider implements RubricProvider {
     public static final Criterion H3_2_T6 = Criterion.builder()
         .shortDescription("Methode setSpecificSpecies() ist vollständig korrekt.")
         .grader(Grader.testAwareBuilder()
-            .requirePass(JUnitTestRef
-                .ofMethod(() -> TutorTests_H3_2.class.getMethod("t07")))
+            .requirePass(JUnitTestRef.and(
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t07")),
+                JUnitTestRef.ofMethod(() -> TutorTests_H3_2.class.getMethod("t07_syntax"))))
             .pointsPassedMax()
             .pointsFailedMin()
             .build())

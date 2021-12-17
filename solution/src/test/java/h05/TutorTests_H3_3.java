@@ -37,7 +37,7 @@ public class TutorTests_H3_3 {
     public void t02() {
 
         Field averageSpeedField = saltWaterCrocodileCT.resolve()
-                .resolveAttribute(new AttributeMatcher("averageSpeed", 0.8, Modifier.STATIC, short.class));
+            .resolveAttribute(new AttributeMatcher("averageSpeed", 0.8, Modifier.STATIC, short.class));
         saltWaterCrocodileCT.assertHasGetter(averageSpeedField, new ParameterMatcher("distance", 0.8, double.class));
         saltWaterCrocodileCT.assertHasSetter(averageSpeedField);
     }
@@ -46,8 +46,8 @@ public class TutorTests_H3_3 {
     @DisplayName("3 | canLiveInSaltWater")
     public void t03() {
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileCT.resolve(), "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
-                        .verify();
+            saltWaterCrocodileCT.resolve(), "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
+                .verify();
         mt.assertReturnValueEquals(true);
     }
 
@@ -55,8 +55,8 @@ public class TutorTests_H3_3 {
     @DisplayName("4 | canLiveInFreshWater")
     public void t04() {
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
-                        .verify();
+            saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
+                .verify();
         mt.assertReturnValueEquals(true);
     }
 
@@ -64,12 +64,12 @@ public class TutorTests_H3_3 {
     @DisplayName("5 | letMeSwim")
     public void t05() {
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileCT, "letMeSwim", 0.8,
-                Modifier.PUBLIC, void.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("distance", 0.8, char.class),
-                        new ParameterMatcher("x", 1.0, double.class),
-                        new ParameterMatcher("y", 1.0, double.class)))).verify();
+            saltWaterCrocodileCT, "letMeSwim", 0.8,
+            Modifier.PUBLIC, void.class,
+            new ArrayList<>(List.of(
+                new ParameterMatcher("distance", 0.8, char.class),
+                new ParameterMatcher("x", 1.0, double.class),
+                new ParameterMatcher("y", 1.0, double.class)))).verify();
         mt.invoke('f', 42d, 69d);
     }
 
@@ -77,8 +77,8 @@ public class TutorTests_H3_3 {
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileCT, "letMeMove", 0.8,
-                Modifier.PUBLIC, String.class).verify();
+            saltWaterCrocodileCT, "letMeMove", 0.8,
+            -1, String.class).verify();
         mt.assertReturnValueEquals("");
     }
 
@@ -88,15 +88,15 @@ public class TutorTests_H3_3 {
     public void t07() {
         saltWaterCrocodileCT.assureClassResolved();
         var constructor = (Constructor<Object>) saltWaterCrocodileCT
-                .resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
+            .resolveConstructor(new ParameterMatcher("specificSpecies", 0.8, short.class));
         ((ClassTester<Object>) saltWaterCrocodileCT).assertConstructorValid(constructor, Modifier.PUBLIC);
 
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = saltWaterCrocodileCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass(), true));
+            new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass(), true));
         // Valid Value
         ((ClassTester<Object>) saltWaterCrocodileCT)
-                .setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
+            .setClassInstance(assertDoesNotThrow(() -> constructor.newInstance()));
         saltWaterCrocodileCT.assertFieldEquals(animalTypeField, enumClassTester.getEnumValue("CROCODYLIDAE", 0.8));
     }
 }

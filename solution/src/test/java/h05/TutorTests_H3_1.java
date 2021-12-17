@@ -93,7 +93,7 @@ public class TutorTests_H3_1 {
     @Test
     @DisplayName("5 | Methode letMeMove()")
     public void t05() {
-        var methodTester = new MethodTester(ostrichCT.resolve(), "letMeMove", 0.8, Modifier.PUBLIC, String.class)
+        var methodTester = new MethodTester(ostrichCT.resolve(), "letMeMove", 0.8, -1, String.class)
                 .verify();
 
         Field distanceSoFarField = ostrichCT

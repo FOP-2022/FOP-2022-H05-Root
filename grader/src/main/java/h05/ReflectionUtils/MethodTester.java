@@ -8,6 +8,7 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.management.RuntimeErrorException;
@@ -15,8 +16,18 @@ import javax.management.RuntimeErrorException;
 import org.mockito.invocation.Invocation;
 import org.sourcegrade.docwatcher.MethodDocumentation;
 import org.sourcegrade.docwatcher.SourceDocumentation;
+import org.sourcegrade.jagr.api.testing.SourceFile;
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import h05.TestUtils;
+import spoon.Launcher;
+import spoon.reflect.code.CtCodeElement;
+import spoon.reflect.code.CtConditional;
+import spoon.reflect.code.CtIf;
+import spoon.reflect.code.CtSwitch;
+import spoon.reflect.declaration.CtMethod;
+import spoon.reflect.declaration.CtType;
+import spoon.reflect.visitor.filter.TypeFilter;
 
 /**
  * A Method Tester
@@ -689,6 +700,30 @@ public class MethodTester {
     public void assertReturnValueEquals(Object expected, String additionalMessage, Object... params) {
         assertEquals(expected, invoke(params), "Falsche Rückgabe bei Methode" + getMethodIdentifier().identifierName
             + (params.length > 0 ? "mit Parameter(n):" + safeArrayToString(params) : "") + additionalMessage);
+    }
+
+    /**
+     * Asserts that none of the Blacklisted Constructs were Used
+     *
+     * @param sourceFileName
+     *            The Name of the Source File
+     * @param methodName
+     *            The Method Name
+     * @param disallowedConstructs
+     *            the Disallowed Constructs
+     */
+    public void assertConstructsNotUsed(List<Class<? extends CtCodeElement>> disallowedConstructs) {
+        assertMethodResolved();
+        Launcher spoon = getClassTester().assureSpoonLauncherModelsBuild().getSpoon();
+        CtType<?> type = spoon.getModel().getAllTypes().stream().filter(CtType::isTopLevel).findFirst().orElseThrow();
+        CtMethod<?> method = type.getMethodsByName(getMethodIdentifier().identifierName).stream().findFirst()
+            .orElseThrow();
+
+        for (var construct : disallowedConstructs) {
+            assertTrue(!method.getElements(new TypeFilter<>(construct)).isEmpty(),
+                String.format("Ein verboteners Sprachkonstrukt wurde in Methode %s verwendet.",
+                    getMethodIdentifier().identifierName));
+        }
     }
 
     /**

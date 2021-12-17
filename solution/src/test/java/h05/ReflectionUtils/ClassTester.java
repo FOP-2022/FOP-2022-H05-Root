@@ -18,6 +18,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,9 +29,12 @@ import org.mockito.MockingDetails;
 import org.opentest4j.AssertionFailedError;
 import org.sourcegrade.docwatcher.MethodDocumentation;
 import org.sourcegrade.docwatcher.SourceDocumentation;
+import org.sourcegrade.jagr.api.testing.SourceFile;
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import h05.TestUtils;
 import net.bytebuddy.ByteBuddy;
+import spoon.Launcher;
 
 /**
  * A Class Tester
@@ -63,6 +67,11 @@ public class ClassTester<T> {
      * The Class Instance of the Class Being Tested
      */
     T classInstance;
+
+    /**
+     * The Spoon Launcher
+     */
+    private Launcher spoon = new Launcher();
 
     /**
      * Creates a new {@link ClassTester}
@@ -231,6 +240,42 @@ public class ClassTester<T> {
      */
     public void addImplementsInterface(String interfaceName) {
         addImplementsInterface(interfaceName, null);
+    }
+
+    /**
+     * Gets the Spoon Launcher
+     *
+     * @return the Spoon Launcher
+     */
+    public Launcher getSpoon() {
+        return spoon;
+    }
+
+    /**
+     * Sets {@link #spoon} to the given Value
+     *
+     * @param spoon
+     *            the new Spoon Launcher
+     */
+    public void setSpoon(Launcher spoon) {
+        this.spoon = spoon;
+    }
+
+    public ClassTester<T> assureSpoonLauncherModelsBuild() {
+        assureClassResolved();
+        if (spoon == null) {
+            spoon = new Launcher();
+        }
+        if (spoon.getModel() == null) {
+            var cycle = TestCycleResolver.getTestCycle();
+            var sourceFileName = getTheClass().getName().replace('.', '/') + ".java";
+            SourceFile sourceFile = cycle.getSubmission().getSourceFile(sourceFileName);
+            spoon.addInputResource(
+                new spoon.support.compiler.VirtualFile(Objects.requireNonNull(sourceFile).getContent(),
+                    sourceFileName));
+            spoon.buildModel();
+        }
+        return this;
     }
 
     /**
