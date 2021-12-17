@@ -87,7 +87,16 @@ public class TutorTests_H2 {
     @Test
     @DisplayName("5 | Methode letMeMove")
     public void t05() {
+        // Auch wenn diese Lösung technisch inkorrekt ist, werden wir nachträglich keine Punkte mehr abziehen
         new MethodTester(animalCT.assureClassResolved(), "letMeMove", 0.8, Modifier.ABSTRACT | Modifier.PUBLIC,
+            String.class,
+            new ArrayList<>()).verify();
+    }
+
+    @Test
+    @DisplayName("5-Alt | Methode letMeMove")
+    public void t05_alt() {
+        new MethodTester(animalCT.assureClassResolved(), "letMeMove", 0.8, Modifier.ABSTRACT,
             String.class,
             new ArrayList<>()).verify();
     }

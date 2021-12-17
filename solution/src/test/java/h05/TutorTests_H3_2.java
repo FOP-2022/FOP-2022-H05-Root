@@ -152,11 +152,13 @@ public class TutorTests_H3_2 {
     @JagrOnlyTest
     @DisplayName("6 | letMeMove mit Hungerreduktion")
     public void t06() {
+        // Aufgrund eines Fehlers in der erstveröffentlichung müssen wir alle Modifier
+        // akzeptieren.
         MethodTester mt = new MethodTester(
             sharkCT.resolve()
                 .assureSpied(),
             "letMeMove", 0.8,
-            Modifier.PUBLIC, String.class).verify();
+            -1, String.class).verify();
         ThreadLocalRandomTester.initialize();
         mt.invoke();
         assertEquals(1, mt.getInvocationCount());

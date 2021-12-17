@@ -91,7 +91,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     }
 
     @Override
-    public String letMeMove() {
+    String letMeMove() {
         degreeOfHunger++;
         int oldX = x, oldY = y;
         letMeSwim((char) ThreadLocalRandom.current().nextInt(1, 6), ThreadLocalRandom.current().nextInt(1, 6),
