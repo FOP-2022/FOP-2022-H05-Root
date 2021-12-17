@@ -69,8 +69,9 @@ public class TutorTests_H3_4 {
     public void t02_two() {
         saltWaterCrocodileAsAmphibeanCT.resolveClass();
         var mt = new MethodTester(
-            saltWaterCrocodileAsAmphibeanCT, "equals", 0.8, Modifier.PUBLIC | Modifier.VOLATILE, boolean.class,
+            saltWaterCrocodileAsAmphibeanCT, "equals", 0.8, -1, boolean.class,
             new ArrayList<>(List.of(new ParameterMatcher(Object.class, true))), false).verify();
+        assertTrue(Modifier.isPublic(mt.getAccessModifier()), "Methode Clone ist nicht public.");
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
             .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
         var saltyInstance = saltWaterCrocodileCT.resolve().getClassInstance();
