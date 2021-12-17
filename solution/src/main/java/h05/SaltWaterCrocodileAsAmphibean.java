@@ -15,7 +15,8 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean, Cloneable {
     /**
      * Creates a new {@link SaltWaterCrocodileAsAmphibean}
      *
-     * @param salty the {@link SaltWaterCrocodileAsAmphibean}
+     * @param salty
+     *            the {@link SaltWaterCrocodileAsAmphibean}
      */
     public SaltWaterCrocodileAsAmphibean(Animal a) {
         super();
@@ -27,7 +28,7 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean, Cloneable {
     @Override
     public boolean equals(Object obj) {
         return (obj != null && obj instanceof SaltWaterCrocodileAsAmphibean)
-                && salty == ((SaltWaterCrocodileAsAmphibean) obj).salty;
+            && salty == ((SaltWaterCrocodileAsAmphibean) obj).salty;
     }
 
     @Override

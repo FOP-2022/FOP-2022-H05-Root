@@ -17,6 +17,7 @@ public abstract class Animal {
 
     /**
      * Lets the Animal Move
+     * @return The Animal Movement
      */
     public abstract String letMeMove();
 

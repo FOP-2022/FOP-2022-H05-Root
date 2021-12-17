@@ -41,21 +41,21 @@ public class TutorTests_H4 {
         zooCT.resolveClass();
         animalCT.resolveClass();
         new MethodTester(
-                zooCT, "canLiveTogether", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT, boolean.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("a1", 0.8, animalCT.getTheClass()),
-                        new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
-                                .verify();
+            zooCT, "canLiveTogether", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT, boolean.class,
+            new ArrayList<>(List.of(
+                new ParameterMatcher("a1", 0.8, animalCT.getTheClass()),
+                new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
+                    .verify();
     }
 
     @Test
     @DisplayName("3 | Zoo - isAllowed")
     public void t03() {
         new MethodTester(zooCT.assureClassResolved(), "isAllowed", 0.8, Modifier.PUBLIC | Modifier.ABSTRACT,
-                boolean.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
-                                .verify();
+            boolean.class,
+            new ArrayList<>(List.of(
+                new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
+                    .verify();
     }
 
     // Survival of the Fittest Zoo
@@ -69,11 +69,11 @@ public class TutorTests_H4 {
     @DisplayName("5 | SurvivalOfTheFittestZoo - canLiveTogether")
     public void t05() {
         var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "canLiveTogether", 0.8, Modifier.PUBLIC,
-                boolean.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("a1", 0.8, animalCT.assureClassResolved().getTheClass()),
-                        new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
-                                .verify();
+            boolean.class,
+            new ArrayList<>(List.of(
+                new ParameterMatcher("a1", 0.8, animalCT.assureClassResolved().getTheClass()),
+                new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
+                    .verify();
         var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark", "SaltWaterCrocodile" };
         for (final var name1 : animalSubtypes) {
             for (final var name2 : animalSubtypes) {
@@ -88,18 +88,18 @@ public class TutorTests_H4 {
     @DisplayName("6 | SurvivalOfTheFittestZoo - isAllowed")
     public void t06() {
         var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "isAllowed", 0.8, Modifier.PUBLIC, boolean.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
-                                .verify();
+            new ArrayList<>(List.of(
+                new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
+                    .verify();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = animalCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
+            new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
 
         for (int i = 0; i < 100; i++) {
             animalCT.resolveInstance();
             var animalType = animalCT.setFieldRandom(animalTypeField);
             mt.assertReturnValueEquals(enumClassTester.getEnumValue("AVES", 0.8) != animalType,
-                    animalCT.getClassInstance());
+                animalCT.getClassInstance());
         }
     }
 
@@ -118,18 +118,17 @@ public class TutorTests_H4 {
         familyFriendlyZooCT.resolve();
         animalCT.resolveClass();
         animalTypeCT.resolveClass();
-        sharkCT.resolve();
-        saltWaterCrocodileCT.resolve();
+        sharkCT.resolveReal();
         var mt = new MethodTester(familyFriendlyZooCT, "canLiveTogether", minSim, Modifier.PUBLIC, boolean.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("a1", minSim, animalCT.getTheClass()),
-                        new ParameterMatcher("a2", minSim, animalCT.getTheClass()))))
-                                .verify();
+            new ArrayList<>(List.of(
+                new ParameterMatcher("a1", minSim, animalCT.getTheClass()),
+                new ParameterMatcher("a2", minSim, animalCT.getTheClass()))))
+                    .verify();
         Field animalTypeField = animalCT.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, -1, animalTypeCT.getClass()));
+            new AttributeMatcher("animalType", 0.8, -1, animalTypeCT.getClass()));
         var getAverageSpeeedMT = new MethodTester(walkingCT, "getAverageSpeed", 0.8,
-                Modifier.PUBLIC | Modifier.ABSTRACT,
-                double.class, new ArrayList<>(List.of(new ParameterMatcher("distance", 0.8, double.class))));
+            Modifier.PUBLIC | Modifier.ABSTRACT,
+            double.class, new ArrayList<>(List.of(new ParameterMatcher("distance", 0.8, double.class))));
         getAverageSpeeedMT.resolveMethod();
 
         // Dynamically Generated Test Animals
@@ -142,22 +141,22 @@ public class TutorTests_H4 {
         var random_condrichthy = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
         ClassTester.setField(random_condrichthy, animalTypeField, animalTypeCT.getEnumValue("CHONDRICHTHYES", 0.8));
         var fast_mammalia = mock(animalCT.getTheClass(),
-                withSettings().extraInterfaces(walkingCT.getTheClass()).defaultAnswer(
-                        CALLS_REAL_METHODS));
+            withSettings().extraInterfaces(walkingCT.getTheClass()).defaultAnswer(
+                CALLS_REAL_METHODS));
         ClassTester.setField(fast_mammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
         assertDoesNotThrow(
-                () -> when(getAverageSpeeedMT.getTheMethod().invoke(fast_mammalia, ArgumentMatchers.anyDouble()))
-                        .thenReturn(10d),
-                "Could not Overwrite Method.");
+            () -> when(getAverageSpeeedMT.getTheMethod().invoke(fast_mammalia, ArgumentMatchers.anyDouble()))
+                .thenReturn(10d),
+            "Could not Overwrite Method.");
         var slow_mammalia = mock(animalCT.getTheClass(),
-                withSettings().extraInterfaces(walkingCT.getTheClass()).defaultAnswer(
-                        CALLS_REAL_METHODS));
+            withSettings().extraInterfaces(walkingCT.getTheClass()).defaultAnswer(
+                CALLS_REAL_METHODS));
         ClassTester.setField(slow_mammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
         assertDoesNotThrow(
-                () -> when(getAverageSpeeedMT.getTheMethod().invoke(
-                        slow_mammalia, ArgumentMatchers.anyDouble()))
-                                .thenReturn(2d),
-                "Could not Overwrite Method.");
+            () -> when(getAverageSpeeedMT.getTheMethod().invoke(
+                slow_mammalia, ArgumentMatchers.anyDouble()))
+                    .thenReturn(2d),
+            "Could not Overwrite Method.");
 
         // Haie sind nicht mit anderen Knorpelfischen kompatibel
         mt.assertReturnValueEquals(false, sharkCT.getClassInstance(), random_condrichthy);
@@ -182,18 +181,18 @@ public class TutorTests_H4 {
         var classTester = new ClassTester<>("h05", "FamilyFriendlyZoo", 0.8).resolve();
         var animalClassTester = new ClassTester<>("h05", "Animal", 0.8).resolveClass();
         var mt = new MethodTester(classTester, "isAllowed", 0.8, Modifier.PUBLIC, boolean.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
-                                .verify();
+            new ArrayList<>(List.of(
+                new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
+                    .verify();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = animalClassTester.resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
+            new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
 
         for (int i = 0; i < 100; i++) {
             animalClassTester.resolveInstance();
             var animalType = animalClassTester.setFieldRandom(animalTypeField);
             mt.assertReturnValueEquals(true,
-                    animalClassTester.getClassInstance());
+                animalClassTester.getClassInstance());
         }
     }
 
@@ -201,12 +200,12 @@ public class TutorTests_H4 {
     @DisplayName("10 | familyFriendlyZoo - letterOfTheDay")
     public void t10() {
         var mt = new MethodTester(
-                familyFriendlyZooCT.resolve(),
-                "letterOfTheDay",
-                0.8,
-                Modifier.PUBLIC,
-                char.class)
-                        .verify();
+            familyFriendlyZooCT.resolve(),
+            "letterOfTheDay",
+            0.8,
+            Modifier.PUBLIC,
+            char.class)
+                .verify();
         ThreadLocalRandomTester.initialize();
         mt.invoke();
         var usedRanges = ThreadLocalRandomTester.current().getUsedRanges();

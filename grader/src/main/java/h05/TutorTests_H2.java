@@ -25,8 +25,8 @@ public class TutorTests_H2 {
     @DisplayName("1 | Enum AnimalType()")
     public void t01() {
         animalTypeCT
-                .verify(1.0d)
-                .assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
+            .verify(1.0d)
+            .assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
     }
 
     @Test
@@ -39,8 +39,18 @@ public class TutorTests_H2 {
     @DisplayName("3 | Attribut animalType + Getter")
     public void t03() {
         Field animalTypeField = animalCT.resolve().resolveAttribute(
-                new AttributeMatcher("animalType", 1.0d, Modifier.PROTECTED,
-                        animalTypeCT.assureClassResolved().getClass()));
+            new AttributeMatcher("animalType", 1.0d, Modifier.PROTECTED,
+                animalTypeCT.assureClassResolved().getClass()));
+
+        animalCT.assertHasGetter(animalTypeField);
+    }
+
+    @Test
+    @DisplayName("3-Alt | Attribut animalType + Getter")
+    public void t03_alt() {
+        Field animalTypeField = animalCT.resolve().resolveAttribute(
+            new AttributeMatcher("animalType", 1.0d, Modifier.STATIC | Modifier.PROTECTED,
+                animalTypeCT.assureClassResolved().getClass()));
 
         animalCT.assertHasGetter(animalTypeField);
     }
@@ -49,11 +59,11 @@ public class TutorTests_H2 {
     @DisplayName("4 | Test ToString()")
     public void t04() {
         Field animalTypeField = animalCT.resolve().resolveAttribute(
-                new AttributeMatcher("animalType", 0.8, -1,
-                        animalTypeCT.assureClassResolved().getClass()));
+            new AttributeMatcher("animalType", 0.8, -1,
+                animalTypeCT.assureClassResolved().getClass()));
 
         var methodTester = new MethodTester(animalCT.resolve(), "toString", 0.8, Modifier.PUBLIC, String.class,
-                new ArrayList<>()).verify();
+            new ArrayList<>()).verify();
 
         assertDoesNotThrow(() -> animalTypeField.setAccessible(true));
 
@@ -62,15 +72,23 @@ public class TutorTests_H2 {
         // Normal
         var expectedAnimalType = animalTypeCT.getRandomEnumConstant();
         var expectedAnswer = String.format("My species is called %s which is part of animal type %s.",
-                animalInstance.getClass().getSimpleName(),
-                expectedAnimalType.name().substring(0, 1) + expectedAnimalType.name().substring(1).toLowerCase());
+            animalInstance.getClass().getSimpleName(),
+            expectedAnimalType.name().substring(0, 1) + expectedAnimalType.name().substring(1).toLowerCase());
         assertDoesNotThrow(() -> animalTypeField.set(animalInstance, expectedAnimalType));
         var returnValue = methodTester.invoke();
         assertEquals(expectedAnswer, returnValue, "Falsche Rückgabe der toString-Metode.");
         // Null
         expectedAnswer = String.format("My species is called %s which is part of animal type Null.",
-                animalInstance.getClass().getSimpleName());
+            animalInstance.getClass().getSimpleName());
         animalCT.setField(animalTypeField, null);
         assertEquals(expectedAnswer, methodTester.invoke(), "Falsche Rückgabe der toString-Metode.");
+    }
+
+    @Test
+    @DisplayName("5 | Methode letMeMove")
+    public void t05() {
+        new MethodTester(animalCT.assureClassResolved(), "letMeMove", 0.8, Modifier.ABSTRACT | Modifier.PUBLIC,
+            String.class,
+            new ArrayList<>()).verify();
     }
 }

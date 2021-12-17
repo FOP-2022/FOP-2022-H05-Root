@@ -1,6 +1,7 @@
 package h05;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -36,8 +37,8 @@ public class TutorTests_H3_4 {
     @DisplayName("1-Alt | Existenz Klasse " + class_name)
     public void t01_alt() {
         new ClassTester<>("h05",
-                "SaltWaterCrocodileAsAmphibean", minSim, Modifier.PUBLIC, null,
-                new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", minSim)))).verify(1.0d);
+            "SaltWaterCrocodileAsAmphibean", minSim, Modifier.PUBLIC, null,
+            new ArrayList<>(List.of(new IdentifierMatcher("Amphibean", "h05", minSim)))).verify(1.0d);
     }
 
     @Test
@@ -45,9 +46,9 @@ public class TutorTests_H3_4 {
     public void t02() {
         saltWaterCrocodileAsAmphibeanCT.resolve();
         var mt = new MethodTester(
-                saltWaterCrocodileAsAmphibeanCT, "clone", 0.8, Modifier.PUBLIC, Object.class, null, false).verify();
+            saltWaterCrocodileAsAmphibeanCT, "clone", 0.8, Modifier.PUBLIC, Object.class, null, false).verify();
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
-                .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
 
         var saltyInstance = saltWaterCrocodileCT.resolve().getClassInstance();
 
@@ -55,8 +56,26 @@ public class TutorTests_H3_4 {
 
         var clonedSWCAA = mt.invoke();
         assertNotSame(saltyInstance, clonedSWCAA);
+        assertNotNull(clonedSWCAA, "Falsche Rückgabe bei Methode Clone: ");
         assertSame(saltyInstance, ClassTester.getFieldValue(clonedSWCAA, saltyField));
-        // classTester.assertHasGetter(saltyField);
+    }
+
+    @Test
+    @DisplayName("2,5 | Methode Equals")
+    public void t02_two() {
+        saltWaterCrocodileAsAmphibeanCT.resolveClass();
+        var mt = new MethodTester(
+            saltWaterCrocodileAsAmphibeanCT, "equals", 0.8, Modifier.PUBLIC, boolean.class,
+            new ArrayList<>(List.of(new ParameterMatcher(Object.class, true))), false).verify();
+        Field saltyField = saltWaterCrocodileAsAmphibeanCT
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, Modifier.PRIVATE, short.class));
+        var saltyInstance = saltWaterCrocodileCT.resolve().getClassInstance();
+        saltWaterCrocodileAsAmphibeanCT.resolveRealInstance();
+        saltWaterCrocodileAsAmphibeanCT.setField(saltyField, saltyInstance);
+        mt.assertReturnValueEquals(true, "Aufruf mit sich selbst.", saltWaterCrocodileAsAmphibeanCT.getClassInstance());
+        var newSWCInstance = saltWaterCrocodileAsAmphibeanCT.getNewRealInstance();
+        ClassTester.setField(newSWCInstance, saltyField, saltyInstance);
+        mt.assertReturnValueEquals(true, "Aufruf mit Kopie.", newSWCInstance);
     }
 
     @Test
@@ -65,14 +84,14 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileAsAmphibeanCT.resolve();
         saltWaterCrocodileCT.resolve();
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
-                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileAsAmphibeanCT, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
-                        .verify();
+            saltWaterCrocodileAsAmphibeanCT, "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
+                .verify();
         MethodTester saltyMt = new MethodTester(
-                saltWaterCrocodileCT, "canLiveInSaltWater", 0.8, -1, boolean.class)
-                        .verify();
+            saltWaterCrocodileCT, "canLiveInSaltWater", 0.8, -1, boolean.class)
+                .verify();
         mt.assertReturnValueEquals(saltyMt.invoke());
     }
 
@@ -82,14 +101,14 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileAsAmphibeanCT.resolve();
         saltWaterCrocodileCT.resolve();
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
-                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileAsAmphibeanCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
-                        .verify();
+            saltWaterCrocodileAsAmphibeanCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
+                .verify();
         MethodTester saltyMt = new MethodTester(
-                saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, -1, boolean.class)
-                        .verify();
+            saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, -1, boolean.class)
+                .verify();
         mt.assertReturnValueEquals(saltyMt.invoke());
     }
 
@@ -99,22 +118,22 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileAsAmphibeanCT.resolve();
         saltWaterCrocodileCT.resolve();
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
-                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
-                saltWaterCrocodileAsAmphibeanCT, "letMeSwim", 0.8,
-                Modifier.PUBLIC, void.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("distance", 0.8, char.class),
-                        new ParameterMatcher("x", 1.0, double.class),
-                        new ParameterMatcher("y", 1.0, double.class)))).verify();
+            saltWaterCrocodileAsAmphibeanCT, "letMeSwim", 0.8,
+            Modifier.PUBLIC, void.class,
+            new ArrayList<>(List.of(
+                new ParameterMatcher("distance", 0.8, char.class),
+                new ParameterMatcher("x", 1.0, double.class),
+                new ParameterMatcher("y", 1.0, double.class)))).verify();
         MethodTester saltyMt = new MethodTester(
-                saltWaterCrocodileCT, "letMeSwim", 0.8,
-                -1, void.class,
-                new ArrayList<>(List.of(
-                        new ParameterMatcher("distance", 0.8, char.class),
-                        new ParameterMatcher("x", 1.0, double.class),
-                        new ParameterMatcher("y", 1.0, double.class)))).verify();
+            saltWaterCrocodileCT, "letMeSwim", 0.8,
+            -1, void.class,
+            new ArrayList<>(List.of(
+                new ParameterMatcher("distance", 0.8, char.class),
+                new ParameterMatcher("x", 1.0, double.class),
+                new ParameterMatcher("y", 1.0, double.class)))).verify();
         var params = mt.getRandomParams();
         mt.assertReturnValueEquals(saltyMt.invoke(params), params);
     }
@@ -128,19 +147,19 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileCT.resolve();
 
         var constructor = (Constructor<Object>) saltWaterCrocodileAsAmphibeanCT
-                .resolveConstructor(new ParameterMatcher("animal", 0.8, animalCT.getTheClass()));
+            .resolveConstructor(new ParameterMatcher("animal", 0.8, animalCT.getTheClass()));
         ((ClassTester<Object>) saltWaterCrocodileAsAmphibeanCT).assertConstructorValid(constructor, Modifier.PUBLIC,
-                new ParameterMatcher("animal", 0.8, animalCT.getTheClass()));
+            new ParameterMatcher("animal", 0.8, animalCT.getTheClass()));
 
         Field saltyField = saltWaterCrocodileAsAmphibeanCT
-                .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
+            .resolveAttribute(new AttributeMatcher("salty", 0.8, short.class));
         // Valid Value
         ((ClassTester<Object>) saltWaterCrocodileAsAmphibeanCT).setClassInstance(
-                assertDoesNotThrow(() -> constructor.newInstance(saltWaterCrocodileCT.getClassInstance())));
+            assertDoesNotThrow(() -> constructor.newInstance(saltWaterCrocodileCT.getClassInstance())));
         saltWaterCrocodileAsAmphibeanCT.assertFieldEquals(saltyField, saltWaterCrocodileCT.getClassInstance());
         // Invalid Value
         ((ClassTester<Object>) saltWaterCrocodileAsAmphibeanCT).setClassInstance(
-                assertDoesNotThrow(() -> constructor.newInstance(animalCT.getClassInstance())));
+            assertDoesNotThrow(() -> constructor.newInstance(animalCT.getClassInstance())));
         saltWaterCrocodileAsAmphibeanCT.assertFieldEquals(saltyField, null);
     }
 }
