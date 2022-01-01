@@ -1,26 +1,18 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import h05.ReflectionUtils.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
-import h05.ReflectionUtils.AttributeMatcher;
-import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.IdentifierMatcher;
-import h05.ReflectionUtils.MethodTester;
-import h05.ReflectionUtils.ParameterMatcher;
 import static h05.H05_Class_Testers.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestForSubmission("h05")
 @DisplayName("H3.4")
@@ -93,10 +85,10 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
             saltWaterCrocodileAsAmphibeanCT, "canLiveInSaltWater", 0.8, -1, boolean.class)
-                .verify();
+            .verify();
         MethodTester saltyMt = new MethodTester(
             saltWaterCrocodileCT, "canLiveInSaltWater", 0.8, -1, boolean.class)
-                .verify();
+            .verify();
         mt.assertReturnValueEquals(saltyMt.invoke());
     }
 
@@ -110,10 +102,10 @@ public class TutorTests_H3_4 {
         saltWaterCrocodileAsAmphibeanCT.setFieldRandom(saltyField);
         MethodTester mt = new MethodTester(
             saltWaterCrocodileAsAmphibeanCT, "canLiveInFreshWater", 0.8, -1, boolean.class)
-                .verify();
+            .verify();
         MethodTester saltyMt = new MethodTester(
             saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, -1, boolean.class)
-                .verify();
+            .verify();
         mt.assertReturnValueEquals(saltyMt.invoke());
     }
 

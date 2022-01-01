@@ -1,22 +1,21 @@
 plugins {
-  java
+    java
+    id("org.sourcegrade.style") version "1.0.0"
 }
+
 allprojects {
-  apply(plugin = "java")
-  repositories {
-    mavenLocal()
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
-    mavenCentral()
-  }
-  java {
-    withSourcesJar()
-  }
-  tasks {
-    jar {
-      archiveFileName.set("${rootProject.name}-${project.name}.jar")
+    apply(plugin = "java")
+    apply(plugin = "org.sourcegrade.style")
+    repositories {
+        mavenLocal()
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots")
+        mavenCentral()
     }
-    named<Jar>("sourcesJar") {
-      archiveFileName.set("${rootProject.name}-${project.name}-sources.jar")
+    java { withSourcesJar() }
+    tasks {
+        jar { archiveFileName.set("${rootProject.name}-${project.name}.jar") }
+        named<Jar>("sourcesJar") {
+            archiveFileName.set("${rootProject.name}-${project.name}-sources.jar")
+        }
     }
-  }
 }

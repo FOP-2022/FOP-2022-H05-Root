@@ -1,22 +1,28 @@
 package h05;
 
+import com.google.common.collect.Range;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.google.common.collect.Range;
-
 public class ThreadLocalRandomTester {
     private static final InheritableThreadLocal<ThreadLocalRandomTester> factory = new InheritableThreadLocal<>();
-    private ArrayList<Integer> numberOverwrites;
     private final boolean loop;
-    private int currentIndex;
     private final ArrayList<Range<Integer>> usedRanges = new ArrayList<>();
     private final ArrayList<Integer> results = new ArrayList<>();
+    private final ArrayList<Integer> numberOverwrites;
+    private int currentIndex;
+
+    public ThreadLocalRandomTester(ArrayList<Integer> numberOverwrites, boolean loop) {
+        this.numberOverwrites = numberOverwrites;
+        this.loop = loop;
+    }
+
+    public ThreadLocalRandomTester() {
+        this(null, false);
+    }
 
     public static void initialize(ArrayList<Integer> numberOverwrites, boolean loop) {
         factory.set(new ThreadLocalRandomTester(numberOverwrites, loop));
@@ -26,17 +32,8 @@ public class ThreadLocalRandomTester {
         initialize(null, false);
     }
 
-    public ThreadLocalRandomTester(ArrayList<Integer> numberOverwrites, boolean loop) {
-        this.numberOverwrites = numberOverwrites;
-        this.loop = loop;
-    }
-
     public static void initializeOriginal() {
         factory.set(new ThreadLocalRandomTester());
-    }
-
-    public ThreadLocalRandomTester() {
-        this(null, false);
     }
 
     public static void removeCurrentTester() {
@@ -74,7 +71,7 @@ public class ThreadLocalRandomTester {
         int result;
         if (numberOverwrites != null && numberOverwrites.size() > 0 && currentIndex < numberOverwrites.size()) {
             results.add(
-                    result = numberOverwrites.get(loop ? (currentIndex++ % numberOverwrites.size()) : currentIndex++));
+                result = numberOverwrites.get(loop ? (currentIndex++ % numberOverwrites.size()) : currentIndex++));
         } else {
             results.add(result = ThreadLocalRandom.current().nextInt(lower, upper));
         }
@@ -92,7 +89,7 @@ public class ThreadLocalRandomTester {
             result = numberOverwrites.stream().mapToInt(Integer::intValue);
         } else {
             var numbers = ThreadLocalRandom.current().ints(100).boxed()
-                    .collect(Collectors.toCollection(ArrayList::new));
+                .collect(Collectors.toCollection(ArrayList::new));
             results.addAll(numbers);
             result = numbers.stream().mapToInt(Integer::intValue);
         }

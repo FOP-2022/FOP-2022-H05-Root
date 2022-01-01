@@ -1,7 +1,7 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import com.google.common.reflect.ClassPath;
+import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -9,9 +9,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import com.google.common.reflect.ClassPath;
-
-import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test Utilities by Ruben
@@ -30,12 +29,9 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected
-     *            Erwarteter Wert
-     * @param actual
-     *            Eigentlicher Wert
-     * @param name
-     *            Feld Name
+     * @param expected Erwarteter Wert
+     * @param actual   Eigentlicher Wert
+     * @param name     Feld Name
      */
     public static void assertModifier(int expected, int actual, String name) {
         if (expected < 0) {
@@ -48,10 +44,8 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected
-     *            Erwarteter Wert
-     * @param clazz
-     *            Klasse mit Modifier
+     * @param expected Erwarteter Wert
+     * @param clazz    Klasse mit Modifier
      */
     public static void assertModifier(int expected, Class<?> clazz) {
         assertModifier(expected, clazz.getModifiers(), "Klasse " + clazz.getName());
@@ -60,10 +54,8 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected
-     *            Erwarteter Wert
-     * @param method
-     *            Methode mit Modifier
+     * @param expected Erwarteter Wert
+     * @param method   Methode mit Modifier
      */
     public static void assertModifier(int expected, Method method) {
         assertModifier(expected, method.getModifiers(),
@@ -73,10 +65,8 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected
-     *            Erwarteter Wert
-     * @param constructor
-     *            Konstruktor mit Modifier
+     * @param expected    Erwarteter Wert
+     * @param constructor Konstruktor mit Modifier
      */
     public static void assertModifier(int expected, Constructor<?> constructor) {
         assertModifier(expected, constructor.getModifiers(),
@@ -86,10 +76,8 @@ public class TestUtils {
     /**
      * Asserts matching Modifiers
      *
-     * @param expected
-     *            Erwarteter Wert
-     * @param attribut
-     *            Attribut mit Modifier
+     * @param expected Erwarteter Wert
+     * @param attribut Attribut mit Modifier
      */
     public static void assertModifier(int expected, Field attribut) {
         assertModifier(expected, attribut.getModifiers(),
@@ -99,10 +87,8 @@ public class TestUtils {
     /**
      * Calculates the similarity (a number within 0 and 1) between two strings.
      *
-     * @param s1
-     *            String 1
-     * @param s2
-     *            String 2
+     * @param s1 String 1
+     * @param s2 String 2
      * @return the similarity
      */
     public static double similarity(String s1, String s2) {
@@ -114,7 +100,8 @@ public class TestUtils {
         int longerLength = longer.length();
         if (longerLength == 0) {
             return 1.0;
-            /* both strings are zero length */ }
+            /* both strings are zero length */
+        }
         /*
          * // If you have Apache Commons Text, you can use it to calculate the edit
          * distance: LevenshteinDistance levenshteinDistance = new
@@ -128,12 +115,10 @@ public class TestUtils {
     /**
      * Calculates the similarity (a number within 0 and 1) between two strings.
      *
-     * @param s1
-     *            string 1
-     * @param s2
-     *            string 2
+     * @param s1 string 1
+     * @param s2 string 2
      * @return the calculated similarity (a number within 0 and 1) between two
-     *         strings.
+     * strings.
      * @see http://rosettacode.org/wiki/Levenshtein_distance#Java
      */
     public static int editDistance(String s1, String s2) {
@@ -166,13 +151,10 @@ public class TestUtils {
      * Scans all classes accessible from the context class loader which belong to
      * the given package and subpackages.
      *
-     * @param packageName
-     *            The base package
+     * @param packageName The base package
      * @return The classes
-     * @throws ClassNotFoundException
-     *             if the Classes were defined Faulty
-     * @throws IOException
-     *             if an IO Exception occurs
+     * @throws ClassNotFoundException if the Classes were defined Faulty
+     * @throws IOException            if an IO Exception occurs
      */
     public static Class<?>[] getClasses(String packageName) throws ClassNotFoundException, IOException {
         var cycle = TestCycleResolver.getTestCycle();
@@ -193,7 +175,7 @@ public class TestUtils {
      * does not return {@code null}
      *
      * @return {@code true} if {@link A#getTestCycle()}
-     *         does not return {@code null}
+     * does not return {@code null}
      */
     public static boolean isAutograderRun() {
         return TestCycleResolver.getTestCycle() != null;

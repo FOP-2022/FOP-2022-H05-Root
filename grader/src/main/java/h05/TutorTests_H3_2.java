@@ -1,40 +1,28 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import h05.ReflectionUtils.AttributeMatcher;
+import h05.ReflectionUtils.ClassTester;
+import h05.ReflectionUtils.MethodTester;
+import h05.ReflectionUtils.ParameterMatcher;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
+import spoon.reflect.code.CtConditional;
+import spoon.reflect.code.CtIf;
+import spoon.reflect.code.CtSwitch;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.sourcegrade.jagr.api.rubric.TestForSubmission;
-import org.sourcegrade.jagr.api.testing.SourceFile;
-import org.sourcegrade.jagr.api.testing.TestCycle;
-import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
-
-import h05.ReflectionUtils.AttributeMatcher;
-import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.MethodTester;
-import h05.ReflectionUtils.ParameterMatcher;
-import spoon.Launcher;
-import spoon.reflect.code.CtCodeElement;
-import spoon.reflect.code.CtConditional;
-import spoon.reflect.code.CtIf;
-import spoon.reflect.code.CtSwitch;
-import spoon.reflect.declaration.CtMethod;
-import spoon.reflect.declaration.CtType;
-import spoon.reflect.visitor.filter.TypeFilter;
-
-import static h05.H05_Class_Testers.*;
+import static h05.H05_Class_Testers.animalCT;
+import static h05.H05_Class_Testers.sharkCT;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestForSubmission("h05")
 @DisplayName("H3.2")
@@ -54,7 +42,7 @@ public class TutorTests_H3_2 {
     @DisplayName("2 | Attribute specificSpecies, x, y, degreeOfHunger + Getter")
     public void t02() {
         sharkCT.resolve();
-        for (var fieldMatcher : new AttributeMatcher[] {
+        for (var fieldMatcher : new AttributeMatcher[]{
             new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE, short.class),
             new AttributeMatcher("x", 1.0, Modifier.PRIVATE, int.class),
             new AttributeMatcher("y", 1.0, Modifier.PRIVATE, int.class),
@@ -178,7 +166,7 @@ public class TutorTests_H3_2 {
         MethodTester mt = new MethodTester(sharkCT, "setSpecificSpecies", 0.8,
             Modifier.PUBLIC, short.class,
             new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class))))
-                .verify();
+            .verify();
         Field specificSpeciesField = sharkCT
             .resolveAttribute(new AttributeMatcher("specificSpecies", 0.8, Modifier.PRIVATE,
                 short.class));
@@ -199,8 +187,8 @@ public class TutorTests_H3_2 {
         new MethodTester(sharkCT, "setSpecificSpecies", 0.8,
             Modifier.PUBLIC, short.class,
             new ArrayList<>(List.of(new ParameterMatcher("specificSpecies", 0.8, short.class))))
-                .assertConstructsNotUsed(List.of(
-                    CtConditional.class));
+            .assertConstructsNotUsed(List.of(
+                CtConditional.class));
     }
 
     @Test
@@ -267,8 +255,8 @@ public class TutorTests_H3_2 {
         new MethodTester(sharkCT, "accept", 0.8,
             Modifier.PUBLIC, void.class,
             new ArrayList<>(List.of(new ParameterMatcher("reductionOfHunger", 0.8, int.class))))
-                .assertConstructsNotUsed(List.of(
-                    CtIf.class,
-                    CtSwitch.class));
+            .assertConstructsNotUsed(List.of(
+                CtIf.class,
+                CtSwitch.class));
     }
 }

@@ -1,29 +1,23 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
+import h05.ReflectionUtils.AttributeMatcher;
+import h05.ReflectionUtils.ClassTester;
+import h05.ReflectionUtils.MethodTester;
+import h05.ReflectionUtils.ParameterMatcher;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.sourcegrade.jagr.api.rubric.TestForSubmission;
-import org.sourcegrade.jagr.api.testing.extension.TestCycleResolver;
-
-import h05.ReflectionUtils.AttributeMatcher;
-import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.MethodTester;
-import h05.ReflectionUtils.ParameterMatcher;
 import static h05.H05_Class_Testers.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @TestForSubmission("h05")
 @DisplayName("H4")
@@ -45,7 +39,7 @@ public class TutorTests_H4 {
             new ArrayList<>(List.of(
                 new ParameterMatcher("a1", 0.8, animalCT.getTheClass()),
                 new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
-                    .verify();
+            .verify();
     }
 
     @Test
@@ -55,7 +49,7 @@ public class TutorTests_H4 {
             boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
-                    .verify();
+            .verify();
     }
 
     // Survival of the Fittest Zoo
@@ -73,8 +67,8 @@ public class TutorTests_H4 {
             new ArrayList<>(List.of(
                 new ParameterMatcher("a1", 0.8, animalCT.assureClassResolved().getTheClass()),
                 new ParameterMatcher("a2", 0.8, animalCT.getTheClass()))))
-                    .verify();
-        var animalSubtypes = new String[] { "Animal", "Ostrich", "Shark", "SaltWaterCrocodile" };
+            .verify();
+        var animalSubtypes = new String[]{"Animal", "Ostrich", "Shark", "SaltWaterCrocodile"};
         for (final var name1 : animalSubtypes) {
             for (final var name2 : animalSubtypes) {
                 var ct1 = new ClassTester<>("h05", name1, 0.8).resolve();
@@ -90,7 +84,7 @@ public class TutorTests_H4 {
         var mt = new MethodTester(survivalOfTheFittestZooCT.resolve(), "isAllowed", 0.8, -1, boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a", 0.8, animalCT.assureClassResolved().getTheClass()))))
-                    .verify();
+            .verify();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = animalCT.resolveAttribute(
             new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
@@ -123,7 +117,7 @@ public class TutorTests_H4 {
             new ArrayList<>(List.of(
                 new ParameterMatcher("a1", minSim, animalCT.getTheClass()),
                 new ParameterMatcher("a2", minSim, animalCT.getTheClass()))))
-                    .verify();
+            .verify();
         Field animalTypeField = animalCT.resolveAttribute(
             new AttributeMatcher("animalType", 0.8, -1, animalTypeCT.getClass()));
         var getAverageSpeeedMT = new MethodTester(walkingCT, "getAverageSpeed", 0.8,
@@ -132,47 +126,47 @@ public class TutorTests_H4 {
         getAverageSpeeedMT.resolveMethod();
 
         // Dynamically Generated Test Animals
-        var random_ave = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
-        ClassTester.setField(random_ave, animalTypeField, animalTypeCT.getEnumValue("AVES", 0.8));
-        var random_mammalia = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
-        ClassTester.setField(random_mammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
-        var random_crocodilidae = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
-        ClassTester.setField(random_crocodilidae, animalTypeField, animalTypeCT.getEnumValue("CROCODYLIDAE", 0.8));
-        var random_condrichthy = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
-        ClassTester.setField(random_condrichthy, animalTypeField, animalTypeCT.getEnumValue("CHONDRICHTHYES", 0.8));
-        var fast_mammalia = mock(animalCT.getTheClass(),
+        var randomAve = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
+        ClassTester.setField(randomAve, animalTypeField, animalTypeCT.getEnumValue("AVES", 0.8));
+        var randomMammalia = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
+        ClassTester.setField(randomMammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
+        var randomCrocodilidae = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
+        ClassTester.setField(randomCrocodilidae, animalTypeField, animalTypeCT.getEnumValue("CROCODYLIDAE", 0.8));
+        var randomCondrichthy = mock(animalCT.getTheClass(), CALLS_REAL_METHODS);
+        ClassTester.setField(randomCondrichthy, animalTypeField, animalTypeCT.getEnumValue("CHONDRICHTHYES", 0.8));
+        var fastMammalia = mock(animalCT.getTheClass(),
             withSettings().extraInterfaces(walkingCT.getTheClass()).defaultAnswer(
                 CALLS_REAL_METHODS));
-        ClassTester.setField(fast_mammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
+        ClassTester.setField(fastMammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
         assertDoesNotThrow(
-            () -> when(getAverageSpeeedMT.getTheMethod().invoke(fast_mammalia, ArgumentMatchers.anyDouble()))
+            () -> when(getAverageSpeeedMT.getTheMethod().invoke(fastMammalia, ArgumentMatchers.anyDouble()))
                 .thenReturn(10d),
             "Could not Overwrite Method.");
-        var slow_mammalia = mock(animalCT.getTheClass(),
+        var slowMammalia = mock(animalCT.getTheClass(),
             withSettings().extraInterfaces(walkingCT.getTheClass()).defaultAnswer(
                 CALLS_REAL_METHODS));
-        ClassTester.setField(slow_mammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
+        ClassTester.setField(slowMammalia, animalTypeField, animalTypeCT.getEnumValue("MAMMALIA", 0.8));
         assertDoesNotThrow(
             () -> when(getAverageSpeeedMT.getTheMethod().invoke(
-                slow_mammalia, ArgumentMatchers.anyDouble()))
-                    .thenReturn(2d),
+                slowMammalia, ArgumentMatchers.anyDouble()))
+                .thenReturn(2d),
             "Could not Overwrite Method.");
 
         // Haie sind nicht mit anderen Knorpelfischen kompatibel
-        mt.assertReturnValueEquals(false, sharkCT.getClassInstance(), random_condrichthy);
-        mt.assertReturnValueEquals(false, random_condrichthy, sharkCT.getClassInstance());
+        mt.assertReturnValueEquals(false, sharkCT.getClassInstance(), randomCondrichthy);
+        mt.assertReturnValueEquals(false, randomCondrichthy, sharkCT.getClassInstance());
         mt.assertReturnValueEquals(true, sharkCT.getClassInstance(), sharkCT.getClassInstance());
         // Krokodile dürfen nicht mit Säugetieren zusammenleben
-        mt.assertReturnValueEquals(false, random_crocodilidae, random_mammalia);
-        mt.assertReturnValueEquals(false, random_mammalia, random_crocodilidae);
+        mt.assertReturnValueEquals(false, randomCrocodilidae, randomMammalia);
+        mt.assertReturnValueEquals(false, randomMammalia, randomCrocodilidae);
         // Vögel dürfen nur mit Tieren zusammenleben, die (falls Sie laufen können) bei
         // einer Strecke von 10 Metern langsamer als 3m/s sind.
-        mt.assertReturnValueEquals(true, random_ave, random_crocodilidae);
-        mt.assertReturnValueEquals(true, random_crocodilidae, random_ave);
-        mt.assertReturnValueEquals(true, random_ave, slow_mammalia);
-        mt.assertReturnValueEquals(true, slow_mammalia, random_ave);
-        mt.assertReturnValueEquals(false, random_ave, fast_mammalia);
-        mt.assertReturnValueEquals(false, fast_mammalia, random_ave);
+        mt.assertReturnValueEquals(true, randomAve, randomCrocodilidae);
+        mt.assertReturnValueEquals(true, randomCrocodilidae, randomAve);
+        mt.assertReturnValueEquals(true, randomAve, slowMammalia);
+        mt.assertReturnValueEquals(true, slowMammalia, randomAve);
+        mt.assertReturnValueEquals(false, randomAve, fastMammalia);
+        mt.assertReturnValueEquals(false, fastMammalia, randomAve);
     }
 
     @Test
@@ -183,7 +177,7 @@ public class TutorTests_H4 {
         var mt = new MethodTester(classTester, "isAllowed", 0.8, -1, boolean.class,
             new ArrayList<>(List.of(
                 new ParameterMatcher("a", 0.8, animalClassTester.getTheClass()))))
-                    .verify();
+            .verify();
         var enumClassTester = new ClassTester<>("h05", "AnimalType", 0.8).resolveClass();
         Field animalTypeField = animalClassTester.resolveAttribute(
             new AttributeMatcher("animalType", 0.8, -1, enumClassTester.getClass()));
@@ -205,13 +199,13 @@ public class TutorTests_H4 {
             0.8,
             Modifier.PUBLIC,
             char.class)
-                .verify();
+            .verify();
         ThreadLocalRandomTester.initialize();
         mt.invoke();
         var usedRanges = ThreadLocalRandomTester.current().getUsedRanges();
         assertEquals(usedRanges.size(), 1);
         usedRanges.forEach(r -> {
-            assertEquals((int) 'a', r.lowerEndpoint());
+            assertEquals('a', r.lowerEndpoint());
             assertEquals((int) 'z' + 1, r.upperEndpoint());
         });
         ThreadLocalRandomTester.removeCurrentTester();

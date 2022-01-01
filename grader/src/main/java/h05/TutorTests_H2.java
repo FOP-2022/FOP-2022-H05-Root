@@ -1,19 +1,19 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import h05.ReflectionUtils.AttributeMatcher;
+import h05.ReflectionUtils.MethodTester;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.sourcegrade.jagr.api.rubric.TestForSubmission;
-
-import h05.ReflectionUtils.AttributeMatcher;
-import h05.ReflectionUtils.MethodTester;
-import static h05.H05_Class_Testers.*;
+import static h05.H05_Class_Testers.animalCT;
+import static h05.H05_Class_Testers.animalTypeCT;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestForSubmission("h05")
 @DisplayName("H2")
@@ -26,7 +26,7 @@ public class TutorTests_H2 {
     public void t01() {
         animalTypeCT
             .verify(1.0d)
-            .assertEnumConstants(new String[] { "AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES" });
+            .assertEnumConstants(new String[]{"AVES", "MAMMALIA", "CROCODYLIDAE", "CHONDRICHTHYES"});
     }
 
     @Test
@@ -73,7 +73,7 @@ public class TutorTests_H2 {
         var expectedAnimalType = animalTypeCT.getRandomEnumConstant();
         var expectedAnswer = String.format("My species is called %s which is part of animal type %s.",
             animalInstance.getClass().getSimpleName(),
-            expectedAnimalType.name().substring(0, 1) + expectedAnimalType.name().substring(1).toLowerCase());
+            expectedAnimalType.name().charAt(0) + expectedAnimalType.name().substring(1).toLowerCase());
         assertDoesNotThrow(() -> animalTypeField.set(animalInstance, expectedAnimalType));
         var returnValue = methodTester.invoke();
         assertEquals(expectedAnswer, returnValue, "Falsche Rückgabe der toString-Metode.");

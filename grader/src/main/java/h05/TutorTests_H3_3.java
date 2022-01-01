@@ -1,6 +1,12 @@
 package h05;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import h05.ReflectionUtils.AttributeMatcher;
+import h05.ReflectionUtils.ClassTester;
+import h05.ReflectionUtils.MethodTester;
+import h05.ReflectionUtils.ParameterMatcher;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.sourcegrade.jagr.api.rubric.TestForSubmission;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -8,15 +14,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.sourcegrade.jagr.api.rubric.TestForSubmission;
-
-import h05.ReflectionUtils.AttributeMatcher;
-import h05.ReflectionUtils.ClassTester;
-import h05.ReflectionUtils.MethodTester;
-import h05.ReflectionUtils.ParameterMatcher;
-import static h05.H05_Class_Testers.*;
+import static h05.H05_Class_Testers.animalCT;
+import static h05.H05_Class_Testers.saltWaterCrocodileCT;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @TestForSubmission("h05")
 @DisplayName("H3.3")
@@ -47,7 +47,7 @@ public class TutorTests_H3_3 {
     public void t03() {
         MethodTester mt = new MethodTester(
             saltWaterCrocodileCT.resolve(), "canLiveInSaltWater", 0.8, Modifier.PUBLIC, boolean.class)
-                .verify();
+            .verify();
         mt.assertReturnValueEquals(true);
     }
 
@@ -56,7 +56,7 @@ public class TutorTests_H3_3 {
     public void t04() {
         MethodTester mt = new MethodTester(
             saltWaterCrocodileCT, "canLiveInFreshWater", 0.8, Modifier.PUBLIC, boolean.class)
-                .verify();
+            .verify();
         mt.assertReturnValueEquals(true);
     }
 

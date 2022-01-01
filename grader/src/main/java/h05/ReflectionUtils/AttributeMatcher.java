@@ -3,8 +3,8 @@ package h05.ReflectionUtils;
 /**
  * An Attribute Matcher based on {@link IdentifierMatcher}
  *
- * @see IdentifierMatcher
  * @author Ruben Deisenroth
+ * @see IdentifierMatcher
  */
 public class AttributeMatcher extends IdentifierMatcher {
     /**
