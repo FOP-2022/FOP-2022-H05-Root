@@ -1,0 +1,52 @@
+{
+  "name": "FOP-2022-H05",
+  "assignmentIds": [
+    "h05"
+  ],
+  "sourceSets": [
+    {
+      "name": "grader",
+      "files": [
+        "h05/TestUtils.java",
+        "h05/TutorTests_H1_2.java",
+        "h05/H05_Class_Testers.java",
+        "h05/ThreadLocalRandomTester.java",
+        "h05/TutorTests_H3_1.java",
+        "h05/TutorTests_H1_3.java",
+        "h05/TutorTests_H1_1.java",
+        "h05/TutorTests_H4.java",
+        "h05/ReflectionUtils/ClassTester.java",
+        "h05/ReflectionUtils/AttributeMatcher.java",
+        "h05/ReflectionUtils/IdentifierMatcher.java",
+        "h05/ReflectionUtils/ParameterMatcher.java",
+        "h05/ReflectionUtils/MethodTester.java",
+        "h05/TutorTests_H3_2.java",
+        "h05/H05_RubricProvider.java",
+        "h05/TutorTests_H2.java",
+        "h05/TutorTests.java",
+        "h05/TutorTests_H3_4.java",
+        "h05/TutorTests_H3_3.java",
+        "h05/ExampleJUnitTest.java",
+        "h05/JagrOnlyTest.java"
+      ]
+    },
+    {
+      "name": "solution",
+      "files": [
+        "h05/Animal.java",
+        "h05/Shark.java",
+        "h05/SaltWaterCrocodile.java",
+        "h05/SaltWaterCrocodileAsAmphibean.java",
+        "h05/EnvironmentType.java",
+        "h05/FamilyFriendlyZoo.java",
+        "h05/Amphibean.java",
+        "h05/Zoo.java",
+        "h05/Ostrich.java",
+        "h05/AnimalType.java",
+        "h05/Walking.java",
+        "h05/SurvivalOfTheFittestZoo.java",
+        "h05/Swimming.java"
+      ]
+    }
+  ]
+}
