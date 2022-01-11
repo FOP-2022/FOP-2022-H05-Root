@@ -7,6 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExampleJUnitTest {
     @Test
     public void testAddition() {
-        assertEquals(2,1+1);
+        assertEquals(2, 1 + 1);
     }
 }

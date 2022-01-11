@@ -47,5 +47,4 @@ public class Ostrich extends Animal implements Walking {
     public String letMeMove() {
         return String.format("Distance so far: %s", ++distanceSoFar);
     }
-
 }

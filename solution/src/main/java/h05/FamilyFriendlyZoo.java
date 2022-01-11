@@ -38,7 +38,7 @@ public class FamilyFriendlyZoo implements Zoo {
         // Vögel dürfen nur mit Tieren zusammenleben, die (falls Sie laufen können) bei
         // einer Strecke von 10 Metern langsamer als 3m/s sind.
         if (a1.getAnimalType() == AnimalType.AVES && (a2 instanceof Walking)
-                && ((Walking) a2).getAverageSpeed(10) >= 3) {
+            && ((Walking) a2).getAverageSpeed(10) >= 3) {
             // Haiart 4 darf nicht mit anderen Haiarten zusammenleben
             // Krokodile Sind nur mit
             return false;
@@ -58,5 +58,4 @@ public class FamilyFriendlyZoo implements Zoo {
     public char letterOfTheDay() {
         return (char) ThreadLocalRandom.current().nextInt('a', 'z' + 1);
     }
-
 }

@@ -21,8 +21,7 @@ import java.util.stream.IntStream;
 
 import static h05.H05_Class_Testers.animalCT;
 import static h05.H05_Class_Testers.sharkCT;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestForSubmission("h05")
 @DisplayName("H3.2")

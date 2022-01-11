@@ -20,9 +20,8 @@ public class Shark extends Animal implements Swimming, IntConsumer {
     /**
      * Creates a new {@link Shark}
      *
-     * @param specificSpecies
-     *            the specific Shark Species, stored in
-     *            {@link #specificSpecies}
+     * @param specificSpecies the specific Shark Species, stored in
+     *                        {@link #specificSpecies}
      */
     public Shark(short specificSpecies) {
         super();
@@ -103,8 +102,7 @@ public class Shark extends Animal implements Swimming, IntConsumer {
      * Sets {@link #specificSpecies} to the given value, if it's between {@code 0}
      * and {@code 10}
      *
-     * @param specificSpecies
-     *            the Specific Shark Species
+     * @param specificSpecies the Specific Shark Species
      * @return the Specific Shark Species
      */
     public short setSpecificSpecies(short specificSpecies) {
@@ -112,5 +110,4 @@ public class Shark extends Animal implements Swimming, IntConsumer {
         this.specificSpecies = (short) Math.max(0, Math.min(specificSpecies, 10));
         return oldSpecies;
     }
-
 }

@@ -22,7 +22,9 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Answers.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
+import static org.mockito.Mockito.spy;
 
 /**
  * A Class Tester
@@ -848,7 +850,6 @@ public class ClassTester<T> {
                     assertSame(null, theClass.getSuperclass());
                 } else {
                     assertSame(Object.class, theClass.getSuperclass());
-
                 }
             }
         } else {
@@ -1249,12 +1250,12 @@ public class ClassTester<T> {
                     expected == null
                     ? null
                     : expected.getClass().getName() + "@" + Integer.toHexString(expected.hashCode())
-                    + "], but got: ["
-                    +
-                    (actual == null ? null
-                        : actual.getClass().getName() + "@"
-                        + Integer.toHexString(actual.hashCode()))
-                    + "]");
+                        + "], but got: ["
+                        +
+                        (actual == null ? null
+                            : actual.getClass().getName() + "@"
+                                + Integer.toHexString(actual.hashCode()))
+                        + "]");
             }
         } else {
             assertEquals(expected, getFieldValue(field), message);
@@ -1309,5 +1310,4 @@ public class ClassTester<T> {
     public void assertIsPlainClass() {
         assertIsPlainClass(theClass, classIdentifier.identifierName);
     }
-
 }

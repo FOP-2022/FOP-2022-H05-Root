@@ -15,13 +15,12 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean, Cloneable {
     /**
      * Creates a new {@link SaltWaterCrocodileAsAmphibean}
      *
-     * @param salty
-     *            the {@link SaltWaterCrocodileAsAmphibean}
+     * @param salty the {@link SaltWaterCrocodileAsAmphibean}
      */
-    public SaltWaterCrocodileAsAmphibean(Animal a) {
+    public SaltWaterCrocodileAsAmphibean(Animal salty) {
         super();
-        if (a instanceof SaltWaterCrocodile) {
-            salty = (SaltWaterCrocodile) a;
+        if (salty instanceof SaltWaterCrocodile) {
+            this.salty = (SaltWaterCrocodile) salty;
         }
     }
 
@@ -65,5 +64,4 @@ public class SaltWaterCrocodileAsAmphibean implements Amphibean, Cloneable {
     public EnvironmentType getPreferredEnvironmentType() {
         return EnvironmentType.IN_WATER;
     }
-
 }

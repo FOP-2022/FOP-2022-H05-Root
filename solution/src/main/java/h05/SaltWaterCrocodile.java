@@ -57,5 +57,4 @@ public class SaltWaterCrocodile extends Animal implements Walking, Swimming {
     public String letMeMove() {
         return "";
     }
-
 }

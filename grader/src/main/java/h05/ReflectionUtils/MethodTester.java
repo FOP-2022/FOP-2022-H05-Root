@@ -93,7 +93,6 @@ public class MethodTester {
     public MethodTester(ClassTester<?> classTester, String methodName, double similarity, int accessModifier,
                         Class<?> returnType, ArrayList<ParameterMatcher> parameters) {
         this(classTester, methodName, similarity, accessModifier, returnType, parameters, false);
-
     }
 
     /**
@@ -311,7 +310,6 @@ public class MethodTester {
      */
     public static void assertMethodNotNull(Method m, String name) {
         assertNotNull(m, getMethodNotFoundMessage(name));
-
     }
 
     /**

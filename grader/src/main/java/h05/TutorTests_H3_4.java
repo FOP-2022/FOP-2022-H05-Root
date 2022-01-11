@@ -1,6 +1,10 @@
 package h05;
 
-import h05.ReflectionUtils.*;
+import h05.ReflectionUtils.AttributeMatcher;
+import h05.ReflectionUtils.ClassTester;
+import h05.ReflectionUtils.IdentifierMatcher;
+import h05.ReflectionUtils.MethodTester;
+import h05.ReflectionUtils.ParameterMatcher;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.sourcegrade.jagr.api.rubric.TestForSubmission;
@@ -11,7 +15,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static h05.H05_Class_Testers.*;
+import static h05.H05_Class_Testers.animalCT;
+import static h05.H05_Class_Testers.minSim;
+import static h05.H05_Class_Testers.saltWaterCrocodileAsAmphibeanCT;
+import static h05.H05_Class_Testers.saltWaterCrocodileCT;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestForSubmission("h05")

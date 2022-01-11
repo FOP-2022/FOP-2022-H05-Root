@@ -17,6 +17,7 @@ public abstract class Animal {
 
     /**
      * Lets the Animal Move
+     *
      * @return The Animal Movement
      */
     abstract String letMeMove();
@@ -24,7 +25,7 @@ public abstract class Animal {
     @Override
     public String toString() {
         return String.format("My species is called %s which is part of animal type %s.",
-        getClass().getSimpleName(),
-                animalType == null ? "Null" : animalType.name().substring(0, 1) + animalType.name().substring(1).toLowerCase());
+            getClass().getSimpleName(),
+            animalType == null ? "Null" : animalType.name().substring(0, 1) + animalType.name().substring(1).toLowerCase());
     }
 }

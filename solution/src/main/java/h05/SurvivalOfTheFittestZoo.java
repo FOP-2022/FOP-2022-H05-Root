@@ -17,5 +17,4 @@ public class SurvivalOfTheFittestZoo implements Zoo {
         // Der Zoobesitzer mag keine Vögel
         return a.getAnimalType() != AnimalType.AVES;
     }
-
 }

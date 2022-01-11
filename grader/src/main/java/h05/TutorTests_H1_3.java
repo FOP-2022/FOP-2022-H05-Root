@@ -11,7 +11,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import static h05.H05_Class_Testers.*;
+import static h05.H05_Class_Testers.amphibeanCT;
+import static h05.H05_Class_Testers.environmentTypeCT;
+import static h05.H05_Class_Testers.minSim;
 
 @TestForSubmission("h05")
 @DisplayName("H1_3")
